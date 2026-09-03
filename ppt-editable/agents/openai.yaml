@@ -1,0 +1,6 @@
+interface:
+  display_name: "PPT-editable"
+  short_description: "High-fidelity image-first editable PowerPoint"
+  default_prompt: "Use $ppt-editable to create or surgically repair a presentation-ready, high-fidelity editable PowerPoint, approving required assets before assembly and making only localized QA fixes afterward."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,2 @@
+# Only the image helper scripts require a third-party Python package.
+Pillow>=10.0

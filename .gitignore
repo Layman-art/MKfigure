@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+node_modules/
+.env
+.env.*
+!.env.example
+~$*.pptx
+.DS_Store
+Thumbs.db
+work/
+outputs/
