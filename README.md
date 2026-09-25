@@ -6,11 +6,11 @@
 
 | 组件 | 位置 | 用途 |
 | --- | --- | --- |
-| Codex skill | [`mk-figure-skill/`](mk-figure-skill/) | 在 Codex 中按图像生成、可编辑复刻、PPT 高保真修复和检查的统一流程工作；吸收了原 [`PPT-editable`](https://github.com/Layman-art/PPT-editable) 的 PPT 专项方法与工具。 |
+| Codex skill | [`mk-figure-skill/`](mk-figure-skill/) | 在 Codex 中按图像生成、可编辑复刻、PPT 高保真修复和检查的统一流程工作；吸收了原 `PPT-editable` 的 PPT 专项方法与工具。 |
 | 桌面软件 | [`src/`](src/) | Windows/macOS Electron 工作台，管理素材、调用已登录的 Codex、复刻并导出 PPTX/SVG/PNG。 |
 | SVG 图标包 | [`icon-pack/`](icon-pack/) | 10 个可单独下载和编辑的城市防灾减灾图标，也是软件内置素材库的原件。 |
 
-三部分同在本仓库，按 [MIT License](LICENSE) 开源。skill 可单独安装使用；软件运行时使用 [`src/main/workflow.ts`](src/main/workflow.ts) 等代码组织任务，并不逐字执行 skill 文档。修改流程时须核对两边行为。原 `PPT-editable` 的 MIT 内容及来源见 [合并说明](docs/ppt-editable-integration.md)。
+三部分同在本仓库，按 [MIT License](LICENSE) 开源。skill 可单独安装使用；软件运行时使用 [`src/main/workflow.ts`](src/main/workflow.ts) 等代码组织任务，并不逐字执行 skill 文档。修改流程时须核对两边行为。原 `PPT-editable` 的 MIT 内容、[原始提交](https://github.com/Layman-art/MKfigure/commit/b4a672299b3b5aa35bf97e34bc303fecc22bfdc9)及来源见 [合并说明](docs/ppt-editable-integration.md)。
 
 安装 skill：把 `mk-figure-skill` 目录复制到 Codex 的 skills 目录，或使用 Codex 的 skill 安装工具指定本仓库的 `mk-figure-skill/` 子目录。已有同名版本先告知，不要直接覆盖。
 
