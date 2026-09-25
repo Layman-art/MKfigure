@@ -189,8 +189,9 @@ def prepare(workspace: Path, stage: Path, electron_zip: Path, asar: Path, arch: 
     app = stage / "MK Figure.app"
     resources = app / "Contents/Resources"
     shutil.copy2(asar, resources / "app.asar")
-    for folder in ["references", "library", "skill", "font-licenses"]:
+    for folder in ["references", "library", "font-licenses"]:
         shutil.copytree(workspace / "resources" / folder, resources / folder, dirs_exist_ok=True)
+    shutil.copytree(workspace / "mk-figure-skill", resources / "skill", dirs_exist_ok=True)
     info["library"] = validate_library(lambda relative: (resources / relative).read_bytes())
     shutil.copytree(workspace / "resources/codex" / f"mac-{arch}", resources / "codex", dirs_exist_ok=True)
     for filename in ["icon.png", "icon.icns", "THIRD_PARTY_NOTICES.md"]:
