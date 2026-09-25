@@ -1,0 +1,128 @@
+{
+  "name": "mk-figure-studio",
+  "productName": "MK Figure",
+  "version": "0.4.1",
+  "description": "科研图生成与可编辑 PPT/SVG 工作台",
+  "author": "MK Figure",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "main": "dist/main/main.cjs",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "tsc --noEmit && vite build && node scripts/build-main.mjs",
+    "start": "electron .",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "dist:win": "npm run build && electron-builder --win nsis --x64 --publish never",
+    "dist:mac": "npm run build && electron-builder --mac zip --arm64 --x64 --publish never",
+    "dist:mac:dmg": "npm run build && electron-builder --mac dmg --arm64 --x64 --publish never",
+    "pack": "npm run build && electron-builder --dir --publish never"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^5.2.5",
+    "jszip": "^3.10.1",
+    "lucide-react": "^0.577.0",
+    "pdf-parse": "1.1.1",
+    "pptxgenjs": "4.0.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "svgpath": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/pdf-parse": "^1.1.5",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "electron": "44.4.1",
+    "electron-builder": "26.15.3",
+    "esbuild": "^0.28.2",
+    "playwright": "^1.58.0",
+    "typescript": "^5.9.0",
+    "vite": "^7.0.0",
+    "vitest": "^4.0.0",
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/noto-serif-sc": "^5.3.0",
+    "@fontsource/source-serif-4": "^5.3.0"
+  },
+  "overrides": {
+    "image-size": "^2.0.4"
+  },
+  "build": {
+    "appId": "art.mkfigure.studio",
+    "productName": "MK Figure",
+    "asar": true,
+    "npmRebuild": false,
+    "directories": {
+      "output": "release",
+      "buildResources": "resources"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json",
+      "!node_modules/**/{test,tests,example,examples}/**"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/library",
+        "to": "library"
+      },
+      {
+        "from": "resources/references",
+        "to": "references"
+      },
+      {
+        "from": "resources/icon.png",
+        "to": "icon.png"
+      },
+      {
+        "from": "resources/THIRD_PARTY_NOTICES.md",
+        "to": "THIRD_PARTY_NOTICES.md"
+      },
+      {
+        "from": "mk-figure-skill",
+        "to": "skill"
+      },
+      {
+        "from": "resources/codex/${os}-${arch}",
+        "to": "codex",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "resources/font-licenses",
+        "to": "font-licenses"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "resources/icon.ico",
+      "signExecutable": false,
+      "artifactName": "MK-Figure-${version}-Windows-${arch}-Setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": false,
+      "installerLanguages": [
+        "zh_CN",
+        "en_US"
+      ]
+    },
+    "mac": {
+      "target": [
+        "zip"
+      ],
+      "category": "public.app-category.productivity",
+      "icon": "resources/icon.icns",
+      "identity": null,
+      "hardenedRuntime": false,
+      "artifactName": "MK-Figure-${version}-macOS-${arch}.${ext}"
+    }
+  }
+}

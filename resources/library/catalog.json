@@ -1,0 +1,145 @@
+[
+  {
+    "id": "pastel-method",
+    "name": "浅色方法框架",
+    "category": "reference",
+    "file": "references/pastel-method.png",
+    "thumbnail": "library/thumbs/pastel-method.png",
+    "mime": "image/png",
+    "extension": "png",
+    "width": 1800,
+    "height": 900
+  },
+  {
+    "id": "algorithm-flow",
+    "name": "算法流程与结构",
+    "category": "reference",
+    "file": "references/algorithm-flow.png",
+    "thumbnail": "library/thumbs/algorithm-flow.png",
+    "mime": "image/png",
+    "extension": "png",
+    "width": 2340,
+    "height": 2835
+  },
+  {
+    "id": "voltage-control",
+    "name": "科研信息图",
+    "category": "reference",
+    "file": "references/voltage-control.png",
+    "thumbnail": "library/thumbs/voltage-control.png",
+    "mime": "image/png",
+    "extension": "png",
+    "width": 1536,
+    "height": 1024
+  },
+  {
+    "id": "icon-city-communication-tower",
+    "name": "通信基站",
+    "category": "icon",
+    "file": "library/icons/communication-tower.svg",
+    "thumbnail": "library/thumbs/icon-city-communication-tower.png",
+    "mime": "image/svg+xml",
+    "extension": "svg",
+    "width": 64,
+    "height": 80
+  },
+  {
+    "id": "icon-city-transmission-tower",
+    "name": "输电铁塔",
+    "category": "icon",
+    "file": "library/icons/transmission-tower.svg",
+    "thumbnail": "library/thumbs/icon-city-transmission-tower.png",
+    "mime": "image/svg+xml",
+    "extension": "svg",
+    "width": 64,
+    "height": 90
+  },
+  {
+    "id": "icon-city-person-yellow",
+    "name": "人物 · 黄色衣服",
+    "category": "icon",
+    "file": "library/icons/person-yellow.svg",
+    "thumbnail": "library/thumbs/icon-city-person-yellow.png",
+    "mime": "image/svg+xml",
+    "extension": "svg",
+    "width": 60,
+    "height": 80
+  },
+  {
+    "id": "icon-city-person-blue",
+    "name": "人物 · 蓝色衣服",
+    "category": "icon",
+    "file": "library/icons/person-blue.svg",
+    "thumbnail": "library/thumbs/icon-city-person-blue.png",
+    "mime": "image/svg+xml",
+    "extension": "svg",
+    "width": 60,
+    "height": 80
+  },
+  {
+    "id": "icon-city-person-green",
+    "name": "人物 · 绿色衣服",
+    "category": "icon",
+    "file": "library/icons/person-green.svg",
+    "thumbnail": "library/thumbs/icon-city-person-green.png",
+    "mime": "image/svg+xml",
+    "extension": "svg",
+    "width": 60,
+    "height": 80
+  },
+  {
+    "id": "icon-city-emergency-generator-truck",
+    "name": "应急发电车",
+    "category": "icon",
+    "file": "library/icons/emergency-generator-truck.svg",
+    "thumbnail": "library/thumbs/icon-city-emergency-generator-truck.png",
+    "mime": "image/svg+xml",
+    "extension": "svg",
+    "width": 120,
+    "height": 68
+  },
+  {
+    "id": "icon-city-electric-car",
+    "name": "电动汽车",
+    "category": "icon",
+    "file": "library/icons/electric-car.svg",
+    "thumbnail": "library/thumbs/icon-city-electric-car.png",
+    "mime": "image/svg+xml",
+    "extension": "svg",
+    "width": 120,
+    "height": 68
+  },
+  {
+    "id": "icon-city-mobile-storage",
+    "name": "移动储能",
+    "category": "icon",
+    "file": "library/icons/mobile-storage.svg",
+    "thumbnail": "library/thumbs/icon-city-mobile-storage.png",
+    "mime": "image/svg+xml",
+    "extension": "svg",
+    "width": 120,
+    "height": 68
+  },
+  {
+    "id": "icon-city-unmanned-vehicle",
+    "name": "无人载具",
+    "category": "icon",
+    "file": "library/icons/unmanned-vehicle.svg",
+    "thumbnail": "library/thumbs/icon-city-unmanned-vehicle.png",
+    "mime": "image/svg+xml",
+    "extension": "svg",
+    "width": 120,
+    "height": 68
+  },
+  {
+    "id": "icon-city-typhoon",
+    "name": "台风",
+    "category": "icon",
+    "file": "library/icons/typhoon.svg",
+    "thumbnail": "library/thumbs/icon-city-typhoon.png",
+    "mime": "image/svg+xml",
+    "extension": "svg",
+    "width": 70,
+    "height": 100
+  }
+]

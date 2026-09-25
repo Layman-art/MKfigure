@@ -1,0 +1,97 @@
+[
+  {
+    "id": "icon-city-communication-tower",
+    "source": "icon-pack/communication-tower.svg",
+    "file": "library/icons/communication-tower.svg",
+    "sha256": "4c46e91c4351e067f72bff7870df2ca86c9826beec980165a4a956900e4f1264",
+    "sourceSha256": "4c46e91c4351e067f72bff7870df2ca86c9826beec980165a4a956900e4f1264",
+    "identical": true
+  },
+  {
+    "id": "icon-city-transmission-tower",
+    "source": "icon-pack/transmission-tower.svg",
+    "file": "library/icons/transmission-tower.svg",
+    "sha256": "73da9fefdebf6c145e3a85d806ebfc59006ec051a9e97f6d99cb8c9770f17137",
+    "sourceSha256": "73da9fefdebf6c145e3a85d806ebfc59006ec051a9e97f6d99cb8c9770f17137",
+    "identical": true
+  },
+  {
+    "id": "icon-city-person-yellow",
+    "source": "icon-pack/person-yellow.svg",
+    "file": "library/icons/person-yellow.svg",
+    "sha256": "d41b36f43b28d0e52ce482c3150306af6fefc1e5835db9f322a987f69282053a",
+    "sourceSha256": "d41b36f43b28d0e52ce482c3150306af6fefc1e5835db9f322a987f69282053a",
+    "identical": true
+  },
+  {
+    "id": "icon-city-person-blue",
+    "source": "icon-pack/person-blue.svg",
+    "file": "library/icons/person-blue.svg",
+    "sha256": "645e633e364a220fc3007a566f4c1526d29d2054efe7ce11ab56b7f8b5f83e56",
+    "sourceSha256": "645e633e364a220fc3007a566f4c1526d29d2054efe7ce11ab56b7f8b5f83e56",
+    "identical": true
+  },
+  {
+    "id": "icon-city-person-green",
+    "source": "icon-pack/person-green.svg",
+    "file": "library/icons/person-green.svg",
+    "sha256": "d033a64da8b97951a3974fab291ffe0c5675c4f6d1db7674279be9bc78c26ff9",
+    "sourceSha256": "d033a64da8b97951a3974fab291ffe0c5675c4f6d1db7674279be9bc78c26ff9",
+    "identical": true
+  },
+  {
+    "id": "icon-city-emergency-generator-truck",
+    "source": "icon-pack/emergency-generator-truck.svg",
+    "file": "library/icons/emergency-generator-truck.svg",
+    "sha256": "77a7accfa58a32962fa768b97a7d6fc655a24dcc0a8be03b67a7d22dd4a0cfce",
+    "sourceSha256": "77a7accfa58a32962fa768b97a7d6fc655a24dcc0a8be03b67a7d22dd4a0cfce",
+    "identical": true
+  },
+  {
+    "id": "icon-city-electric-car",
+    "source": "icon-pack/electric-car.svg",
+    "file": "library/icons/electric-car.svg",
+    "sha256": "9dbed11f6292578461c55ad64c8f86a4efe2885aa406d36c825dd7f72d177462",
+    "sourceSha256": "9dbed11f6292578461c55ad64c8f86a4efe2885aa406d36c825dd7f72d177462",
+    "identical": true
+  },
+  {
+    "id": "icon-city-mobile-storage",
+    "source": "icon-pack/mobile-storage.svg",
+    "file": "library/icons/mobile-storage.svg",
+    "sha256": "07bd536926abfb5f1b59965d4a213f0618c45b349bb5e03a2861d4b209a659d6",
+    "sourceSha256": "07bd536926abfb5f1b59965d4a213f0618c45b349bb5e03a2861d4b209a659d6",
+    "identical": true
+  },
+  {
+    "id": "icon-city-unmanned-vehicle",
+    "source": "icon-pack/unmanned-vehicle.svg",
+    "file": "library/icons/unmanned-vehicle.svg",
+    "sha256": "0491850d2ff9cfa9296c32cd454bf8564303daa0171b798b149402cd800efdda",
+    "sourceSha256": "0491850d2ff9cfa9296c32cd454bf8564303daa0171b798b149402cd800efdda",
+    "identical": true
+  },
+  {
+    "id": "icon-city-typhoon",
+    "source": "icon-pack/typhoon.svg",
+    "file": "library/icons/typhoon.svg",
+    "sha256": "f7aeb5887ce64fb4777ee1c1251054aaecf9d9e2e37effc7080994ee76fbfcd9",
+    "sourceSha256": "f7aeb5887ce64fb4777ee1c1251054aaecf9d9e2e37effc7080994ee76fbfcd9",
+    "identical": true
+  },
+  {
+    "id": "pastel-method",
+    "file": "references/pastel-method.png",
+    "sha256": "f9a23d55f093463cb5adc3c4fe3ceca1f82b9125a128091ae8db39cd4afba7f0"
+  },
+  {
+    "id": "algorithm-flow",
+    "file": "references/algorithm-flow.png",
+    "sha256": "d000494a1535092d355ba45b1480b6d6c3dc444f0a5556e2c54eadaaaaa5fe32"
+  },
+  {
+    "id": "voltage-control",
+    "file": "references/voltage-control.png",
+    "sha256": "8691f7c93bfda004f84e5f10616ddc923a97ea17b42b6eec6430f74e47e3f051"
+  }
+]

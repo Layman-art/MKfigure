@@ -1,0 +1,5 @@
+[
+  {"id":"pastel-method","name":"浅色方法框架","description":"浅蓝与绿色分区、细线箭头，适合英文论文方法图。","file":"pastel-method.png"},
+  {"id":"algorithm-flow","name":"算法流程与结构","description":"算法步骤、网络结构与公式结合，适合研究流程说明。","file":"algorithm-flow.png"},
+  {"id":"voltage-control","name":"科研信息图","description":"深蓝主色、多栏结构和设备插画，适合信息丰富的研究概览。","file":"voltage-control.png"}
+]

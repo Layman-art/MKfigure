@@ -1,0 +1,6 @@
+interface:
+  display_name: "mk-figure-skill"
+  short_description: "生成科研图、复刻可编辑 PPT/SVG，或局部修复已有 PPT"
+  default_prompt: "使用 $mk-figure-skill 按我的材料或参考图生成、复刻或修复科研图，并验证内容、外观和可编辑性。"
+policy:
+  allow_implicit_invocation: true

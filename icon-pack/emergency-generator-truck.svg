@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="68" viewBox="0 0 120 68">
+  <rect x="4" y="5" width="68" height="52" rx="4" fill="#7DA55D"/>
+  <rect x="8" y="9" width="60" height="43" rx="3" fill="#A6C985"/>
+  <rect x="19" y="14" width="36" height="30" rx="3" fill="#5E8743"/>
+  <path d="M 39 17 L 28 32 L 35 32 L 31 41 L 46 25 L 39 25 L 43 17 Z" fill="#E1ECCC"/>
+  <path d="M 72 16 L 92 16 C 96 16 98 19 100 23 L 109 36 L 117 40 L 117 57 L 72 57 Z" fill="#7DA55D"/>
+  <path d="M 78 21 L 91 21 C 93 21 94 22 96 25 L 102 36 L 78 36 Z" fill="#5E8743"/>
+  <rect x="78" y="40" width="8" height="3" rx="1" fill="#5E8743"/>
+  <rect x="108" y="42" width="7" height="6" rx="1" fill="#A6C985"/>
+  <rect x="4" y="51" width="114" height="8" rx="2" fill="#7DA55D"/>
+  <circle cx="25" cy="56" r="11" fill="#5E8743"/>
+  <circle cx="25" cy="56" r="5.4" fill="#A6C985"/>
+  <circle cx="25" cy="56" r="2.5" fill="#7DA55D"/>
+  <circle cx="96" cy="56" r="11" fill="#5E8743"/>
+  <circle cx="96" cy="56" r="5.4" fill="#A6C985"/>
+  <circle cx="96" cy="56" r="2.5" fill="#7DA55D"/>
+</svg>
