@@ -27,7 +27,7 @@ async function createWindow(){
   const dev=!!process.env.MK_DEV_URL;
   const area=screen.getPrimaryDisplay().workAreaSize;
   const minWidth=Math.min(960,area.width),minHeight=Math.min(640,area.height);
-  mainWindow=new BrowserWindow({width:Math.max(minWidth,Math.min(1400,area.width-48)),height:Math.max(minHeight,Math.min(920,area.height-48)),minWidth,minHeight,title:'MK Figure',backgroundColor:'#f7f5f0',icon:path.join(resources(),'icon.png'),webPreferences:{preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true}});
+  mainWindow=new BrowserWindow({width:Math.max(minWidth,Math.min(1400,area.width-48)),height:Math.max(minHeight,Math.min(920,area.height-48)),minWidth,minHeight,title:'MK Figure',backgroundColor:'#faf9f5',icon:path.join(resources(),'icon.png'),webPreferences:{preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true}});
   mainWindow.setMenuBarVisibility(false);
   mainWindow.webContents.setWindowOpenHandler(()=>({action:'deny'}));
   const entryUrl=pathToFileURL(path.join(__dirname,'../renderer/index.html')).href;

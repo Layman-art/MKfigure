@@ -30,6 +30,6 @@ export default function ImageRevision({ mode, useOriginal, instruction, onMode, 
         value={instruction} onChange={event => onInstruction(event.target.value)}/>
     </Field>
     <p className="image-revision-hint">{mode === 'feedback' ? 'AI 先整理意见，再修改当前图。' : useOriginal ? '当前图＋你的提示词，直接改图。' : '仅使用新提示词，不发送当前图。'}不附加旧风格参考。</p>
-    <Button variant="primary" icon={WandSparkles} disabled={!instruction.trim()} onClick={() => onRun(action, instruction.trim())}>{label}</Button>
+    <Button variant="accent" icon={WandSparkles} disabled={!instruction.trim()} onClick={() => onRun(action, instruction.trim())}>{label}</Button>
   </section>;
 }
