@@ -33,7 +33,7 @@
   <br><sub>一个工作台，六张独立画布。截图为 0.6.0 参考素材载入演示。</sub>
 </p>
 
-> 本页展示 **main 分支的 0.6.0 功能**；当前公开安装包为 **v0.4.1**。六窗创作、统一风格与文件夹工作区等新功能目前需[从源码运行](#本地开发)。
+> **Windows 最新版：v0.6.2**，包含六窗创作、统一风格和文件夹工作区，沿用原来的浅色界面。[下载安装包](https://github.com/Layman-art/MKfigure/releases/tag/v0.6.2) · [更新与验证记录](docs/release-0.6.2.md)。macOS 安装包仍为 v0.4.1，尚未同步这些新功能。
 
 ## 为什么用 MK Figure？
 
@@ -70,6 +70,7 @@
 ### ▤ 资料和过程留在作品里
 
 - 文件夹侧栏保存并继续创作；素材库统一管理参考图与个人图标。
+- 可记住多个文件夹，重启恢复上次活动目录；“从侧栏移除”只移除入口，本地文件保留，重新打开即可继续。
 - 内置 3 张参考图与 10 个 SVG 图标，可导入自己的素材。
 - 展示任务耗时、模型、推理强度及模型回传的 Token 用量；Token 不是账户余额或费用。
 
@@ -102,17 +103,18 @@
 
 ## 快速开始
 
-1. 在 [GitHub Releases](https://github.com/Layman-art/MKfigure/releases/latest) 下载对应平台的安装包。Windows 运行安装程序；macOS 解压 ZIP 后将应用拖入“应用程序”。
+1. Windows 下载 [v0.6.2 安装包](https://github.com/Layman-art/MKfigure/releases/tag/v0.6.2) 并运行安装程序；macOS 暂用 [v0.4.1](https://github.com/Layman-art/MKfigure/releases/tag/v0.4.1)，解压 ZIP 后将应用拖入“应用程序”。
 2. 打开 **模型与连接**，登录 Codex 或检测已有登录，选择账户支持的模型与推理强度。
-3. 输入主题、粘贴资料或上传已有图片，选择参考风格；无需先让 AI 改写提示词。
+3. 点击“打开文件夹”选择创作目录，再输入主题、粘贴资料或上传已有图片，选择参考风格；无需先让 AI 改写提示词。
 4. 生成或复刻后核对文字、公式和箭头，按需精修，再导出需要的格式。
 
 | 使用方式 | 入口 |
 | --- | --- |
-| Windows x64 / macOS 13+（Apple Silicon、Intel） | [发行版与安装包](https://github.com/Layman-art/MKfigure/releases/latest) · [v0.4.1 安装指南](安装与使用.md) |
+| Windows x64 | [v0.6.2 安装包](https://github.com/Layman-art/MKfigure/releases/tag/v0.6.2) · [用户指南](docs/user-guide.md) |
+| macOS 13+（Apple Silicon、Intel） | [v0.4.1 历史安装包](https://github.com/Layman-art/MKfigure/releases/tag/v0.4.1) · [v0.4.1 安装指南](安装与使用.md) |
 | 在 Codex 对话中使用流程 | [mk-figure-skill](mk-figure-skill/)：将目录安装到本机 Codex skills 目录，已有同名版本先备份。 |
 | 单独使用矢量素材 | [10 个 SVG 图标](icon-pack/) |
-| 使用 main 分支的新功能 | [本地开发](#本地开发) · [0.6.0 工作区指南](docs/workspaces-0.6.0.md) |
+| 从源码运行 | [本地开发](#本地开发) · [工作区使用指南](docs/user-guide.md#管理作品) |
 
 安装包包含运行时，不要求用户另装 Node.js、Python 或 PowerPoint；在 PowerPoint 中编辑 PPTX 时需安装相应软件。当前只接入 Codex，生图能力与可选模型以账户实际支持为准。
 

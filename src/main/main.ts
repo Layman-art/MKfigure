@@ -147,7 +147,7 @@ app.whenReady().then(async()=>{
   store=new Store(app.getPath('userData'),resources());await store.init();folders=new FolderWorkspace(store);await folders.init();await fs.mkdir(path.join(store.directory,'codex-work'),{recursive:true});await resetHub();
   library=new ImageLibrary(path.join(store.directory,'library'),resources());await library.init();
   workflow=new Workflow(store,()=>hub,event=>{const paneId=registry.owner(event.projectId);if(paneId!==undefined&&mainWindow&&!mainWindow.isDestroyed())mainWindow.webContents.send('mk:progress',{paneId,event});},p=>folders.effectiveProject(p));
-  handler('bootstrap',async(paneId:number)=>{rendererReady?.resolve();return {settings:store.publicSettings(),projects:await store.list(),references:await store.references(),version:app.getVersion(),platform:process.platform,workspace:registry.info(paneId),...await folders.state()};});
+  handler('bootstrap',async(paneId:number)=>{rendererReady?.resolve();return {settings:store.publicSettings(),projects:folders.isSelected?await store.list():[],references:await store.references(),version:app.getVersion(),platform:process.platform,workspace:registry.info(paneId),...await folders.state()};});
   handler('getFolder',()=>folders.state());
   const switchFolder=async(recentPath?:string,local=false)=>{
     if(runTasks.size||styleTasks.size||[...projectOperations.values()].some(Boolean)||navigating.size)throw new Error('请等待当前任务完成或停止后，再切换文件夹');
@@ -166,6 +166,17 @@ app.whenReady().then(async()=>{
   };
   handler('openFolder',(_paneId:number,recentPath?:string)=>switchFolder(recentPath));
   handler('closeFolder',()=>switchFolder(undefined,true));
+  handler('removeFolder',async(_paneId:number,directory:string)=>{
+    const active=folders.isSelected&&folders.directory===directory;
+    if(active&&(runTasks.size||styleTasks.size||[...projectOperations.values()].some(Boolean)||navigating.size))throw new Error('请等待当前任务完成或停止后，再移除当前文件夹');
+    folderChanging=true;
+    try {
+      if(active)await Promise.allSettled([...inFlight.values()].flatMap(tasks=>[...tasks]));
+      const state=await folders.remove(directory);
+      if(active)registry.ids().forEach(id=>registry.release(id));
+      folderChanged();return state;
+    } finally { folderChanging=false; }
+  });
   handler('saveSharedStyle',async(_paneId:number,style:SharedStyle)=>{const result=await folders.saveStyle(style);folderChanged();return result;});
   handler('setSharedReference',async(_paneId:number,libraryId?:string)=>{const image=libraryId?await library.referenceImage(libraryId):undefined;const result=await folders.setReference(image?{name:image.name,data:Buffer.from(image.dataUrl.split(',')[1],'base64')}:undefined);folderChanged();return result;});
   handler('optimizeStyle',async(paneId:number,input:string,instruction:string='',history:StyleMessage[]=[])=>{
@@ -180,7 +191,7 @@ app.whenReady().then(async()=>{
   });
   handler('cancelStyle',(paneId:number)=>styleTasks.get(paneId)?.abort());
   handler('getModelCatalog',(_paneId:number,force?:boolean)=>catalog.read(force===true));
-  handler('createProject',async(paneId:number,name:string,route:'full'|'reconstruct')=>{if(!['full','reconstruct'].includes(route))throw new Error('未知项目入口');const previous=registry.project(paneId);if(previous&&(workflow.isRunning(previous)||(projectOperations.get(paneId)||0)>0))throw new Error('当前作品正在处理，请完成或停止后再新建');let project=await store.create(name,route);project=await store.mutate(project.id,p=>{p.styleMode='shared';});claimProject(paneId,project.id);folderChanged();return store.hydrate(project);});
+  handler('createProject',async(paneId:number,name:string,route:'full'|'reconstruct')=>{folders.assertSelected();if(!['full','reconstruct'].includes(route))throw new Error('未知项目入口');const previous=registry.project(paneId);if(previous&&(workflow.isRunning(previous)||(projectOperations.get(paneId)||0)>0))throw new Error('当前作品正在处理，请完成或停止后再新建');let project=await store.create(name,route);project=await store.mutate(project.id,p=>{p.styleMode='shared';});claimProject(paneId,project.id);folderChanged();return store.hydrate(project);});
   handler('openProject',async(paneId:number,id:string)=>{const project=await store.load(safeId(id));claimProject(paneId,id);return store.hydrate(project);});
   handler('listLibrary',(_paneId:number)=>library.list());
   handler('importLibraryFiles',async(_paneId:number,category:LibraryCategory)=>{

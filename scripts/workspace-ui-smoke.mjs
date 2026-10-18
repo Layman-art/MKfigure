@@ -10,13 +10,18 @@ const output = path.join(root, 'output', 'workspace', version, process.env.MK_PA
 await fs.mkdir(output, { recursive: true });
 const data = path.join(root, '.runtime', 'workspace-ui', String(Date.now()));
 const folderPath = path.join(data, 'My Research');
+const initialFolder = path.join(data, 'Initial Research');
 await fs.mkdir(folderPath, { recursive: true });
+await fs.mkdir(initialFolder, { recursive: true });
 const env = { ...process.env, MK_FIGURE_DATA_DIR: data }; delete env.ELECTRON_RUN_AS_NODE;
 const client = await electron.launch({ executablePath: process.env.MK_PACKAGED_EXE || electronPath, args: process.env.MK_PACKAGED_EXE ? [] : [root], cwd: root, env, timeout: 60000 });
 const errors = [];
 try {
   const page = await client.firstWindow(); page.setDefaultTimeout(20000);
   page.on('pageerror', error => errors.push(error.message));
+  await page.locator('.workspace-empty').waitFor();
+  await client.evaluate(({ dialog }, folder) => { dialog.showOpenDialog = async () => ({ canceled: false, filePaths: [folder] }); }, initialFolder);
+  await page.getByRole('button', { name: '打开创作文件夹', exact: true }).click();
   await page.locator('.studio-home').waitFor();
   await page.waitForFunction(() => document.querySelector('.active-folder strong')?.textContent !== '正在载入');
   await client.evaluate(({ BrowserWindow }) => { const win = BrowserWindow.getAllWindows()[0]; win.webContents.setBackgroundThrottling(false); win.setContentSize(1440, 900); });
@@ -61,7 +66,7 @@ try {
   await client.evaluate(({ dialog }) => { dialog.showOpenDialog = async () => ({ canceled: true, filePaths: [] }); });
   await page.getByRole('button', { name: '打开文件夹', exact: true }).click();
   await page.locator('.studio-switching').waitFor({ state: 'hidden' });
-  const localProjects = await Promise.all((await fs.readdir(path.join(data, 'projects'))).map(async id => JSON.parse(await fs.readFile(path.join(data, 'projects', id, 'project.json'), 'utf8'))));
+  const localProjects = await Promise.all((await fs.readdir(path.join(initialFolder, '.mkfigure', 'projects'))).map(async id => JSON.parse(await fs.readFile(path.join(initialFolder, '.mkfigure', 'projects', id, 'project.json'), 'utf8'))));
   await page.evaluate(async projects => {
     for (const project of projects) {
       const index = Number(project.brief.topic.match(/科研图 (\d+)/)[1]) - 1;
@@ -118,7 +123,7 @@ try {
   await deletion.focus(); await deletion.click();
   await page.waitForFunction(() => document.querySelectorAll('.folder-project-row').length === 0);
   await page.locator('.studio-navigation').getByRole('button', { name: '首页', exact: true }).click();
-  await page.getByRole('button', { name: '返回本地作品', exact: true }).click();
+  await page.getByRole('button', { name: '打开文件夹 Initial Research', exact: true }).click();
   await page.waitForFunction(() => document.querySelectorAll('.folder-project-row').length === 6);
   const manifest = JSON.parse(await fs.readFile(path.join(folderPath, '.mkfigure', 'workspace.json'), 'utf8'));
   assert.ok(manifest);

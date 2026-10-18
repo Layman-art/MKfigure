@@ -31,6 +31,9 @@ const errors=[],projects=[];
 const until=async(fn,label)=>{for(let i=0;i<160;i++){if(await fn())return;await new Promise(r=>setTimeout(r,50));}throw new Error('Timed out: '+label);};
 try{
  const page=await client.firstWindow();page.setDefaultTimeout(15000);page.on('pageerror',e=>errors.push(e.message));
+ await page.locator('.workspace-empty').waitFor();
+ // Explicit legacy selection keeps this IPC/concurrency fixture's original storage paths.
+ await page.evaluate(()=>window.mkFigure.closeFolder());
  await page.locator('.studio-route').filter({hasText:'单图创作'}).click();
  await until(()=>page.evaluate(async()=> (await window.mkFigure.bootstrap()).projects.length===1),'first single project created');
  await page.locator('.studio-navigation').getByRole('button',{name:'单图创作',exact:true}).click();

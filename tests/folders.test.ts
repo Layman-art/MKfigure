@@ -8,15 +8,98 @@ import { Store } from '../src/main/storage';
 vi.mock('electron', () => ({ safeStorage: {}, nativeImage: {} }));
 const roots: string[] = [];
 afterEach(async () => { for (const root of roots.splice(0)) await fs.rm(root, { recursive: true, force: true }); });
-async function setup() {
+async function setup(selectLocal=true) {
   const root = await fs.mkdtemp(path.join(tmpdir(), 'mk-folders-')); roots.push(root);
   const store = new Store(path.join(root, 'local'), root); await store.init();
   const workspace = new FolderWorkspace(store); await workspace.init();
+  if(selectLocal)await workspace.open();
   const folder = path.join(root, 'paper'); await fs.mkdir(folder);
   return { root, store, workspace, folder };
 }
 
 describe('folder creation workspace', () => {
+  it('starts without a selection and does not allow implicit local style writes', async () => {
+    const { workspace,store }=await setup(false);
+    await store.create('旧本地作品','full');
+    expect(await workspace.state()).toMatchObject({selected:false,localProjectCount:1,folder:{projects:[]}});
+    expect(()=>workspace.assertSelected()).toThrow('请先打开');
+    await expect(workspace.saveStyle({...EMPTY_STYLE,prompt:'blocked'})).rejects.toThrow('请先打开');
+    await expect(workspace.setReference()).rejects.toThrow('请先打开');
+  });
+
+  it('restores the selected directory and retains all sidebar entries across restarts', async () => {
+    const { root,store,workspace,folder }=await setup(false);
+    await workspace.open(folder);
+    for(let i=0;i<13;i++){const dir=path.join(root,`folder-${i}`);await fs.mkdir(dir);await workspace.open(dir);}
+    await workspace.open(folder);
+    const project=await store.create('当前作品','full');
+    const nextStore=new Store(store.directory,root);await nextStore.init();
+    const next=new FolderWorkspace(nextStore);await next.init();
+    expect(await next.state()).toMatchObject({selected:true,folder:{path:await fs.realpath(folder),projects:[{id:project.id}]}});
+    expect((await next.state()).recentFolders).toHaveLength(14);
+  });
+
+  it('removes only entries and reopens preserved projects, styles, and references', async () => {
+    const { root,store,workspace,folder }=await setup(false);
+    const other=path.join(root,'other');await fs.mkdir(other);await workspace.open(other);
+    await store.create('另一个作品','full');
+    await workspace.open(folder);await workspace.saveStyle({...EMPTY_STYLE,prompt:'保留风格'});
+    await workspace.setReference({name:'参考图',data:Buffer.from('reference')});
+    const project=await store.create('保留作品','full');
+    const snapshot=async(dir:string):Promise<Record<string,string>>=>{
+      const result:Record<string,string>={};
+      for(const entry of await fs.readdir(dir,{withFileTypes:true})){
+        const full=path.join(dir,entry.name);
+        if(entry.isDirectory())for(const [name,data] of Object.entries(await snapshot(full)))result[path.join(entry.name,name)]=data;
+        else result[entry.name]=(await fs.readFile(full)).toString('base64');
+      }return result;
+    };
+    const before=await snapshot(folder),otherBefore=await snapshot(other);
+    const active=await workspace.state();
+    expect((await workspace.remove(await fs.realpath(other))).folder).toEqual(active.folder);
+    expect(await snapshot(other)).toEqual(otherBefore);
+    expect(await workspace.remove(await fs.realpath(folder))).toMatchObject({selected:false,recentFolders:[],folder:{projects:[]}});
+    expect(await snapshot(folder)).toEqual(before);
+    const restarted=new FolderWorkspace(new Store(store.directory,root));await restarted.init();
+    expect((await restarted.state()).selected).toBe(false);
+    const reopened=await workspace.open(folder);
+    expect(reopened.folder.style).toMatchObject({prompt:'保留风格',reference:{name:'参考图'}});
+    expect(reopened.folder.projects.map(p=>p.id)).toEqual([project.id]);
+    expect(await snapshot(folder)).toEqual(before);
+  });
+
+  it('loads legacy recent arrays without selecting local works and migrates on selection', async () => {
+    const { root,store,folder }=await setup(false);
+    await fs.writeFile(path.join(store.directory,'recent-folders.json'),JSON.stringify([{path:folder,name:'论文'}]));
+    const next=new FolderWorkspace(new Store(store.directory,root));await next.init();
+    expect(await next.state()).toMatchObject({selected:false,recentFolders:[{path:folder,name:'论文'}]});
+    await next.open(folder);
+    expect(JSON.parse(await fs.readFile(path.join(store.directory,'recent-folders.json'),'utf8'))).toMatchObject({version:1,selected:true,activePath:await fs.realpath(folder)});
+  });
+
+  it('keeps unavailable directory entries on startup and allows their removal', async () => {
+    const { root,store,workspace,folder }=await setup(false);
+    await workspace.open(folder);const real=await fs.realpath(folder);
+    await fs.rename(folder,path.join(root,'moved'));
+    const next=new FolderWorkspace(new Store(store.directory,root));await next.init();
+    expect(await next.state()).toMatchObject({selected:false,recentFolders:[{path:real}]});
+    await expect(next.open(real)).rejects.toThrow();
+    expect((await next.state()).selected).toBe(false);
+    expect((await next.remove(real)).recentFolders).toEqual([]);
+    expect(await fs.stat(path.join(root,'moved','.mkfigure','workspace.json'))).toBeTruthy();
+  });
+
+  it('keeps active state and sidebar entries if atomic configuration replacement fails', async () => {
+    const { root,store,workspace,folder }=await setup(false);
+    await workspace.open(folder);const before=await workspace.state();
+    const config=path.join(store.directory,'recent-folders.json');await fs.rename(config,config+'.backup');await fs.mkdir(config);
+    await expect(workspace.remove(await fs.realpath(folder))).rejects.toThrow();
+    expect(await workspace.state()).toEqual(before);
+    const other=path.join(root,'other');await fs.mkdir(other);
+    await expect(workspace.open(other)).rejects.toThrow();
+    expect(await workspace.state()).toEqual(before);
+  });
+
   it('preserves existing local creations and keeps external workspace projects separate', async () => {
     const { store, workspace, folder } = await setup();
     const legacy = await store.create('已有作品', 'full');

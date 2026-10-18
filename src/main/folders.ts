@@ -32,11 +32,22 @@ export class FolderWorkspace {
   private document!:FolderDocument;
   private metaRoot:string;
   private recent:RecentFolder[]=[];
+  private selected=false;
   private writes:Promise<unknown>=Promise.resolve();
   constructor(private readonly store:Store) { this.metaRoot=store.directory; }
   async init() {
-    try { const saved=JSON.parse(await fs.readFile(path.join(this.store.directory,'recent-folders.json'),'utf8')); this.recent=Array.isArray(saved)?saved.filter(item=>item&&typeof item.path==='string'&&path.isAbsolute(item.path)).slice(0,12).map(item=>({path:item.path,name:text(item.name,160)||path.basename(item.path)})):[]; } catch { /* first launch */ }
+    let activePath:unknown,selected=false;
+    try {
+      const saved=JSON.parse(await fs.readFile(path.join(this.store.directory,'recent-folders.json'),'utf8'));
+      const entries=Array.isArray(saved)?saved:saved.recentFolders;
+      this.recent=Array.isArray(entries)?entries.filter(item=>item&&typeof item.path==='string'&&path.isAbsolute(item.path)).map(item=>({path:item.path,name:text(item.name,160)||path.basename(item.path)})).filter((item,index,all)=>all.findIndex(other=>other.path===item.path)===index):[];
+      selected=!Array.isArray(saved)&&saved.selected===true;activePath=saved.activePath;
+    } catch { /* first launch or unreadable preferences */ }
     this.document=await this.readDocument(this.store.directory,true);
+    if(selected)try {
+      if(activePath===null) this.selected=true;
+      else if(typeof activePath==='string'&&this.isRecent(activePath)) await this.open(activePath,true);
+    } catch { /* Keep unavailable entries so users can reopen or remove them. */ }
   }
   private async readDocument(root:string,create:boolean):Promise<FolderDocument> {
     const file=path.join(root,'workspace.json');
@@ -56,11 +67,17 @@ export class FolderWorkspace {
     }
   }
   async state():Promise<FolderState> {
-    return {folder:{id:this.document.id,name:this.currentPath?path.basename(this.currentPath):'本地作品',path:this.currentPath,style:structuredClone(this.document.style),projects:await this.store.list()},recentFolders:structuredClone(this.recent)};
+    const localStore=new Store(this.store.directory,this.store.resources);
+    return {selected:this.selected,localProjectCount:(await localStore.list()).length,folder:{id:this.document.id,name:this.currentPath?path.basename(this.currentPath):'本地作品',path:this.currentPath,style:structuredClone(this.document.style),projects:this.selected?await this.store.list():[]},recentFolders:structuredClone(this.recent)};
+  }
+  assertSelected() { if(!this.selected)throw new Error('请先打开创作文件夹'); }
+  get isSelected() { return this.selected; }
+  private saveEntries(recent:RecentFolder[],selected:boolean,activePath?:string) {
+    return atomicJson(path.join(this.store.directory,'recent-folders.json'),{version:1,recentFolders:recent,selected,activePath:activePath??null});
   }
   isRecent(directory:string) { return this.recent.some(item=>item.path===directory); }
   get directory() { return this.currentPath; }
-  async open(directory?:string) {
+  async open(directory?:string,restore=false) {
     // A failed save must not prevent moving to a healthy workspace.
     await this.writes.catch(()=>undefined);
     const real=directory?await fs.realpath(directory):undefined;
@@ -69,24 +86,35 @@ export class FolderWorkspace {
     if(real) {
       const existing=await fs.lstat(metaRoot).catch((error:NodeJS.ErrnoException)=>{if(error.code!=='ENOENT')throw error;return undefined;});
       if(existing) { await normalDirectory(metaRoot);if(!(await fs.readdir(metaRoot)).includes('workspace.json')&&(await fs.readdir(metaRoot)).length)throw new Error('此文件夹已有其他 .mkfigure 数据，未做修改'); }
-      else await fs.mkdir(metaRoot);
+      else if(!restore)await fs.mkdir(metaRoot);
     }
-    const document=await this.readDocument(metaRoot,true);
-    const projects=path.join(metaRoot,'projects');await fs.mkdir(projects,{recursive:true});await normalDirectory(projects);
-    if(real) {
-      const next=[{path:real,name:path.basename(real)},...this.recent.filter(item=>item.path!==real)].slice(0,12);
-      await atomicJson(path.join(this.store.directory,'recent-folders.json'),next);this.recent=next;
-    }
-    this.currentPath=real;this.metaRoot=metaRoot;this.document=document;this.store.setProjectsDirectory(projects);
+    const document=await this.readDocument(metaRoot,!restore);
+    const projects=path.join(metaRoot,'projects');if(!restore)await fs.mkdir(projects,{recursive:true});await normalDirectory(projects);
+    const next=real&&!this.isRecent(real)?[...this.recent,{path:real,name:path.basename(real)}]:this.recent;
+    if(!restore)await this.saveEntries(next,true,real);
+    this.recent=next;this.selected=true;this.currentPath=real;this.metaRoot=metaRoot;this.document=document;this.store.setProjectsDirectory(projects);
+    return this.state();
+  }
+  async remove(directory:string) {
+    await this.writes.catch(()=>undefined);
+    if(!this.isRecent(directory))throw new Error('文件夹不在侧栏中');
+    const active=this.selected&&this.currentPath===directory;
+    const next=this.recent.filter(item=>item.path!==directory);
+    const localDocument=active?await this.readDocument(this.store.directory,false):undefined;
+    await this.saveEntries(next,active?false:this.selected,active?undefined:this.currentPath);
+    this.recent=next;
+    if(active){this.selected=false;this.currentPath=undefined;this.metaRoot=this.store.directory;this.document=localDocument!;this.store.setProjectsDirectory(path.join(this.store.directory,'projects'));}
     return this.state();
   }
   async saveStyle(input:SharedStyle) {
+    this.assertSelected();
     const task=this.writes.catch(()=>undefined).then(async()=>{
       const style={...cleanStyle(input),reference:this.document.style.reference,updatedAt:new Date().toISOString()};
       const next={...this.document,style};await atomicJson(path.join(this.metaRoot,'workspace.json'),next);this.document=next;return structuredClone(style);
     });this.writes=task;return task;
   }
   async setReference(reference?:{name:string;data:Buffer}) {
+    this.assertSelected();
     const task=this.writes.catch(()=>undefined).then(async()=>{
       let ref:SharedStyle['reference'];
       if(reference){const file=`style-${randomUUID()}.png`;await fs.writeFile(path.join(this.metaRoot,file),reference.data,{flag:'wx'});ref={name:text(reference.name,160),file};}

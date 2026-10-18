@@ -26,9 +26,6 @@
 .folder-project-row > button:first-child { flex:1; min-width:0; }
 .folder-projects .folder-project-delete { width:24px; padding:7px 4px; opacity:0; }
 .folder-project-row:hover .folder-project-delete,.folder-project-delete:focus-visible { opacity:1; }
-.recent-folders { font-size:11px; color:var(--muted); padding:9px 10px; max-height:150px; overflow:auto; }
-.recent-folders summary { cursor:pointer; }
-.recent-folders button { display:flex; align-items:center; gap:6px; width:100%; border:0; background:transparent; color:inherit; padding:8px 0; text-align:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .return-local { display:flex; gap:7px; align-items:center; background:none; border:0; font-size:11px; color:var(--muted); margin:8px 10px; }
 .studio-sidebar-footer { display:grid; border-top:1px solid var(--line); padding-top:10px; }
 .studio-sidebar-footer > span { display:flex; gap:5px; align-items:center; padding:10px 12px 0; color:var(--muted); font-size:10px; }
@@ -94,3 +91,28 @@
 @media(max-width:1100px) { .studio-sidebar { width:180px; padding-inline:9px; } .studio-main .creation-grid { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(3,minmax(320px,1fr)); } .studio-main .workspace-task small { display:none; } .studio-home { padding-inline:28px; } }
 @media(max-width:760px) { .studio-sidebar { width:155px; } .studio-brand strong { font-size:19px; } .studio-brand { gap:6px; padding-left:4px; } .studio-header { padding-inline:10px; } .studio-header .workspace-running { display:none; } .studio-routes { grid-template-columns:1fr; } .studio-main .creation-grid { grid-template-columns:1fr; grid-template-rows:none; grid-auto-rows:minmax(330px,1fr); } }
 @media(max-width:1100px) { .studio-main .creation-expanded .work-columns { display:block; overflow:auto; } .studio-main .creation-expanded .form-panel { overflow:visible; } .studio-main .creation-expanded .preview-panel { min-height:350px; overflow:visible; } }
+
+/* Folder workspace entries use the existing light theme. */
+.workspace-folder-list { flex:1; min-height:0; overflow:auto; }
+.workspace-folder { margin-bottom:7px; }
+.workspace-folder-heading { display:flex; align-items:center; gap:2px; border-radius:7px; }
+.workspace-folder.is-active > .workspace-folder-heading { background:var(--accent-soft); }
+.workspace-folder-heading > button { display:flex; align-items:center; gap:8px; border:0; background:none; color:var(--ink-soft); padding:10px 8px; text-align:left; font-size:12px; border-radius:7px; }
+.workspace-folder-heading > button:first-child { flex:1; min-width:0; }
+.workspace-folder-heading strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:500; }
+.workspace-folder-heading svg { flex-shrink:0; }
+.workspace-folder-heading > .active-folder { color:var(--accent-deep); }
+.workspace-folder-heading > button:hover { background:var(--bg-muted); color:var(--ink); }
+.workspace-folder-heading > .workspace-folder-remove { padding:7px 5px; color:var(--muted); }
+.workspace-folder-heading > .workspace-folder-remove:hover { color:var(--accent-deep); }
+.workspace-folder-list .folder-projects { flex:initial; overflow:visible; min-height:0; margin:3px 0 8px 9px; border-left:1px solid var(--line); }
+.workspace-folder-hint { margin:8px 12px; font-size:11px; line-height:1.8; color:var(--muted); }
+.legacy-workspace { border-top:1px solid var(--line); margin-top:12px; padding-top:5px; }
+.studio-sidebar button:disabled,.studio-header button:disabled { opacity:.45; }
+.workspace-empty { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:36px 20px; overflow:auto; }
+.workspace-empty > svg { color:var(--accent); margin-bottom:20px; }
+.workspace-empty h1 { font:400 30px/1.5 var(--font-serif); margin:0 0 12px; }
+.workspace-empty p { font-size:14px; color:var(--muted); line-height:1.8; margin:0 0 26px; }
+.workspace-empty > button { display:flex; align-items:center; gap:9px; border:1px solid var(--accent); border-radius:8px; background:var(--accent); color:#fff; padding:12px 20px; font-size:13px; }
+.workspace-empty > button:hover { background:var(--accent-deep); }
+.workspace-empty small { margin-top:18px; color:var(--muted); font-size:12px; line-height:1.8; }

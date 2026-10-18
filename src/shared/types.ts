@@ -7,7 +7,7 @@ export interface StyleMessage { role: 'user' | 'assistant'; text: string; }
 export interface SharedStyle { prompt: string; palette: string; background: string; lines: string; reference?: { name: string; file: string }; updatedAt?: string; history?: StyleMessage[]; }
 export interface FolderInfo { id: string; name: string; path?: string; style: SharedStyle; projects: ProjectSummary[]; }
 export interface RecentFolder { path: string; name: string; }
-export interface FolderState { folder: FolderInfo; recentFolders: RecentFolder[]; }
+export interface FolderState { folder: FolderInfo; recentFolders: RecentFolder[]; selected: boolean; localProjectCount: number; }
 export interface StyleSuggestion { text: string; usage?: TokenUsage; model: string; durationMs: number; }
 export interface ProviderConfig { id: ProviderId; enabled: boolean; baseUrl: string; model: string; vision: boolean; hasKey?: boolean; codexPath?: string; }
 export interface AppSettings { activeProvider: ProviderId; providers: ProviderConfig[]; imageProvider: 'codex' | 'openai' | 'custom'; imageModel: string; reasoningEffort: string; }
@@ -42,6 +42,7 @@ export interface WorkspaceApi {
   getFolder(): Promise<FolderState>;
   openFolder(recentPath?: string): Promise<FolderState>;
   closeFolder(): Promise<FolderState>;
+  removeFolder(path: string): Promise<FolderState>;
   saveSharedStyle(style: SharedStyle): Promise<SharedStyle>;
   setSharedReference(libraryId?: string): Promise<SharedStyle>;
   optimizeStyle(text: string, instruction?: string, history?: StyleMessage[]): Promise<StyleSuggestion>;
