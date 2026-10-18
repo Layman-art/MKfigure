@@ -89,10 +89,12 @@ export default function WorkspaceShell() {
   };
   const single = async () => {
     if (!selected || switchingRef.current || (mode === 'single' && expanded !== null)) return;
-    const index = states.findIndex(state => !state.projectId);
-    const paneIndex = index < 0 ? 0 : index;
-    setMode('single'); setExpanded(paneIndex);
-    if (index >= 0) await actions.current[paneIndex]?.create('full');
+    const draftIndex = states.findIndex(state => state.draft && !state.running);
+    const emptyIndex = states.findIndex(state => !state.projectId);
+    const index = draftIndex >= 0 ? draftIndex : emptyIndex >= 0 ? emptyIndex : states.findIndex(state => !state.running);
+    if (index < 0) { setError('六张图都在运行，请等待其中一张完成后开始新创作。'); return; }
+    setMode('single'); setExpanded(index);
+    if (draftIndex < 0) await actions.current[index]?.create('full');
   };
   const openProject = async (id: string) => {
     let index = states.findIndex(state => state.projectId === id);

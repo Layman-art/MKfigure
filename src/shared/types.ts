@@ -30,7 +30,7 @@ export interface QaReport { structuralPassed: boolean; visualReview: 'pending' |
 export interface HistoryEntry { at: string; action: string; message: string; }
 export interface TokenUsage { inputTokens?: number; cachedInputTokens?: number; outputTokens?: number; reasoningOutputTokens?: number; totalTokens?: number; }
 export interface RunMetrics { id: string; action: RunAction; startedAt: string; finishedAt?: string; durationMs: number; status: 'running' | 'completed' | 'failed' | 'cancelled'; model?: string; reasoningEffort?: string; usage?: TokenUsage; usageComplete?: boolean; styleSnapshot?: { mode: string; prompt: string; reference?: Asset }; }
-export interface Project { id: string; name: string; createdAt: string; updatedAt: string; stage: Stage; brief: Brief; sources: Asset[]; styleId?: string; customReference?: Asset; libraryReferenceId?: string; target?: Asset; generated: Asset[]; scene?: FigureScene; previewSvg?: string; previewPng?: string; qa?: QaReport; history: HistoryEntry[]; runs?: RunMetrics[]; styleMode?: 'shared' | 'custom' | 'none'; styleHistory?: StyleMessage[]; }
+export interface Project { draftSlot?: number; id: string; name: string; createdAt: string; updatedAt: string; stage: Stage; brief: Brief; sources: Asset[]; styleId?: string; customReference?: Asset; libraryReferenceId?: string; target?: Asset; generated: Asset[]; scene?: FigureScene; previewSvg?: string; previewPng?: string; qa?: QaReport; history: HistoryEntry[]; runs?: RunMetrics[]; styleMode?: 'shared' | 'custom' | 'none'; styleHistory?: StyleMessage[]; }
 export interface ProjectSummary { id: string; name: string; updatedAt: string; stage: Stage; }
 export interface ProviderStatus { available: boolean; authenticated: boolean; label: string; detail?: string; loginUrl?: string; runtimeVersion?: string; }
 export interface ProgressEvent { projectId: string; action: string; message: string; fraction?: number; metrics?: RunMetrics; }
@@ -51,6 +51,7 @@ export interface WorkspaceApi {
   getModelCatalog(force?: boolean): Promise<ModelCatalogState>;
   releaseProject(projectId: string): Promise<void>;
   onSettingsChanged(callback: (settings: AppSettings) => void): () => void;
+  createDraft(route: 'full' | 'reconstruct'): Promise<Project>;
   createProject(name: string, route: 'full' | 'reconstruct'): Promise<Project>;
   deleteProject(projectId: string): Promise<{ deleted: boolean; projects: ProjectSummary[] }>;
   listLibrary(): Promise<LibraryItem[]>;

@@ -61,7 +61,8 @@ try {
   assert.equal(noFolder, true);
   await screenshot('01-open-folder');
   await open(folderA);
-  await page.locator('.studio-navigation').getByRole('button', { name: '单图创作', exact: true }).click();
+  await page.evaluate(async () => { const p = await window.mkFigure.createProject('神经 ODE 方法图', 'full'); await window.mkFigure.releaseProject(p.id); });
+  await page.locator('.folder-project-row > button').first().click();
   await page.getByRole('button', { name: '重命名', exact: true }).click();
   await page.getByRole('textbox', { name: '项目名称', exact: true }).fill('神经 ODE 方法图');
   await page.getByRole('textbox', { name: '项目名称', exact: true }).press('Enter');

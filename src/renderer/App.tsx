@@ -34,7 +34,7 @@ function SparkMark() {
   return <svg className="spark-mark" width="30" height="30" viewBox="0 0 30 30" aria-hidden="true" focusable="false"><g stroke="currentColor" strokeWidth="2.6" strokeLinecap="round"><path d="M15 3.5V11"/><path d="M15 19v7.5"/><path d="M3.5 15H11"/><path d="M19 15h7.5"/><path d="M6.9 6.9l5.2 5.2"/><path d="M17.9 17.9l5.2 5.2"/><path d="M23.1 6.9l-5.2 5.2"/><path d="M12.1 17.9l-5.2 5.2"/></g></svg>;
 }
 
-export interface PaneState { projectId?: string; label: string; running: boolean; ready: boolean; message: string; thumbnail?: string; fraction?: number }
+export interface PaneState { projectId?: string; draft?: boolean; label: string; running: boolean; ready: boolean; message: string; thumbnail?: string; fraction?: number }
 export interface PaneActions { flush: () => Promise<void>; start: () => void; create: (route: 'full' | 'reconstruct') => Promise<void>; open: (id: string) => Promise<void>; remove: (id: string) => Promise<void>; showLibrary: () => void; showSettings: () => void }
 interface AppProps { sharedStyle?: SharedStyle; onHome?: () => void; onEditSharedStyle?: () => void; api?: WorkspaceApi; compact?: boolean; paneIndex?: number; onExpand?: () => void; onState?: (state: PaneState) => void; onRegister?: (actions: PaneActions) => void }
 export default function App({ api = window.mkFigure, compact = false, paneIndex = 0, onExpand, onState, onRegister, sharedStyle, onHome, onEditSharedStyle }: AppProps) {
@@ -72,7 +72,7 @@ export default function App({ api = window.mkFigure, compact = false, paneIndex 
   const app = api;
 
   const updateSummary = useCallback((next: Project) => {
-    setBoot(prev => prev ? { ...prev, projects: [{ id: next.id, name: next.name, updatedAt: next.updatedAt, stage: next.stage }, ...prev.projects.filter(p => p.id !== next.id)] } : prev);
+    setBoot(prev => prev ? { ...prev, projects: [...(next.draftSlot === undefined ? [{ id: next.id, name: next.name, updatedAt: next.updatedAt, stage: next.stage }] : []), ...prev.projects.filter(p => p.id !== next.id)] } : prev);
   }, []);
   const receiveProject = useCallback((next: Project) => {
     projectRef.current = next;
@@ -133,7 +133,7 @@ export default function App({ api = window.mkFigure, compact = false, paneIndex 
       void app.bootstrap().then(result => {
         if (cancelled || operationLock.current) return;
         const current = projectRef.current;
-        const projects = current ? [{ id: current.id, name: current.name, updatedAt: current.updatedAt, stage: current.stage }, ...result.projects.filter(item => item.id !== current.id)] : result.projects;
+        const projects = current && current.draftSlot === undefined ? [{ id: current.id, name: current.name, updatedAt: current.updatedAt, stage: current.stage }, ...result.projects.filter(item => item.id !== current.id)] : result.projects;
         setBoot(previous => previous ? { ...previous, projects } : previous);
       }).catch(() => { /* A focus refresh must not interrupt the active workspace. */ });
     };
@@ -147,7 +147,7 @@ export default function App({ api = window.mkFigure, compact = false, paneIndex 
     void app.bootstrap().then(result => {
       if (!active || operationLock.current) return;
       const current = projectRef.current;
-      const projects = current ? [{ id: current.id, name: current.name, updatedAt: current.updatedAt, stage: current.stage }, ...result.projects.filter(item => item.id !== current.id)] : result.projects;
+      const projects = current && current.draftSlot === undefined ? [{ id: current.id, name: current.name, updatedAt: current.updatedAt, stage: current.stage }, ...result.projects.filter(item => item.id !== current.id)] : result.projects;
       setBoot(previous => previous ? { ...previous, projects } : previous);
     }).catch(() => {});
     return () => { active = false; };
@@ -181,10 +181,10 @@ export default function App({ api = window.mkFigure, compact = false, paneIndex 
     if (projectRef.current) await app.releaseProject(projectRef.current.id);
     projectRef.current = undefined; setProject(undefined); setLibrary(undefined);
   });
-  const create = (route: 'full' | 'reconstruct') => perform('创建项目', async () => {
+  const create = (route: 'full' | 'reconstruct') => perform('打开草稿', async () => {
     await flushSave();
-    setCompactAction(route === 'reconstruct' ? 'reconstruct' : 'generate');
-    let next = await app.createProject(route === 'reconstruct' ? '图片复刻' : '未命名科研图', route);
+    let next = await app.createDraft(route);
+    setCompactAction(route === 'reconstruct' || next.target ? 'reconstruct' : 'generate');
     receiveProject(next); setExported(undefined); setFeedback(''); setPreviewMode('visual');
     if (route === 'reconstruct') { next = await app.importFiles(next.id, 'target'); receiveProject(next); }
   });
@@ -273,7 +273,7 @@ export default function App({ api = window.mkFigure, compact = false, paneIndex 
   actionsRef.current = { flush: flushSave, start: compactStart, create, open, remove, showLibrary: () => openLibrary('browse'), showSettings: () => setSettingsOpen(true) };
   useLayoutEffect(() => { onRegister?.({ flush: () => actionsRef.current.flush(), start: () => actionsRef.current.start(), create: route => actionsRef.current.create(route), open: id => actionsRef.current.open(id), remove: id => actionsRef.current.remove(id), showLibrary: () => actionsRef.current.showLibrary(), showSettings: () => actionsRef.current.showSettings() }); }, [onRegister]);
   const paneMessage = error ? '需要处理' : busy ? busy.message : project?.scene ? '可编辑图已完成' : target ? '图片已就绪' : project ? '等待开始' : '未开始';
-  useEffect(() => { onState?.({ projectId: project?.id, label: project?.name || `创作 ${paneIndex + 1}`, running: !!busy || styleBusy, ready: compactReady, message: paneMessage, thumbnail: previewUrl, fraction: busy?.fraction }); }, [onState, project?.id, styleBusy, project?.name, paneIndex, !!busy, compactReady, paneMessage, previewUrl, busy?.fraction]);
+  useEffect(() => { onState?.({ projectId: project?.id, draft: project?.draftSlot !== undefined, label: project?.name || `创作 ${paneIndex + 1}`, running: !!busy || styleBusy, ready: compactReady, message: paneMessage, thumbnail: previewUrl, fraction: busy?.fraction }); }, [onState, project?.id, project?.draftSlot, styleBusy, project?.name, paneIndex, !!busy, compactReady, paneMessage, previewUrl, busy?.fraction]);
 
   if (compact) return <article className={`creation-card${busy ? ' is-running' : ''}`} data-pane={paneIndex + 1} data-pane-id={`pane-${paneIndex + 1}`}>
     <header className="creation-card-heading"><span className="pane-number">{String(paneIndex + 1).padStart(2, '0')}</span><div><strong>{project?.name || '新的创作'}</strong><small>{busy ? '运行中' : project ? styleLabel : '从想法或图片开始'}</small></div><button className="icon-button" aria-label={`展开子窗口 ${paneIndex + 1}`} onClick={onExpand}><Maximize2 size={16}/></button></header>
@@ -288,7 +288,7 @@ export default function App({ api = window.mkFigure, compact = false, paneIndex 
 
   return <div className="app-shell">
     <header className="topbar"><button className="brand" onClick={onHome || goHome} disabled={!!busy || styleBusy || libraryBusy} aria-label="返回首页">{onExpand ? <><ArrowLeft size={15}/><span>返回首页</span></> : <><BrandMark className="brand-mark"/><span>MK Figure</span></>}</button>
-      {project && !library && <div className="project-title"><span className="crumb-sep" aria-hidden="true">/</span><input ref={nameInput} className={`project-name${renaming ? ' editing' : ''}`} aria-label="项目名称" readOnly={!renaming} value={renaming ? nameDraft : project.name} onChange={e => setNameDraft(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') void rename(); if (e.key === 'Escape') setRenaming(false); }} disabled={!!busy}/>{renaming ? <><button className="name-action" onClick={() => void rename()} disabled={!!busy}><Check size={14}/>保存</button><button className="icon-button" aria-label="取消重命名" onClick={() => setRenaming(false)}><X size={14}/></button></> : <button className="icon-button name-edit" aria-label="重命名" title="重命名" disabled={!!busy} onClick={() => { setNameDraft(project.name); setRenaming(true); }}><PencilLine size={14}/></button>}<span className={`save-status ${saved === 'error' ? 'bad' : ''}`}>{saved === 'saving' ? <><LoaderCircle size={12} className="spin"/>正在保存</> : saved === 'error' ? <><AlertCircle size={12}/>未保存</> : <><Check size={12}/>已自动保存</>}</span>{isSample && <span className="sample-badge">历史示例 · 非 AI 生成</span>}</div>}
+      {project && !library && <div className="project-title"><span className="crumb-sep" aria-hidden="true">/</span><input ref={nameInput} className={`project-name${renaming ? ' editing' : ''}`} aria-label="项目名称" readOnly={!renaming} value={renaming ? nameDraft : project.name} onChange={e => setNameDraft(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') void rename(); if (e.key === 'Escape') setRenaming(false); }} disabled={!!busy}/>{renaming ? <><button className="name-action" onClick={() => void rename()} disabled={!!busy}><Check size={14}/>保存</button><button className="icon-button" aria-label="取消重命名" onClick={() => setRenaming(false)}><X size={14}/></button></> : <button className="icon-button name-edit" aria-label="重命名" title="重命名" disabled={!!busy} onClick={() => { setNameDraft(project.name); setRenaming(true); }}><PencilLine size={14}/></button>}<span className={`save-status ${saved === 'error' ? 'bad' : ''}`}>{saved === 'saving' ? <><LoaderCircle size={12} className="spin"/>正在保存</> : saved === 'error' ? <><AlertCircle size={12}/>未保存</> : <><Check size={12}/>{project.draftSlot !== undefined ? "草稿已保存 · 运行后加入作品" : "已自动保存"}</>}</span>{isSample && <span className="sample-badge">历史示例 · 非 AI 生成</span>}</div>}
       <div className="topbar-right"><button className="connection-button" title="修改模型与推理强度" onClick={() => setSettingsOpen(true)} disabled={!!busy || libraryBusy}><span>{`Codex · ${modelLabel}`}</span><ChevronDown size={14}/></button></div></header>
     {error && <div role="alert" className="global-message error-message"><AlertCircle size={17}/><span>{error}</span><button aria-label="关闭错误提示" onClick={() => setError('')}><X size={16}/></button></div>}
     {notice && <div role="status" className="global-message notice-message"><CheckCircle2 size={17}/><span>{notice}</span><button aria-label="关闭提示" onClick={() => setNotice('')}><X size={16}/></button></div>}

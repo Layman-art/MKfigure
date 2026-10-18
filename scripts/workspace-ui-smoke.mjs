@@ -76,7 +76,8 @@ try {
   await client.evaluate(({ dialog }, folder) => { dialog.showOpenDialog = async () => ({ canceled: false, filePaths: [folder] }); }, folderPath);
   await page.getByRole('button', { name: '打开文件夹', exact: true }).click();
   await page.waitForFunction(() => document.querySelector('.active-folder strong')?.textContent === 'My Research');
-  await page.locator('.studio-route').filter({ hasText: '单图创作' }).click();
+  await page.evaluate(async () => { const p = await window.mkFigure.createProject('未命名科研图', 'full'); await window.mkFigure.releaseProject(p.id); });
+  await page.locator('.folder-project-row > button').first().click();
   await page.getByRole('textbox', { name: '项目名称', exact: true }).waitFor();
   await screenshot('07-single-folder');
   const beforeReopen = await page.evaluate(() => window.mkFigure.getFolder());
@@ -124,7 +125,12 @@ try {
   await page.waitForFunction(() => document.querySelectorAll('.folder-project-row').length === 0);
   await page.locator('.studio-navigation').getByRole('button', { name: '首页', exact: true }).click();
   await page.getByRole('button', { name: '打开文件夹 Initial Research', exact: true }).click();
-  await page.waitForFunction(() => document.querySelectorAll('.folder-project-row').length === 6);
+  await page.waitForFunction(() => document.querySelectorAll('.folder-project-row').length === 0);
+  await page.locator('.studio-route').filter({ hasText: '并行创作' }).click();
+  for (let index = 0; index < 6; index++) {
+    await pane(index).getByRole('button', { name: '新建科研图', exact: true }).click();
+    assert.equal(await pane(index).getByRole('textbox', { name: '主题与内容', exact: true }).inputValue(), `科研图 ${index + 1}：独立内容`);
+  }
   const manifest = JSON.parse(await fs.readFile(path.join(folderPath, '.mkfigure', 'workspace.json'), 'utf8'));
   assert.ok(manifest);
   assert.deepEqual(errors, []);

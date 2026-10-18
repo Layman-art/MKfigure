@@ -28,6 +28,7 @@ const env={...process.env,MK_FIGURE_DATA_DIR:data};delete env.ELECTRON_RUN_AS_NO
 const client=await electron.launch({executablePath:electronPath,args:[fixture],cwd:root,env,timeout:60000});
 
 const errors=[],projects=[];
+const paneDraftReady=page=>page.locator('textarea.composer:visible').waitFor();
 const until=async(fn,label)=>{for(let i=0;i<160;i++){if(await fn())return;await new Promise(r=>setTimeout(r,50));}throw new Error('Timed out: '+label);};
 try{
  const page=await client.firstWindow();page.setDefaultTimeout(15000);page.on('pageerror',e=>errors.push(e.message));
@@ -35,9 +36,10 @@ try{
  // Explicit legacy selection keeps this IPC/concurrency fixture's original storage paths.
  await page.evaluate(()=>window.mkFigure.closeFolder());
  await page.locator('.studio-route').filter({hasText:'单图创作'}).click();
- await until(()=>page.evaluate(async()=> (await window.mkFigure.bootstrap()).projects.length===1),'first single project created');
+ await paneDraftReady(page);
+ assert.equal(await page.evaluate(async()=> (await window.mkFigure.bootstrap()).projects.length),0);
  await page.locator('.studio-navigation').getByRole('button',{name:'单图创作',exact:true}).click();
- assert.equal(await page.evaluate(async()=> (await window.mkFigure.bootstrap()).projects.length),1);
+ assert.equal(await page.evaluate(async()=> (await window.mkFigure.bootstrap()).projects.length),0);
  await page.locator('.studio-navigation').getByRole('button',{name:'并行创作',exact:true}).click();
  await page.locator('.creation-card').first().waitFor();
  assert.equal(await page.locator('.creation-card').count(),6);assert.equal((await client.windows()).length,1);
@@ -63,9 +65,10 @@ try{
   // Commit pending draft through the normal pane navigation before reading back.
   await overview();
   await new Promise(r=>setTimeout(r,750));
-  const p=await page.evaluate(async i=>{const api=window.mkFigure.panes[i],b=await api.bootstrap();return api.openProject(b.projects[0].id);},i);projects.push(p);assert.equal(p.styleMode,modes[i]);
+  const p=await page.evaluate(async i=>window.mkFigure.panes[i].createDraft('full'),i);projects.push(p);assert.equal(p.styleMode,modes[i]);
  }
  assert.equal((await client.windows()).length,1);
+ assert.equal(await page.evaluate(async()=> (await window.mkFigure.bootstrap()).projects.length),0);
  await assert.rejects(()=>page.evaluate(id=>window.mkFigure.panes[1].openProject(id),projects[0].id),/另一个子窗口/);
  await assert.rejects(()=>page.evaluate(p=>window.mkFigure.panes[1].saveProject(p),projects[0]),/作品已切换/);
  await page.evaluate(()=>{window.__paneProgress=Array.from({length:6},()=>[]);window.mkFigure.panes.forEach((api,i)=>api.onProgress(e=>window.__paneProgress[i].push(e.projectId)));});
@@ -73,6 +76,7 @@ try{
  assert.equal(await page.getByRole('button',{name:/开始就绪任务/}).count(),0);
  for(let i=0;i<6;i++)await pane(i).getByRole('button',{name:'开始',exact:true}).click();
  await until(()=>client.evaluate(()=>globalThis.__multiTest.active===6),'six concurrent tasks');
+ assert.equal(await page.evaluate(async()=> (await window.mkFigure.bootstrap()).projects.length),6);
  const calls=await client.evaluate(()=>globalThis.__multiTest.calls);assert.equal(calls.length,6);assert.equal(new Set(calls.map(c=>c.outputDir)).size,6);
  for(let i=0;i<6;i++){
   const call=calls.find(c=>c.prompt.includes('子窗口 '+(i+1)+' 的科研图'));assert.ok(call);
@@ -122,7 +126,7 @@ try{
  const closed=client.waitForEvent('close',{timeout:20000});await client.evaluate(({app})=>{setTimeout(()=>app.quit(),0);});await closed;
  for(let i=0;i<6;i++){const p=JSON.parse(await fs.readFile(path.join(data,'projects',projects[i].id,'project.json'),'utf8'));assert.equal(p.brief.topic,'关窗前草稿 '+(i+1));}
  assert.deepEqual(errors,[]);
- const report={passed:true,desktopWindows:1,panels:6,maxConcurrent:6,singleNavigationKeepsCurrentProject:true,allProgressVisible:true,expandedKeepsOtherAppsMounted:true,stylesIsolated:true,sharedStyleSnapshot:true,customAndNoneOverrides:true,catalogRefreshPreservesRunningTasks:true,resultsIsolated:true,cancelOneKeepsFiveRunning:true,closeFlushesAllSix:true,closeFailurePreservesWindow:true,lateProgressIgnored:true,sharedSettingsBroadcast:true,pageErrors:errors,liveModelCalls:0,modelService:'local barrier stub, production workflow and IPC'};
+ const report={passed:true,draftsHiddenBeforeRun:true,sixDraftsPromotedOnce:true,desktopWindows:1,panels:6,maxConcurrent:6,singleNavigationKeepsCurrentProject:true,allProgressVisible:true,expandedKeepsOtherAppsMounted:true,stylesIsolated:true,sharedStyleSnapshot:true,customAndNoneOverrides:true,catalogRefreshPreservesRunningTasks:true,resultsIsolated:true,cancelOneKeepsFiveRunning:true,closeFlushesAllSix:true,closeFailurePreservesWindow:true,lateProgressIgnored:true,sharedSettingsBroadcast:true,pageErrors:errors,liveModelCalls:0,modelService:'local barrier stub, production workflow and IPC'};
  await fs.writeFile(path.join(out,'results.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
 }catch(error){console.error(error);const page=(await client.windows())[0];if(page)await page.screenshot({path:path.join(out,'failure.png')}).catch(()=>{});throw error;}
 finally{await client.evaluate(({app})=>app.exit()).catch(()=>{});await client.close().catch(()=>{});}

@@ -28,6 +28,7 @@ let closing=false,closePending=false;
 let rendererReady:{promise:Promise<void>;resolve:()=>void}|undefined;
 const inFlight=new Map<number,Set<Promise<unknown>>>();
 const runTasks=new Map<string,Promise<unknown>>();
+const cancelledRunStarts=new Set<string>();
 const projectOperations=new Map<number,number>();const navigating=new Set<number>();let quitting=false,quitRequested=false,settingsChanging=false;
 let hub:ProviderHub;let workflow:Workflow;let store:Store;
 let library:ImageLibrary;
@@ -65,7 +66,7 @@ function claimProject(paneId:number,id:string){
   if(owner!==undefined&&owner!==paneId)throw new Error('该作品已在另一个子窗口打开，请在原子窗口继续编辑');
   if(owner===undefined&&workflow.isRunning(id))throw new Error('该作品的上一次任务正在停止，请稍后再打开');
   const previous=registry.project(paneId);
-  if(previous&&previous!==id&&(workflow.isRunning(previous)||(projectOperations.get(paneId)||0)>0))throw new Error('当前作品正在处理，请完成或停止后再切换');
+  if(previous&&previous!==id&&(workflow.isRunning(previous)||runTasks.has(previous)||(projectOperations.get(paneId)||0)>0))throw new Error('当前作品正在处理，请完成或停止后再切换');
   registry.claim(paneId,id);
 }
 const projectMethods=new Set(['selectLibraryReference','deleteProject','saveProject','importFiles','run','cancelRun','renderScene','exportProject']);
@@ -77,13 +78,13 @@ function handler(name:string,fn:(paneId:number,...args:any[])=>unknown){ipcMain.
   try{
     if(folderChanging&&!['bootstrap','getFolder','cancelRun','cancelStyle'].includes(name))throw new Error('正在打开文件夹，请稍后重试');
     if(closePending&&!['bootstrap','getFolder','saveProject','finishWindowClose','cancelWindowClose','cancelRun','cancelStyle'].includes(name))throw new Error('窗口正在关闭');
-    if(navigating.has(paneId)&&['createProject','openProject','releaseProject',...projectMethods].includes(name))throw new Error('子窗口正在切换作品，请稍后重试');
-    if(name==='createProject'||name==='openProject'){navigation=true;navigating.add(paneId);}
+    if(navigating.has(paneId)&&['createDraft','createProject','openProject','releaseProject',...projectMethods].includes(name))throw new Error('子窗口正在切换作品，请稍后重试');
+    if(name==='createDraft'||name==='createProject'||name==='openProject'){navigation=true;navigating.add(paneId);}
     if(projectMethods.has(name)){
       const requestedId=name==='saveProject'?(args[0] as Project|undefined)?.id:args[0];
       if(typeof requestedId!=='string')throw new Error('无效的作品编号');
       const id=safeId(requestedId);
-      if(name!=='cancelRun'&&workflow.isRunning(id))throw new Error('作品正在处理，请完成或停止任务后再修改');
+      if(name!=='cancelRun'&&(workflow.isRunning(id)||runTasks.has(id)))throw new Error('作品正在处理，请完成或停止任务后再修改');
       if(name==='deleteProject') {
         const owner=registry.owner(id);if(owner!==undefined&&owner!==paneId)throw new Error('请在作品所在的子窗口删除');
       } else {
@@ -191,7 +192,8 @@ app.whenReady().then(async()=>{
   });
   handler('cancelStyle',(paneId:number)=>styleTasks.get(paneId)?.abort());
   handler('getModelCatalog',(_paneId:number,force?:boolean)=>catalog.read(force===true));
-  handler('createProject',async(paneId:number,name:string,route:'full'|'reconstruct')=>{folders.assertSelected();if(!['full','reconstruct'].includes(route))throw new Error('未知项目入口');const previous=registry.project(paneId);if(previous&&(workflow.isRunning(previous)||(projectOperations.get(paneId)||0)>0))throw new Error('当前作品正在处理，请完成或停止后再新建');let project=await store.create(name,route);project=await store.mutate(project.id,p=>{p.styleMode='shared';});claimProject(paneId,project.id);folderChanged();return store.hydrate(project);});
+  handler('createDraft',async(paneId:number,route:'full'|'reconstruct')=>{folders.assertSelected();if(!['full','reconstruct'].includes(route))throw new Error('未知项目入口');const previous=registry.project(paneId);if(previous&&(workflow.isRunning(previous)||runTasks.has(previous)||(projectOperations.get(paneId)||0)>0))throw new Error('当前作品正在处理，请完成或停止后再新建');const project=await store.createDraft(paneId,route);claimProject(paneId,project.id);return store.hydrate(project);});
+  handler('createProject',async(paneId:number,name:string,route:'full'|'reconstruct')=>{folders.assertSelected();if(!['full','reconstruct'].includes(route))throw new Error('未知项目入口');const previous=registry.project(paneId);if(previous&&(workflow.isRunning(previous)||runTasks.has(previous)||(projectOperations.get(paneId)||0)>0))throw new Error('当前作品正在处理，请完成或停止后再新建');let project=await store.create(name,route);project=await store.mutate(project.id,p=>{p.styleMode='shared';});claimProject(paneId,project.id);folderChanged();return store.hydrate(project);});
   handler('openProject',async(paneId:number,id:string)=>{const project=await store.load(safeId(id));claimProject(paneId,id);return store.hydrate(project);});
   handler('listLibrary',(_paneId:number)=>library.list());
   handler('importLibraryFiles',async(_paneId:number,category:LibraryCategory)=>{
@@ -270,8 +272,8 @@ app.whenReady().then(async()=>{
   handler('providerStatus',(_paneId:number,id:ProviderId)=>hub.status(providerId(id)));
   handler('loginCodex',async(_paneId:number)=>{if(runTasks.size||styleTasks.size)throw new Error('请在当前任务结束后登录');const result=await hub.loginCodex();if(result.authenticated){catalog.invalidate();void catalog.read(true);}if(result.loginUrl){const url=new URL(result.loginUrl);if(url.protocol!=='https:'||!['auth.openai.com','chatgpt.com','openai.com'].includes(url.hostname))throw new Error('登录服务返回了非预期地址');await shell.openExternal(result.loginUrl);}return result;});
   handler('listModels',(_paneId:number,id:ProviderId)=>hub.listModels(providerId(id)));
-  handler('run',(_paneId:number,id:string,action:any,feedback?:string)=>{if(settingsChanging)throw new Error('模型设置正在更新，请稍后重试');if(workflow.isRunning(id))throw new Error('此项目正在处理，请等待完成或先停止');const task=workflow.run(safeId(id),action,String(feedback||'').slice(0,20000));runTasks.set(id,task);return task.finally(()=>{if(runTasks.get(id)===task)runTasks.delete(id);folderChanged();});});
-  handler('cancelRun',(_paneId:number,id:string)=>workflow.cancel(safeId(id)));
+  handler('run',(_paneId:number,id:string,action:any,feedback?:string)=>{if(settingsChanging)throw new Error('模型设置正在更新，请稍后重试');if(workflow.isRunning(id)||runTasks.has(id))throw new Error('此项目正在处理，请等待完成或先停止');const task=(async()=>{const instruction=String(feedback||'').slice(0,20000);await store.beginRun(safeId(id),action,instruction);folderChanged();if(cancelledRunStarts.has(id)||closePending)throw new Error('已停止本次操作');return workflow.run(id,action,instruction);})();runTasks.set(id,task);return task.finally(()=>{if(runTasks.get(id)===task)runTasks.delete(id);cancelledRunStarts.delete(id);folderChanged();});});
+  handler('cancelRun',(_paneId:number,id:string)=>{safeId(id);if(runTasks.has(id)&&!workflow.isRunning(id))cancelledRunStarts.add(id);workflow.cancel(id);});
   handler('renderScene',(_paneId:number,id:string,scene:any)=>workflow.preview(safeId(id),scene));
   handler('exportProject',async(_paneId:number,id:string,formats:Array<'pptx'|'svg'|'png'>)=>{
     if(!Array.isArray(formats)||!formats.length||formats.some(f=>!['pptx','svg','png'].includes(f)))throw new Error('请选择有效的导出格式');

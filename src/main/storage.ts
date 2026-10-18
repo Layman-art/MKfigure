@@ -3,7 +3,10 @@ import { lstatSync } from 'node:fs';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { safeStorage, nativeImage } from 'electron';
-import type { AppSettings, Asset, Brief, Project, ProjectSummary, ProviderId, StyleReference } from '../shared/types';
+import type { AppSettings, Asset, Brief, Project, ProjectSummary, ProviderId, RunAction, StyleReference } from '../shared/types';
+
+import { PANE_COUNT } from '../shared/types';
+import { generationPrompt } from './generation-prompt';
 
 export const DEFAULT_BRIEF: Brief = { topic: '', focus: '', language: 'zh', purpose: 'paper', aspectRatio: 'auto', widthMm: 180, prompt: '', stylePrompt: '', notes: '', fullVector: true };
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -97,9 +100,37 @@ export class Store {
     for (const name of ['project.json', 'preview.svg', 'preview.png']) ordinaryPath(path.join(directory, name), false, true);
     return directory;
   }
-  async create(name: string, route: 'full'|'reconstruct') {
-    const now = new Date().toISOString(); const project: Project = { id: randomUUID(), name: cleanText(name, 160) || '未命名科研图', createdAt: now, updatedAt: now, stage: route === 'reconstruct' ? 'reconstruct' : 'brief', brief: { ...DEFAULT_BRIEF, language: route === 'reconstruct' ? 'original' : 'zh' }, sources: [], generated: [], history: [] };
+  async create(name: string, route: 'full'|'reconstruct', draftSlot?: number) {
+    const now = new Date().toISOString(); const project: Project = { ...(draftSlot === undefined ? {} : { draftSlot, styleMode: 'shared' as const }), id: randomUUID(), name: cleanText(name, 160) || '未命名科研图', createdAt: now, updatedAt: now, stage: route === 'reconstruct' ? 'reconstruct' : 'brief', brief: { ...DEFAULT_BRIEF, language: route === 'reconstruct' ? 'original' : 'zh' }, sources: [], generated: [], history: [] };
     await fs.mkdir(path.join(this.projectDir(project.id), 'assets'), { recursive: true }); await this.write(project); return project;
+  }
+  async createDraft(slot: number, route: 'full'|'reconstruct'): Promise<Project> {
+    if (!Number.isInteger(slot) || slot < 1 || slot > PANE_COUNT) throw new Error('无效的草稿位置');
+    const key = `draft-${slot}`;
+    const previous = this.queues.get(key) || Promise.resolve();
+    const task = previous.catch(() => undefined).then(async () => {
+      const entries = await fs.readdir(this.projectsDirectory, { withFileTypes: true });
+      for (const entry of entries) if (entry.isDirectory()) {
+        let project: Project;
+        try { project = await this.load(entry.name); } catch { continue; }
+        if (project.draftSlot === slot) return project;
+      }
+      return this.create('新创作', route, slot);
+    });
+    this.queues.set(key, task);
+    try { return await task; } finally { if (this.queues.get(key) === task) this.queues.delete(key); }
+  }
+  async beginRun(id: string, action: RunAction, feedback = ''): Promise<Project> {
+    return this.mutate(id, project => {
+      validateRunInput(project, action, feedback);
+      if (project.draftSlot === undefined) return;
+      if (!project.name.trim() || ['未命名科研图', '新创作'].includes(project.name)) {
+        const content = project.brief.topic.trim() || project.brief.focus.trim() || project.brief.prompt.trim();
+        const asset = project.target?.name || project.sources[0]?.name;
+        project.name = (content.replace(/\s+/g, ' ').slice(0, 40) || (asset && path.parse(asset).name) || '科研图').slice(0, 160);
+      }
+      delete project.draftSlot;
+    });
   }
   async load(id: string): Promise<Project> {
     const project = JSON.parse(await fs.readFile(path.join(this.projectDir(id), 'project.json'), 'utf8')) as Project;
@@ -137,7 +168,7 @@ export class Store {
   async list(): Promise<ProjectSummary[]> {
     ordinaryPath(this.projectsDirectory, true);
     const entries = await fs.readdir(this.projectsDirectory, { withFileTypes: true }); const result: ProjectSummary[] = [];
-    for (const e of entries) if (e.isDirectory()) try { const p = await this.load(e.name); result.push({ id: p.id, name: p.name, updatedAt: p.updatedAt, stage: p.stage }); } catch { /* skip incomplete */ }
+    for (const e of entries) if (e.isDirectory()) try { const p = await this.load(e.name); if (p.draftSlot !== undefined) continue; result.push({ id: p.id, name: p.name, updatedAt: p.updatedAt, stage: p.stage }); } catch { /* skip incomplete */ }
     return result.sort((a,b) => b.updatedAt.localeCompare(a.updatedAt));
   }
   resolveAsset(projectId: string, asset: Asset): string {
@@ -160,4 +191,15 @@ export class Store {
     const rows = JSON.parse(await fs.readFile(path.join(this.resources, 'references/catalog.json'), 'utf8')) as Array<{id:string;name:string;description:string;file:string}>;
     return Promise.all(rows.map(async r => ({ id: r.id, name:r.name, description:r.description, path: path.join(this.resources, 'references', path.basename(r.file)), previewUrl: `data:image/png;base64,${(await fs.readFile(path.join(this.resources, 'references', path.basename(r.file)))).toString('base64')}` })));
   }
+}
+
+/** Validate before a draft becomes a visible work; model failures keep the same work. */
+export function validateRunInput(project: Project, action: RunAction, feedback = '') {
+  if (!['analyze','prompt','generate','edit-image','refine-image','regenerate-image','reconstruct','review','refine'].includes(action)) throw new Error('不支持的操作');
+  if (action === 'analyze' && !project.brief.topic.trim() && !project.sources.length) throw new Error('请提供绘图主题或至少一份资料');
+  if (action === 'prompt' && !project.brief.topic.trim() && !project.brief.focus.trim() && !project.brief.notes.trim()) throw new Error('请先说明想画什么，其他资料均可选');
+  if (action === 'generate') generationPrompt(project.brief, project.sources.map(source => source.text || source.name).join('\n'));
+  if (['edit-image','refine-image','regenerate-image'].includes(action) && !feedback.trim()) throw new Error('请填写修改意见或新的绘图提示词');
+  if (['edit-image','refine-image','reconstruct','refine'].includes(action) && !project.target) throw new Error('请先生成一张视觉稿，或上传需要复刻的图片');
+  if (action === 'review' && !project.scene) throw new Error('请先完成可编辑复刻');
 }
