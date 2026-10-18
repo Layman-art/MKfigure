@@ -1,113 +1,171 @@
-# MK Figure
+<div align="center">
+  <img src="resources/icon.png" width="88" alt="MK Figure 标志">
 
-把研究主题、论文资料或现成图片，变成可继续编辑的科研图。当前仅使用 Codex 账户连接。
+  <h1>MK Figure · 科研绘图工作台</h1>
 
-## 一套生态
+  <p><strong>从研究想法，到可以继续编辑的科研图。</strong></p>
+  <p>Create, refine, and reconstruct scientific figures as editable PowerPoint and SVG.</p>
 
-| 组件 | 位置 | 用途 |
-| --- | --- | --- |
-| Codex skill | [`mk-figure-skill/`](mk-figure-skill/) | 在 Codex 中按图像生成、可编辑复刻、PPT 高保真修复和检查的统一流程工作；吸收了原 `PPT-editable` 的 PPT 专项方法与工具。 |
-| 桌面软件 | [`src/`](src/) | Windows/macOS Electron 工作台，管理素材、调用已登录的 Codex、复刻并导出 PPTX/SVG/PNG。 |
-| SVG 图标包 | [`icon-pack/`](icon-pack/) | 10 个可单独下载和编辑的城市防灾减灾图标，也是软件内置素材库的原件。 |
+  <p>
+    <a href="https://github.com/Layman-art/MKfigure/releases/latest"><img alt="最新发行版" src="https://img.shields.io/github/v/release/Layman-art/MKfigure?style=flat-square&color=ad6848"></a>
+    <img alt="Windows 与 macOS" src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS-666b62?style=flat-square">
+    <img alt="PPTX、SVG、PNG 导出" src="https://img.shields.io/badge/export-PPTX%20%2F%20SVG%20%2F%20PNG-668b83?style=flat-square">
+    <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-ad8d52?style=flat-square"></a>
+  </p>
 
-三部分同在本仓库，按 [MIT License](LICENSE) 开源。skill 可单独安装使用；软件运行时使用 [`src/main/workflow.ts`](src/main/workflow.ts) 等代码组织任务，并不逐字执行 skill 文档。修改流程时须核对两边行为。原 `PPT-editable` 的 MIT 内容、[原始提交](https://github.com/Layman-art/MKfigure/commit/b4a672299b3b5aa35bf97e34bc303fecc22bfdc9)及来源见 [合并说明](docs/ppt-editable-integration.md)。
+  <p>
+    <a href="https://github.com/Layman-art/MKfigure/releases/latest"><strong>下载桌面版</strong></a> ·
+    <a href="mk-figure-skill/"><strong>安装 Codex Skill</strong></a> ·
+    <a href="icon-pack/"><strong>获取 SVG 图标</strong></a>
+  </p>
 
-安装 skill：把 `mk-figure-skill` 目录复制到 Codex 的 skills 目录，或使用 Codex 的 skill 安装工具指定本仓库的 `mk-figure-skill/` 子目录。已有同名版本先告知，不要直接覆盖。
+  <p>
+    <a href="#为什么用-mk-figure">为什么用 MK Figure</a> ·
+    <a href="#功能一览">功能一览</a> ·
+    <a href="#界面预览">界面预览</a> ·
+    <a href="#快速开始">快速开始</a> ·
+    <a href="#本地开发">参与开发</a>
+  </p>
+</div>
 
-## 安装与连接
+<p align="center">
+  <img src="docs/assets/six-pane-workspace.png" width="100%" alt="MK Figure 在同一个窗口中管理六张图，每张图都有独立内容、风格与操作入口">
+  <br><sub>一个工作台，六张独立画布。截图为 0.6.0 参考素材载入演示。</sub>
+</p>
 
-- Windows x64：从 [Releases](https://github.com/Layman-art/MKfigure/releases) 下载 Windows 安装程序，按向导安装。
-- macOS：从 Releases 选择 Apple Silicon 或 Intel 对应的应用 ZIP，解压后将 `MK Figure.app` 拖入“应用程序”。需要 macOS 13+。
-- 安装包包含 Electron 和对应架构的官方 Codex 运行时，不要求另装 Node.js、Python 或 PowerPoint。已有可编辑图形可在未连接模型时导出。
+> 本页展示 **main 分支的 0.6.0 功能**；当前公开安装包为 **v0.4.1**。六窗创作、统一风格与文件夹工作区等新功能目前需[从源码运行](#本地开发)。
 
-打开“模型与连接”，登录 Codex 或检测已有登录，选择账户返回的模型及其支持的推理强度。也可以使用“账户默认模型”。生成、复刻、检查与精修共用这组设置；生图通过所选 Codex 模型调用图像工具，具体图像能力以账户和模型实际支持为准。
+## 为什么用 MK Figure？
 
-0.6.0 内置官方 Codex 运行时 0.163.0。模型目录在启动、登录后及回到应用时按需检查，每 6 小时刷新；也可点击“刷新模型”。刷新失败保留已获取的列表，不自动切换当前模型或重启正在运行的任务。GPT-6.1 Sol 等模型按账户实际返回展示，不通过硬编码伪造可用模型。
+科研绘图往往还需要在生成后改字、改公式、统一配色，并保留下一次修改所需的资料。MK Figure 把这些环节组织成可继续的作品：从一段文字开始，也能直接上传现成图片进入复刻。
 
-升级保留旧项目、旧连接配置和本机加密凭据，不因隐藏旧入口而删除数据。当前界面和任务只使用 Codex。
+| 绘图中的反复操作 | MK Figure 提供的支持 |
+| --- | --- |
+| 图已生成，修改标签、公式和布局仍要重新制作 | **可编辑交付**：重建文字与矢量图形，导出 PPTX、SVG 和 PNG。 |
+| 多张图逐一处理，参考风格与进度来回切换 | **六图并行**：同一窗口管理六张图，共用风格、独立执行，也可逐图覆盖。 |
+| 提示词、原图与修改结果散在多次对话和文件中 | **作品持续保存**：按文件夹保留资料、版本、检查记录和用量，随时接着修改。 |
 
-## 开始绘图
+生成、修改、复刻和检查沿用 Codex 的模型能力；工作台负责衔接流程、组织文件和展示结果。实际质量与耗时仍取决于图的复杂度、模型及账户可用额度。
 
-首页分为 **单图创作** 和 **并行创作**。单图创作直接进入完整流程；并行创作在同一个桌面窗口内提供 6 个子窗口，宽屏采用三列两行，小屏自动调整列数并滚动。每张图独立输入内容、生成或复刻、查看进度和停止；展开其中一张时，其余任务继续运行，不再提供常驻的“开始就绪任务”按钮。模型账号与素材库共享；同一作品不能在两个子窗口同时编辑。
+## 功能一览
 
-1. **新建科研图**：在“主题与重点”粘贴内容或说明想画什么，从素材库选参考风格，也可手写风格要求。直接点击“生成视觉稿”即可；论文、语言、用途和参考风格均可按需补充。
-2. **图片复刻**：上传 PNG、JPEG 或 WebP，直接重建可编辑图形。
-3. **图片素材库**：集中管理参考图与图标，可导入自己的素材，并保存原图到其他文件夹。
+### ✦ 从内容开始，也能从图片开始
 
-素材库通过侧边栏进入，没有离线示例。“内容与风格”集中配置参考图和风格，视觉稿页只显示摘要并链接回同一设置，不需要重复上传。可以直接手写风格，也可选择“AI 优化风格”或展开“风格助手”继续沟通；建议需点击“应用建议”才替换原文，不会自动生图。“AI 整理内容”和提示词优化同样是可选操作。
+- 输入主题或粘贴一段文字，即可开始绘图；论文资料、参考图、语言和用途均可选填。
+- 直接手写提示词与风格，或按需使用 AI 整理和风格助手。
+- 已有图片可跳过生图，直接复刻；不满意时继续改图或重新生成，并保留图片版本。
 
-点击“统一风格”可设置当前文件夹的描述、配色、背景、线条和参考图片。每张图可选择“统一风格”“本图自定义”或“不用参考风格”；公共设置改变不覆盖本图自定义，也不改变已经提交的生成任务。详细操作和保存位置见 [0.6.0 创作工作区说明](docs/workspaces-0.6.0.md)。
+### ◫ 单图专注，六图并行
 
-界面采用象牙纸色底、暖墨色文字和单一陶土色强调：标题、作品名与正文内容使用衬线字体（Source Serif 4 / 思源宋体），按钮与表单控件使用无衬线字体。陶土色只用于品牌标记、当前步骤和调用 AI 的操作按钮。启动时直接显示加载完成的界面，没有启动动画或额外等待。
+- 单图与并行创作分别进入；六张图各自开始、停止和查看进度。
+- 统一风格可复用描述、配色与参考图；每张图也可自定义或不使用参考风格。
+- 展开一张图时，其他任务继续运行。实际并发受云端排队与账户限流影响。
 
-各阶段可以自由切换。顶部“重命名”支持保存、取消及 Enter/Escape 操作。
+### ⌘ 检查、精修与可编辑导出
 
-首次图片不满意时，在“生成视觉稿”页面继续改图：直接填写提示词，并选择“修改当前图”或“不带原图重新生成”；也可选择“按改进意见”，让 AI 先整理修改指令再编辑当前图。三种方式都不自动叠加旧风格参考，完成后保留之前的图片版本。满意后点击“使用当前图片复刻”。
+- 文字、形状与曲线重建为可编辑对象，公式使用衬线文字与线条，不使用 Office Math。
+- 提供结构检查、视觉与内容核对、文字修改和按意见精修。
+- 按需导出 PPTX / SVG / PNG；**只选 PPTX，就只导出一个 PPTX 文件**。
 
-软件的请求不会作为普通对话出现在 Codex 侧栏：当前使用独立临时会话，各步骤由本地作品数据衔接。完整代码入口、资料流向、实际提示词来源及 skill 与软件的关系见 [数据流说明](docs/data-flow.md)。
+### ▤ 资料和过程留在作品里
 
-## 图片素材库
+- 文件夹侧栏保存并继续创作；素材库统一管理参考图与个人图标。
+- 内置 3 张参考图与 10 个 SVG 图标，可导入自己的素材。
+- 展示任务耗时、模型、推理强度及模型回传的 Token 用量；Token 不是账户余额或费用。
 
-内置 13 项素材：3 张方法框架、算法流程和科研信息图参考，以及 [10 个城市防灾图标](icon-pack/)，包括通信基站、输电铁塔、三个人物、应急发电车、电动汽车、移动储能、无人载具和台风。图标保留原始 SVG，列表使用 PNG 缩略图预览；保存原图时得到原始格式，不会用缩略图替代 SVG。
+## 界面预览
 
-可以导入 PNG、JPG、WebP 和 SVG，按“参考图”或“图标”分类。个人素材支持重命名、改分类、保存原图和确认后删除；内置素材可使用、查看及保存，不可改名或删除。删除个人素材只处理素材库中的副本，原始导入文件不变。
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <img src="docs/assets/creation-home.png" alt="单图创作与并行创作的首页入口">
+      <br><sub>单图与并行：按当前任务选择创作方式</sub>
+    </td>
+    <td width="50%" align="center">
+      <img src="docs/assets/shared-style.png" alt="统一风格面板中的描述、参考图、配色和线条设置">
+      <br><sub>统一风格：公共规范复用，单张图可覆盖</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <img src="docs/assets/folder-workspace.png" alt="按文件夹保存作品的单图工作区">
+      <br><sub>文件夹工作区：资料与创作过程一起保留</sub>
+    </td>
+    <td width="50%" align="center">
+      <img src="docs/assets/editable-export.png" alt="Neural ODE 可编辑复刻结果及 PowerPoint、SVG、PNG 导出入口">
+      <br><sub>可编辑导出：真实 Neural ODE 全流程验证结果</sub>
+    </td>
+  </tr>
+</table>
 
-选择参考风格时会进入完整的素材库页面，选定后返回当前作品，绘图表单中只保留紧凑的当前参考信息。选中的参考内容会独立保存到作品，之后删除或修改库中的个人素材不会破坏该作品的已选参考。参考只用于布局与视觉风格，科学内容以你的资料为准。
+截图来自 0.6.0 Windows 程序。导出示例经过 GPT-6.1 Sol 低推理全流程验证，并在 PowerPoint 中完成文字编辑、保存与重开；其余截图用于展示界面和参考素材。详细范围见[验证记录](docs/validation-0.6.0.md)。
 
-个人素材在本机保存，导入和管理不调用模型。执行生图等模型任务时，所选参考按任务需要发送给 Codex。素材库不自动把图标插入已复刻的可编辑图形。
+## 快速开始
 
-## 管理作品
+1. 在 [GitHub Releases](https://github.com/Layman-art/MKfigure/releases/latest) 下载对应平台的安装包。Windows 运行安装程序；macOS 解压 ZIP 后将应用拖入“应用程序”。
+2. 打开 **模型与连接**，登录 Codex 或检测已有登录，选择账户支持的模型与推理强度。
+3. 输入主题、粘贴资料或上传已有图片，选择参考风格；无需先让 AI 改写提示词。
+4. 生成或复刻后核对文字、公式和箭头，按需精修，再导出需要的格式。
 
-侧边栏显示当前文件夹的作品。可以继续使用“本地作品”，也可以点击“打开文件夹”，在所选目录的 `.mkfigure/` 内保存作品、导入资料副本、生成图片、编辑图形与历史记录。旧作品无需迁移，也不会因打开新文件夹而移动；“返回本地作品”可重新查看。当前一个应用实例只有一个活动文件夹，需等任务完成或停止后才能切换。
+| 使用方式 | 入口 |
+| --- | --- |
+| Windows x64 / macOS 13+（Apple Silicon、Intel） | [发行版与安装包](https://github.com/Layman-art/MKfigure/releases/latest) · [v0.4.1 安装指南](安装与使用.md) |
+| 在 Codex 对话中使用流程 | [mk-figure-skill](mk-figure-skill/)：将目录安装到本机 Codex skills 目录，已有同名版本先备份。 |
+| 单独使用矢量素材 | [10 个 SVG 图标](icon-pack/) |
+| 使用 main 分支的新功能 | [本地开发](#本地开发) · [0.6.0 工作区指南](docs/workspaces-0.6.0.md) |
 
-悬停作品或键盘聚焦时显示独立的“删除”按钮。确认后，作品目录及内部素材、生成图和记录移入系统回收站；需要恢复时可在系统回收站还原。不会影响外部原始资料、导出到其他文件夹的文件及其他作品。导出在该作品目录内的文件也属于删除范围。
+安装包包含运行时，不要求用户另装 Node.js、Python 或 PowerPoint；在 PowerPoint 中编辑 PPTX 时需安装相应软件。当前只接入 Codex，生图能力与可选模型以账户实际支持为准。
 
-确认框默认选择“取消”。取消确认或回收操作失败时保留作品；正在运行的任务需先停止再删除。删除成功后列表会更新，重新打开应用也不会重新列出该作品。
+## 数据与使用边界
 
-## 检查与导出
+作品保存在本机；文件夹作品位于所选目录的 `.mkfigure/` 中。**执行模型任务时，会按任务需要将内容、资料和参考图发送给 Codex**。软件不提供云同步；备份文件夹作品时需保留整个目录，包括 `.mkfigure/`。完整流向见[数据流说明](docs/data-flow.md)。
 
-复刻结果使用原生 PPT 文字、形状、曲线及组合，并可导出 SVG、PNG。中文默认微软雅黑，英文为 Times New Roman；公式使用可编辑衬线文字和线条，变量斜体、数字与运算符正体，不使用 Office Math。复杂公式编辑后可能需要手动调整间距。
+<details>
+<summary><strong>查看字体、检查与平台说明</strong></summary>
 
-先对照预览检查文字、公式、箭头与科学含义，再选择导出格式。**只勾选 PPTX 就只导出一个 PPTX 文件**，不再附带 scene JSON 或检查报告；项目图形数据、模型原始返回及检查记录留在应用内部。
+- 中文默认微软雅黑，英文为 Times New Roman；字体不随软件分发，跨电脑编辑需自行安装。复杂公式改字后可能需要手动调整间距。
+- 结构检查通过不代表科学内容正确或逐像素还原。复杂图、公式、箭头和论文结论仍需人工核对；PDF/PPTX 导入主要提取文字。
+- 六路并发通过本地可控模型测试；真实云端全流程验证覆盖一张简洁示例图，不能据此承诺六倍提速或所有复杂图都能通过。
+- Windows 安装包尚未做发行者代码签名。macOS 包已做结构校验，尚未完成 Mac 真机验证、Developer ID 签名或 Apple 公证。
 
-Microsoft 字体不随安装包分发，跨电脑编辑需安装相应字体。PDF/PPTX 导入主要提取文字；扫描页面、图表和公式需要另附图片或人工核对。复杂图可能需要多次精修，不能把结构检查通过理解为科学内容正确或逐像素一致。
+</details>
 
-## 用量与时间
+## 文档导航
 
-运行时显示已用时间、模型和推理强度；“用量与时间”保留新操作的记录。Token 数来自 Codex 回传，缓存包含在输入中、推理包含在输出中，不重复相加；**它不是账户余额或费用**。
+| 我想了解 | 文档 |
+| --- | --- |
+| 生成、改图、复刻、导出与素材管理 | [完整使用指南](docs/user-guide.md) |
+| 六窗、文件夹保存与统一风格 | [0.6.0 创作工作区](docs/workspaces-0.6.0.md) |
+| 已测内容、未测内容及 PowerPoint 验证 | [0.6.0 验证记录](docs/validation-0.6.0.md) |
+| 软件、Codex 与 skill 如何衔接 | [数据流与代码入口](docs/data-flow.md) |
 
-未回传的用量显示“Token 未回传”，不按文本长度估算。失败或停止时保留已收到的部分数据。升级前没有记录的历史任务不会补造时间或用量。
+## 本地开发
 
-“本地作品”和个人素材库保存在应用用户数据目录；文件夹作品保存在所选目录的 `.mkfigure/` 内。备份或移动文件夹作品时，应保留整个目录及其 `.mkfigure/`，再在新位置打开。账户登录与全局模型设置不随创作文件夹携带；导出位置仍由用户选择，原始文件保持不变。
-
-## 验证范围
-
-0.4.0 的 130 项离线测试及三种视觉稿修改入口通过；真实 `gpt-6-astra/low` 五动作测试和 PowerPoint 编辑保存重开完成。测试同时发现画幅未遵从、复刻公式重叠等质量限制，没有把运行成功当作成品通过。见 [0.4.0 变更记录](docs/image-revision-0.4.0.md)。低推理实测原始报告在开发机的 `output/` 目录，未随源代码仓库发布。
-
-0.3.0 的 112 项离线测试通过，新增素材库流程在真实 Electron 中验收，覆盖四种格式导入、参考选择返回、原 SVG 导出和删除后的项目副本保留。截图及范围说明见 [0.3.0 素材库记录](docs/image-library-0.3.0.md)。
-
-历史验证：0.2.1 的 80 项离线测试通过，其中 14 项覆盖删除与存储边界。真实 Electron 删除流程使用独立测试项目、模拟确认响应与回收动作完成验收，没有删除用户真实作品；这不等于 Windows/macOS 系统回收站的实机恢复测试。详见 [0.2.1 项目管理记录](docs/project-management-0.2.1.md)。
-
-0.2.0 已验证一次真实 `gpt-6-astra` 小请求的 token 回传，以及 Neural ODE 场景在真实 PowerPoint 中的文字编辑、保存重开和 5 处意外换行修复。文字与风格生图路径使用真实 Store 配合模拟模型服务验收，未以此宣称新的在线生图全流程通过。历史结果与剩余排版限制见 [0.2.0 更新与验证记录](docs/product-update-0.2.0.md)。
-
-分发包未做发行者代码签名或 Apple 公证；macOS 包完成结构校验后仍需实机运行验收，不能以打包成功代替 Mac 实测。
-
-内置素材目录及来源说明在 `resources/library`。SVG 原件位于 `icon-pack/`；素材准备脚本核对原件与打包副本的 SHA-256。Mac 封装脚本检查 13 项原件、缩略图及原件哈希。这些检查验证素材完整性，不代表新增界面或模型流程已经通过实机验收。
-
-## 开发
-
-需要 Node.js 22+ 和 npm：
+技术栈：Electron · React · TypeScript · Vite · Vitest · Playwright。需要 Node.js 22+ 和 npm。
 
 ```sh
+git clone https://github.com/Layman-art/MKfigure.git
+cd MKfigure
 npm ci
 node scripts/prepare-codex.mjs
 node scripts/prepare-library-assets.mjs
 npm run dev
+```
+
+检查与打包：
+
+```sh
 npm test
 npm run build
 npm run dist:win
+# 在 macOS 上构建
+npm run dist:mac
 ```
 
-在 macOS 上运行 `npm run dist:mac` 或 `npm run dist:mac:dmg` 可构建 ZIP 或 DMG。Windows 主机另有官方 Darwin 二进制封装脚本，见 [Mac 打包验证](docs/mac-package-validation.md)。默认测试不调用真实模型；显式开启的在线验证（例如 `MK_CODEX_LIVE=1`）会使用账户额度。
+默认测试不调用真实模型；显式开启在线验证会使用账户额度。Mac 构建细节见[打包说明](docs/mac-package-validation.md)。欢迎通过 [Issues](https://github.com/Layman-art/MKfigure/issues) 反馈问题，或提交 Pull Request。
 
-接口依据：[官方 Codex App Server](https://learn.chatgpt.com/docs/app-server)。历史记录：[界面调整](docs/design-refresh-0.1.2.md)、[超时修复](docs/timeout-fix-0.1.3.md)。
+## 开源与来源
+
+桌面软件、[Codex skill](mk-figure-skill/) 与 [SVG 图标包](icon-pack/) 同仓维护，采用 [MIT License](LICENSE)。原 PPT-editable 的工具与方法已合并，来源与许可见[合并说明](docs/ppt-editable-integration.md)；参考素材来源见[素材记录](resources/library/provenance.md)。
+
+仓库首页的展示结构参考 [Research Workbench](https://github.com/Layman-art/Research-Workbench)。
