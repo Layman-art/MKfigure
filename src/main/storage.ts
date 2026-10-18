@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import { lstatSync } from 'node:fs';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { safeStorage, nativeImage } from 'electron';
@@ -25,13 +26,37 @@ export function cleanBrief(value: unknown): Brief {
     purpose: b?.purpose === 'slides' ? 'slides' : 'paper', aspectRatio: ['auto','2:1','16:9','3:2','4:3','1:1'].includes(b?.aspectRatio || '') ? b.aspectRatio! : 'auto',
     widthMm: typeof b?.widthMm === 'number' && Number.isFinite(b.widthMm) ? Math.min(1000, Math.max(50, b.widthMm)) : 180, fullVector: b?.fullVector !== false };
 }
-async function atomicJson(file: string, value: unknown) { const tmp = `${file}.${randomUUID()}.tmp`; await fs.writeFile(tmp, JSON.stringify(value, null, 2), 'utf8'); await fs.rename(tmp, file); }
+export async function atomicJson(file: string, value: unknown) {
+  const tmp = `${file}.${randomUUID()}.tmp`;
+  try {
+    await fs.writeFile(tmp, JSON.stringify(value, null, 2), 'utf8');
+    for (let attempt = 0; ; attempt++) {
+      try { await fs.rename(tmp, file); return; }
+      catch (error) {
+        // Windows can briefly hold the destination while a preview/index read finishes.
+        if (process.platform !== 'win32' || !['EPERM','EACCES','EBUSY'].includes((error as NodeJS.ErrnoException).code || '') || attempt >= 4) throw error;
+        await new Promise(resolve => setTimeout(resolve, 25 * 2 ** attempt));
+      }
+    }
+  } finally { await fs.unlink(tmp).catch(() => undefined); }
+}
+
+function ordinaryPath(file: string, directory: boolean, allowMissing = false) {
+  try {
+    const info = lstatSync(file);
+    if (info.isSymbolicLink() || (directory ? !info.isDirectory() : !info.isFile() || info.nlink > 1)) throw new Error('作品文件或目录异常：不支持链接文件和目录');
+  } catch (error) {
+    if (!allowMissing || (error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+  }
+}
 
 export class Store {
   settings: AppSettings = structuredClone(DEFAULT_SETTINGS);
   private encryptedKeys: Partial<Record<ProviderId, string>> = {};
   private queues = new Map<string, Promise<unknown>>();
-  constructor(readonly directory: string, readonly resources: string) {}
+  private projectsDirectory: string;
+  constructor(readonly directory: string, readonly resources: string) { this.projectsDirectory = path.join(directory, 'projects'); }
+  setProjectsDirectory(directory: string) { this.projectsDirectory = directory; }
   async init() {
     await fs.mkdir(path.join(this.directory, 'projects'), { recursive: true });
     try { const saved = JSON.parse(await fs.readFile(path.join(this.directory, 'settings.json'), 'utf8')); this.settings = this.cleanSettings(saved.settings); this.encryptedKeys = saved.keys || {}; } catch { /* first launch */ }
@@ -62,12 +87,25 @@ export class Store {
     }
     await atomicJson(path.join(this.directory, 'settings.json'), { settings: next, keys: encrypted }); this.settings = next; this.encryptedKeys = encrypted; return this.publicSettings();
   }
-  projectDir(id: string) { return path.join(this.directory, 'projects', safeId(id)); }
+  projectDir(id: string) {
+    const directory = path.join(this.projectsDirectory, safeId(id));
+    // These paths also feed asset import, image generation and rendering callers.
+    ordinaryPath(this.projectsDirectory, true);
+    ordinaryPath(directory, true, true);
+    ordinaryPath(path.join(directory, 'assets'), true, true);
+    ordinaryPath(path.join(directory, 'generation'), true, true);
+    for (const name of ['project.json', 'preview.svg', 'preview.png']) ordinaryPath(path.join(directory, name), false, true);
+    return directory;
+  }
   async create(name: string, route: 'full'|'reconstruct') {
     const now = new Date().toISOString(); const project: Project = { id: randomUUID(), name: cleanText(name, 160) || '未命名科研图', createdAt: now, updatedAt: now, stage: route === 'reconstruct' ? 'reconstruct' : 'brief', brief: { ...DEFAULT_BRIEF, language: route === 'reconstruct' ? 'original' : 'zh' }, sources: [], generated: [], history: [] };
     await fs.mkdir(path.join(this.projectDir(project.id), 'assets'), { recursive: true }); await this.write(project); return project;
   }
-  async load(id: string): Promise<Project> { return JSON.parse(await fs.readFile(path.join(this.projectDir(id), 'project.json'), 'utf8')); }
+  async load(id: string): Promise<Project> {
+    const project = JSON.parse(await fs.readFile(path.join(this.projectDir(id), 'project.json'), 'utf8')) as Project;
+    if (project.id !== id) throw new Error('作品标识与目录不一致');
+    return project;
+  }
   async write(project: Project) {
     project.updatedAt = new Date().toISOString();
     const persisted = structuredClone(project); delete persisted.previewSvg; delete persisted.previewPng;
@@ -83,7 +121,7 @@ export class Store {
     const directory = this.projectDir(safeId(id));
     const previous = this.queues.get(id) || Promise.resolve();
     const task = previous.catch(() => undefined).then(async () => {
-      const root = path.join(this.directory, 'projects');
+      const root = this.projectsDirectory;
       const [rootInfo, info] = await Promise.all([fs.lstat(root), fs.lstat(directory)]);
       if (!rootInfo.isDirectory() || rootInfo.isSymbolicLink() || !info.isDirectory() || info.isSymbolicLink()) throw new Error('作品目录异常，无法移入回收站');
       const [realRoot, realDirectory] = await Promise.all([fs.realpath(root), fs.realpath(directory)]);
@@ -97,13 +135,15 @@ export class Store {
     try { await task; } finally { if (this.queues.get(id) === task) this.queues.delete(id); }
   }
   async list(): Promise<ProjectSummary[]> {
-    const entries = await fs.readdir(path.join(this.directory, 'projects'), { withFileTypes: true }); const result: ProjectSummary[] = [];
+    ordinaryPath(this.projectsDirectory, true);
+    const entries = await fs.readdir(this.projectsDirectory, { withFileTypes: true }); const result: ProjectSummary[] = [];
     for (const e of entries) if (e.isDirectory()) try { const p = await this.load(e.name); result.push({ id: p.id, name: p.name, updatedAt: p.updatedAt, stage: p.stage }); } catch { /* skip incomplete */ }
     return result.sort((a,b) => b.updatedAt.localeCompare(a.updatedAt));
   }
   resolveAsset(projectId: string, asset: Asset): string {
     const base = path.join(this.projectDir(projectId), 'assets'); const resolved = path.resolve(base, path.basename(asset.path));
-    if (!resolved.startsWith(base + path.sep)) throw new Error('无效素材路径'); return resolved;
+    if (!resolved.startsWith(base + path.sep)) throw new Error('无效素材路径');
+    ordinaryPath(resolved, false, true); return resolved;
   }
   async imageData(projectId: string, asset: Asset) { if (asset.kind !== 'image') throw new Error('该文件不是图片'); const buffer = await fs.readFile(this.resolveAsset(projectId, asset)); return `data:${asset.mime};base64,${buffer.toString('base64')}`; }
   async hydrate(project: Project): Promise<Project> {

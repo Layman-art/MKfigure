@@ -13,15 +13,15 @@ const exec = promisify(execFile);
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const runtimeRoot = join(root, 'resources', 'codex');
 const downloadRoot = join(runtimeRoot, '_downloads');
-const version = '0.154.0';
-// Pins independently checked against official registry metadata on 2026-09-16.
+const version = '0.163.0';
+// Pins independently checked against official registry metadata on 2026-10-18.
 const targets = [
   { id: 'win-x64', suffix: 'win32-x64', triple: 'x86_64-pc-windows-msvc', binary: 'codex.exe',
-    integrity: 'sha512-Stg2KEJPIKVqPPR1wCverGOR4ey3RR3cvakR07w7FNKQUMzmHaOZomRsP2bR1qOT/67yHsks9rB+MCMfIWXcRA==' },
+    integrity: 'sha512-QQGQ/q9dCJ5C5jqhgFrwycpWG3szIyFNThMiKl6hYtu6N/eM3Qd7StesgnCFAfzVED8IkE3N3oH71szzcludqw==' },
   { id: 'mac-arm64', suffix: 'darwin-arm64', triple: 'aarch64-apple-darwin', binary: 'codex',
-    integrity: 'sha512-HP/vJCH/t2hB9Kg6hotN9UglClJ6/z584fal5lEP14C9gNAgAQS4/kTQC7l5V+BA3TqwDPwINSjul28cX8AYXg==' },
+    integrity: 'sha512-i7Dzk2a5aGmuGM9aNZgaUVTojZ/4bc5lRfosz++Y7X2BGhDkz+cySgbD+NYS1pOxfm0VEbLi9PZ3pAulI4kchw==' },
   { id: 'mac-x64', suffix: 'darwin-x64', triple: 'x86_64-apple-darwin', binary: 'codex',
-    integrity: 'sha512-2aqz+72Hop8PF2RYglQ4JnGjm3OlRIrTykJIT0hyLeUgM6NCFy09RgTmqRCoWliKQZjEn9jjZqUEp7QujAj77g==' },
+    integrity: 'sha512-Ioj7h+B1ME9ZU1PH1ATfvFV5DiototEpFFaSSbg3kfDifB9djhl5fcJ++g5mpcL/+uVbcnReei+RiSXEx8o+kw==' },
 ];
 const wanted = new Set(process.argv.slice(2));
 if ([...wanted].some(id => !targets.some(target => target.id === id))) throw new Error('Supported targets: win-x64 mac-arm64 mac-x64');

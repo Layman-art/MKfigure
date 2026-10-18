@@ -538,19 +538,25 @@ def main() -> None:
     args = parser.parse_args()
     workspace = args.workspace.resolve()
     output = workspace / "release-mac"
-    stage = output / "staging" / args.arch
+    version = json.loads((workspace / "package.json").read_text("utf-8"))["version"]
+    if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+(?:-[a-zA-Z0-9.-]+)?", version):
+        raise ValueError("Invalid package version for staging path")
+    stage = output / "staging" / version / args.arch
+    ensure_inside(stage.resolve(), workspace)
+    if stage.exists():
+        raise ValueError(f"Version staging already exists; preserve it and choose a fresh version: {stage}")
     links, metadata = prepare(workspace, stage, args.electron_zip.resolve(), args.asar.resolve(), args.arch)
-    (output / f"{args.arch}-preparation.json").write_text(json.dumps({"symlinks": links, "asar": metadata}, indent=2), "utf-8")
+    (output / f"{version}-{args.arch}-preparation.json").write_text(json.dumps({"symlinks": links, "asar": metadata}, indent=2), "utf-8")
     print(f"Prepared {args.arch}: {len(links)} framework symlinks; app.asar has {metadata['entries']} entries and no native Node modules", flush=True)
     if args.prepare_only:
         return
-    signing = sign_stage(stage, args.rcodesign.resolve(), output / "logs" / args.arch)
+    signing = sign_stage(stage, args.rcodesign.resolve(), output / "logs" / version / args.arch)
     print(f"Ad-hoc signed and verified {len(signing)} rebranded app executables; no Developer ID or uploads", flush=True)
     destination = output / f"MK-Figure-{metadata['appVersion']}-macOS-{args.arch}.zip"
     zip_stage(stage, destination, links)
     report = validate_archive(destination, args.arch, metadata)
     report["localAdHocSigning"] = signing
-    (output / f"macOS-{args.arch}-validation.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), "utf-8")
+    (output / f"macOS-{version}-{args.arch}-validation.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), "utf-8")
     print(json.dumps({"file": str(destination), "bytes": report["bytes"], "sha256": report["sha256"], "nativeMacExecutionTested": False}), flush=True)
 
 

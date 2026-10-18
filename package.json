@@ -1,7 +1,7 @@
 {
   "name": "mk-figure-studio",
   "productName": "MK Figure",
-  "version": "0.4.1",
+  "version": "0.6.0",
   "description": "科研图生成与可编辑 PPT/SVG 工作台",
   "author": "MK Figure",
   "license": "MIT",

@@ -1,6 +1,14 @@
 export type Stage = 'brief' | 'visual' | 'reconstruct' | 'review' | 'export';
 export type ProviderId = 'codex' | 'openai' | 'deepseek' | 'custom';
 export type ModelInfo = { id: string; name: string; description?: string; supportsVision?: boolean; supportsImages?: boolean; reasoningEfforts?: string[]; isDefault?: boolean };
+export const PANE_COUNT = 6;
+export interface ModelCatalogState { models: ModelInfo[]; updatedAt?: string; error?: string; stale: boolean; }
+export interface StyleMessage { role: 'user' | 'assistant'; text: string; }
+export interface SharedStyle { prompt: string; palette: string; background: string; lines: string; reference?: { name: string; file: string }; updatedAt?: string; history?: StyleMessage[]; }
+export interface FolderInfo { id: string; name: string; path?: string; style: SharedStyle; projects: ProjectSummary[]; }
+export interface RecentFolder { path: string; name: string; }
+export interface FolderState { folder: FolderInfo; recentFolders: RecentFolder[]; }
+export interface StyleSuggestion { text: string; usage?: TokenUsage; model: string; durationMs: number; }
 export interface ProviderConfig { id: ProviderId; enabled: boolean; baseUrl: string; model: string; vision: boolean; hasKey?: boolean; codexPath?: string; }
 export interface AppSettings { activeProvider: ProviderId; providers: ProviderConfig[]; imageProvider: 'codex' | 'openai' | 'custom'; imageModel: string; reasoningEffort: string; }
 export interface Brief { topic: string; focus: string; language: 'zh' | 'en' | 'bilingual' | 'original'; purpose: 'paper' | 'slides'; aspectRatio: 'auto' | '2:1' | '16:9' | '3:2' | '4:3' | '1:1'; widthMm: number; prompt: string; stylePrompt?: string; notes: string; fullVector: boolean; }
@@ -21,15 +29,27 @@ export interface QaIssue { severity: 'error' | 'warning' | 'info'; code: string;
 export interface QaReport { structuralPassed: boolean; visualReview: 'pending' | 'reviewed' | 'failed'; issues: QaIssue[]; textCount: number; shapeCount: number; rasterCount: number; checkedAt: string; visualNotes?: string; }
 export interface HistoryEntry { at: string; action: string; message: string; }
 export interface TokenUsage { inputTokens?: number; cachedInputTokens?: number; outputTokens?: number; reasoningOutputTokens?: number; totalTokens?: number; }
-export interface RunMetrics { id: string; action: RunAction; startedAt: string; finishedAt?: string; durationMs: number; status: 'running' | 'completed' | 'failed' | 'cancelled'; model?: string; reasoningEffort?: string; usage?: TokenUsage; usageComplete?: boolean; }
-export interface Project { id: string; name: string; createdAt: string; updatedAt: string; stage: Stage; brief: Brief; sources: Asset[]; styleId?: string; customReference?: Asset; libraryReferenceId?: string; target?: Asset; generated: Asset[]; scene?: FigureScene; previewSvg?: string; previewPng?: string; qa?: QaReport; history: HistoryEntry[]; runs?: RunMetrics[]; }
+export interface RunMetrics { id: string; action: RunAction; startedAt: string; finishedAt?: string; durationMs: number; status: 'running' | 'completed' | 'failed' | 'cancelled'; model?: string; reasoningEffort?: string; usage?: TokenUsage; usageComplete?: boolean; styleSnapshot?: { mode: string; prompt: string; reference?: Asset }; }
+export interface Project { id: string; name: string; createdAt: string; updatedAt: string; stage: Stage; brief: Brief; sources: Asset[]; styleId?: string; customReference?: Asset; libraryReferenceId?: string; target?: Asset; generated: Asset[]; scene?: FigureScene; previewSvg?: string; previewPng?: string; qa?: QaReport; history: HistoryEntry[]; runs?: RunMetrics[]; styleMode?: 'shared' | 'custom' | 'none'; styleHistory?: StyleMessage[]; }
 export interface ProjectSummary { id: string; name: string; updatedAt: string; stage: Stage; }
-export interface ProviderStatus { available: boolean; authenticated: boolean; label: string; detail?: string; loginUrl?: string; }
+export interface ProviderStatus { available: boolean; authenticated: boolean; label: string; detail?: string; loginUrl?: string; runtimeVersion?: string; }
 export interface ProgressEvent { projectId: string; action: string; message: string; fraction?: number; metrics?: RunMetrics; }
-export interface Bootstrap { settings: AppSettings; projects: ProjectSummary[]; references: StyleReference[]; version: string; platform: string; }
+export interface WorkspaceInfo { id: number; max: number; }
+export interface Bootstrap extends FolderState { settings: AppSettings; projects: ProjectSummary[]; references: StyleReference[]; version: string; platform: string; workspace: WorkspaceInfo; }
 export type RunAction = 'analyze' | 'prompt' | 'generate' | 'edit-image' | 'regenerate-image' | 'refine-image' | 'reconstruct' | 'review' | 'refine';
-export interface DesktopApi {
+export interface WorkspaceApi {
   bootstrap(): Promise<Bootstrap>;
+  getFolder(): Promise<FolderState>;
+  openFolder(recentPath?: string): Promise<FolderState>;
+  closeFolder(): Promise<FolderState>;
+  saveSharedStyle(style: SharedStyle): Promise<SharedStyle>;
+  setSharedReference(libraryId?: string): Promise<SharedStyle>;
+  optimizeStyle(text: string, instruction?: string, history?: StyleMessage[]): Promise<StyleSuggestion>;
+  cancelStyle(): Promise<void>;
+  onFolderChanged(callback: () => void): () => void;
+  getModelCatalog(force?: boolean): Promise<ModelCatalogState>;
+  releaseProject(projectId: string): Promise<void>;
+  onSettingsChanged(callback: (settings: AppSettings) => void): () => void;
   createProject(name: string, route: 'full' | 'reconstruct'): Promise<Project>;
   deleteProject(projectId: string): Promise<{ deleted: boolean; projects: ProjectSummary[] }>;
   listLibrary(): Promise<LibraryItem[]>;
@@ -52,5 +72,11 @@ export interface DesktopApi {
   exportProject(projectId: string, formats: Array<'pptx' | 'svg' | 'png'>): Promise<{ directory: string; files: string[] }>;
   revealFile(path: string): Promise<void>;
   onProgress(callback: (event: ProgressEvent) => void): () => void;
+}
+export interface DesktopApi extends WorkspaceApi {
+  panes: WorkspaceApi[];
+  finishWindowClose(): Promise<void>;
+  cancelWindowClose(): Promise<void>;
+  onWindowCloseRequested(callback: () => void): () => void;
 }
 declare global { interface Window { mkFigure: DesktopApi; } }

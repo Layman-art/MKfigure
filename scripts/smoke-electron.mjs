@@ -13,7 +13,7 @@ const failures=[];let details={};
 try{
   const page=await client.firstWindow();page.on('pageerror',e=>failures.push(e.message));
   await client.evaluate(({BrowserWindow})=>{const win=BrowserWindow.getAllWindows()[0];win.webContents.setBackgroundThrottling(false);win.restore();win.show();win.focus();});
-  await page.getByRole('button',{name:/^新建科研图/}).waitFor({timeout:60000});
+  await page.getByRole('button',{name:/^新建科研图/}).first().waitFor({timeout:60000});
   await page.screenshot({path:path.join(out,'01-welcome.png')});
   const boot=await page.evaluate(()=>window.mkFigure.bootstrap());assert.equal(boot.references.length,3);assert.ok(boot.references.every(r=>r.previewUrl.startsWith('data:image/')));
   await seedTestScene(page);
@@ -53,6 +53,8 @@ try{
   const imported=await page.evaluate(id=>window.mkFigure.importFiles(id,'target'),direct.id);assert.equal(imported.target.kind,'image');assert.ok(imported.target.previewUrl.startsWith('data:image/png'));
   const custom=await page.evaluate(id=>window.mkFigure.importFiles(id,'reference'),direct.id);assert.ok(custom.customReference);assert.equal(custom.styleId,undefined);
   let blocked=false;try{await page.evaluate(()=>window.mkFigure.renderScene('../outside',{}));}catch{blocked=true;}assert.ok(blocked);
+  // Restore the project shown by this renderer after the direct IPC test above.
+  await page.evaluate(id=>window.mkFigure.openProject(id),current.id);
   assert.deepEqual(failures,[]);
   details={passed:true,referenceCount:boot.references.length,exampleElements:current.scene.elements.length,renamingPersisted:true,exportFiles:files,pptOnly,codexOnlySettings:true,directReconstruction:true,customReference:true,invalidProjectBlocked:true,pageErrors:failures};
   await fs.writeFile(path.join(out,'results.json'),JSON.stringify(details,null,2));console.log(JSON.stringify(details));

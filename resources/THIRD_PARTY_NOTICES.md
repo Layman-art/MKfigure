@@ -3,7 +3,7 @@
 MK Figure includes the following open-source components. Their original license files are preserved in the included packages or runtime directories.
 
 - Electron: MIT, with Chromium and other bundled components under their respective licenses. See Electron's LICENSE and LICENSES.chromium.html.
-- OpenAI Codex 0.154.0: Apache-2.0. Unmodified official npm native runtimes and their licenses are under resources/codex. See the runtime manifest for the original package, integrity and version.
+- OpenAI Codex 0.163.0: Apache-2.0. Unmodified official npm native runtimes and their licenses are under resources/codex. See the runtime manifest for the original package, integrity and version.
 - PptxGenJS: MIT; https://github.com/gitbrent/PptxGenJS
 - React and React DOM: MIT; https://github.com/facebook/react
 - JSZip: MIT or GPLv3; used under MIT; https://github.com/Stuk/jszip

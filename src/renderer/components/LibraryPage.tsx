@@ -1,20 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import { AlertCircle, ArrowDownToLine, ArrowLeft, Check, CheckCircle2, Images, LoaderCircle, Search, Trash2, Upload, X } from 'lucide-react';
-import type { LibraryCategory, LibraryItem } from '../../shared/types';
+import type { LibraryCategory, LibraryItem, WorkspaceApi } from '../../shared/types';
 import { errorText } from '../display';
 import { Button, Field } from './Controls';
 
 type Filter = 'all' | LibraryCategory;
 type Preview = { item: LibraryItem; url: string };
 
-export default function LibraryPage({ selecting, selectedId, onBack, onSelect, onBusyChange }: {
+export default function LibraryPage({ api = window.mkFigure, selecting, selectedId, onBack, onSelect, onBusyChange }: {
+  api?: WorkspaceApi;
   selecting: boolean;
   selectedId?: string;
   onBack: () => void;
   onSelect: (id: string) => Promise<void>;
   onBusyChange: (busy: boolean) => void;
 }) {
-  const app = window.mkFigure;
+  const app = api;
   const [items, setItems] = useState<LibraryItem[]>([]);
   const [filter, setFilter] = useState<Filter>(selecting ? 'reference' : 'all');
   const [query, setQuery] = useState('');

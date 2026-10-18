@@ -19,7 +19,7 @@ const SYSTEM = `You are the scientific figure assistant in MK Figure. Follow the
 
 export class Workflow {
   private running = new Map<string, AbortController>();
-  constructor(readonly store: Store, readonly hub: () => ProviderHub, readonly progress: (event: ProgressEvent) => void) {}
+  constructor(readonly store: Store, readonly hub: () => ProviderHub, readonly progress: (event: ProgressEvent) => void, readonly resolveStyle?: (project:Project)=>Promise<Project>) {}
   cancel(id: string) { this.running.get(id)?.abort(); }
   cancelAll() { for (const controller of this.running.values()) controller.abort(); }
   isRunning(id: string) { return this.running.has(id); }
@@ -97,6 +97,10 @@ export class Workflow {
     const saveMetrics = (project: Project) => { project.runs=[...(project.runs||[]),snapshot()].slice(-150); };
     try {
       let p = await this.store.load(id); const provider = this.store.settings.activeProvider;
+      if (['generate','prompt'].includes(action) && this.resolveStyle) {
+        p = await this.resolveStyle(p);
+        metrics.styleSnapshot = {mode:p.styleMode || 'custom',prompt:p.brief.stylePrompt || '',reference:p.customReference};
+      }
       const config = this.store.settings.providers.find(c=>c.id===provider)!;
       emit('正在准备资料…',0.05);
       if (action === 'review') {
@@ -133,7 +137,7 @@ export class Workflow {
         checkCancel();
         const outputDir = path.join(this.store.projectDir(id),'generation');
         const operationPath = path.join(outputDir,`operation-${metrics.id}.json`);
-        const operation = {runId:metrics.id,action,mode:editing?'edit':'create',model,reasoningEffort:metrics.reasoningEffort,createdAt:metrics.startedAt,prompt,
+        const operation = {runId:metrics.id,action,mode:editing?'edit':'create',model,reasoningEffort:metrics.reasoningEffort,createdAt:metrics.startedAt,prompt,styleSnapshot:metrics.styleSnapshot,
           ...(action !== 'generate' ? {feedback,previousTargetId:p.target?.id} : {}),...(editing ? {sourceTargetId:p.target!.id} : {})};
         await fs.mkdir(outputDir,{recursive:true});
         await fs.writeFile(operationPath,JSON.stringify(operation,null,2),'utf8');

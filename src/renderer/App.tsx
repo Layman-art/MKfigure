@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ArrowDownToLine, ArrowLeft, ArrowRight, Check, CheckCircle2, ChevronDown, ChevronRight, Circle, FileImage, FileText, FolderOpen, ImagePlus, Images, Layers3, LoaderCircle, Maximize2, Plus, RefreshCw, Settings2, Sparkles, WandSparkles, X, AlertCircle, ExternalLink, PencilLine, ShieldCheck, Square, Trash2, Type, Upload, Workflow } from 'lucide-react';
-import type { Asset, Bootstrap, Brief, FigureScene, ProgressEvent, Project, RunAction, RunMetrics, Stage } from '../shared/types';
+import type { Asset, Bootstrap, Brief, FigureScene, ProgressEvent, Project, RunAction, RunMetrics, Stage, SharedStyle, WorkspaceApi } from '../shared/types';
 import BrandMark from './BrandMark';
 import { Button, Field } from './components/Controls';
-import ReferencePicker from './components/ReferencePicker';
+import StyleEditor from './components/StyleEditor';
+import './creation-workspace.css';
 import LibraryPage from './components/LibraryPage';
 import ImageRevision, { type ImageRevisionMode } from './components/ImageRevision';
 import SettingsDialog from './components/SettingsDialog';
@@ -12,7 +13,7 @@ import RunSummary, { LiveRunSummary } from './components/RunSummary';
 import { errorText, reasoningLabel } from './display';
 
 const STAGES: Array<{ id: Stage; label: string; detail: string }> = [
-  { id: 'brief', label: '描述想法', detail: '内容与参考资料' },
+  { id: 'brief', label: '内容与风格', detail: '内容与参考资料' },
   { id: 'visual', label: '生成视觉稿', detail: '构图与风格探索' },
   { id: 'reconstruct', label: '可编辑复刻', detail: '图形、文字与公式' },
   { id: 'review', label: '检查与精修', detail: '内容、排版与可编辑性' },
@@ -33,7 +34,10 @@ function SparkMark() {
   return <svg className="spark-mark" width="30" height="30" viewBox="0 0 30 30" aria-hidden="true" focusable="false"><g stroke="currentColor" strokeWidth="2.6" strokeLinecap="round"><path d="M15 3.5V11"/><path d="M15 19v7.5"/><path d="M3.5 15H11"/><path d="M19 15h7.5"/><path d="M6.9 6.9l5.2 5.2"/><path d="M17.9 17.9l5.2 5.2"/><path d="M23.1 6.9l-5.2 5.2"/><path d="M12.1 17.9l-5.2 5.2"/></g></svg>;
 }
 
-export default function App() {
+export interface PaneState { projectId?: string; label: string; running: boolean; ready: boolean; message: string; thumbnail?: string; fraction?: number }
+export interface PaneActions { flush: () => Promise<void>; start: () => void; create: (route: 'full' | 'reconstruct') => Promise<void>; open: (id: string) => Promise<void>; remove: (id: string) => Promise<void>; showLibrary: () => void; showSettings: () => void }
+interface AppProps { sharedStyle?: SharedStyle; onHome?: () => void; onEditSharedStyle?: () => void; api?: WorkspaceApi; compact?: boolean; paneIndex?: number; onExpand?: () => void; onState?: (state: PaneState) => void; onRegister?: (actions: PaneActions) => void }
+export default function App({ api = window.mkFigure, compact = false, paneIndex = 0, onExpand, onState, onRegister, sharedStyle, onHome, onEditSharedStyle }: AppProps) {
   const [boot, setBoot] = useState<Bootstrap>();
   const [project, setProject] = useState<Project>();
   const [busy, setBusy] = useState<Busy>(null);
@@ -54,14 +58,18 @@ export default function App() {
   const [nameDraft, setNameDraft] = useState('');
   const [library, setLibrary] = useState<LibraryView>();
   const [libraryBusy, setLibraryBusy] = useState(false);
+  const [styleBusy, setStyleBusy] = useState(false);
+  const [compactAction, setCompactAction] = useState<'generate' | 'reconstruct'>('generate');
   const libraryLock = useRef(false);
   const nameInput = useRef<HTMLInputElement>(null);
   const projectRef = useRef<Project | undefined>(undefined);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(saveTimer.current), []);
   const saveChain = useRef<Promise<void>>(Promise.resolve());
   const revision = useRef(0);
   const operationLock = useRef(false);
-  const app = window.mkFigure;
+  const runStarted = useRef(false);
+  const app = api;
 
   const updateSummary = useCallback((next: Project) => {
     setBoot(prev => prev ? { ...prev, projects: [{ id: next.id, name: next.name, updatedAt: next.updatedAt, stage: next.stage }, ...prev.projects.filter(p => p.id !== next.id)] } : prev);
@@ -92,11 +100,11 @@ export default function App() {
     saveTimer.current = setTimeout(() => { void persist(next, rev); }, 650);
   }, [persist]);
   const changeBrief = (patch: Partial<Brief>) => { if (projectRef.current) changeProject({ brief: { ...projectRef.current.brief, ...patch } }); };
-  const flushSave = async () => {
+  const flushSave = useCallback(async () => {
     clearTimeout(saveTimer.current);
-    if (projectRef.current) await persist(projectRef.current, revision.current);
+    if (projectRef.current && !runStarted.current) await persist(projectRef.current, revision.current);
     else await saveChain.current;
-  };
+  }, [persist]);
   const libraryBusyChanged = useCallback((value: boolean) => { libraryLock.current = value; setLibraryBusy(value); }, []);
   const rename = async () => {
     if (!renaming) return;
@@ -108,22 +116,45 @@ export default function App() {
   useEffect(() => { if (renaming) { nameInput.current?.focus(); nameInput.current?.select(); } }, [renaming]);
   useEffect(() => { setRenaming(false); }, [project?.id]);
   useEffect(() => { setImageInstruction(''); setImageRevisionMode('direct'); setUseOriginalImage(true); }, [project?.id]);
-
   useEffect(() => {
     if (!app) { setError('桌面连接未启动。请从已安装的 MK Figure Studio 打开此工作区。'); return; }
     let cancelled = false;
     app.bootstrap().then(result => { if (!cancelled) setBoot(result); }).catch(err => { if (!cancelled) setError(errorText(err)); });
     const unsubscribe = app.onProgress((event: ProgressEvent) => {
-      if (event.projectId !== projectRef.current?.id) return;
+      if (!operationLock.current || event.projectId !== projectRef.current?.id) return;
+      if (event.metrics && event.metrics.status !== 'running') return;
       const prefix = event.metrics?.model ? `${event.metrics.model} · ` : '';
       const message = prefix && event.message.startsWith(prefix) ? event.message.slice(prefix.length).replace(/ · \d+分\d+秒$/, '') : event.message;
       setBusy(previous => ({ action: event.action, message, fraction: event.fraction, metrics: event.metrics || previous?.metrics }));
     });
-    return () => { cancelled = true; unsubscribe(); };
+    const unsubscribeSettings = app.onSettingsChanged(settings => setBoot(previous => previous ? { ...previous, settings } : previous));
+    const refreshProjects = () => {
+      if (operationLock.current) return;
+      void app.bootstrap().then(result => {
+        if (cancelled || operationLock.current) return;
+        const current = projectRef.current;
+        const projects = current ? [{ id: current.id, name: current.name, updatedAt: current.updatedAt, stage: current.stage }, ...result.projects.filter(item => item.id !== current.id)] : result.projects;
+        setBoot(previous => previous ? { ...previous, projects } : previous);
+      }).catch(() => { /* A focus refresh must not interrupt the active workspace. */ });
+    };
+    window.addEventListener('focus', refreshProjects);
+    return () => { cancelled = true; unsubscribe(); unsubscribeSettings(); window.removeEventListener('focus', refreshProjects); };
   }, [app]);
 
+  useEffect(() => {
+    if (compact || operationLock.current) return;
+    let active = true;
+    void app.bootstrap().then(result => {
+      if (!active || operationLock.current) return;
+      const current = projectRef.current;
+      const projects = current ? [{ id: current.id, name: current.name, updatedAt: current.updatedAt, stage: current.stage }, ...result.projects.filter(item => item.id !== current.id)] : result.projects;
+      setBoot(previous => previous ? { ...previous, projects } : previous);
+    }).catch(() => {});
+    return () => { active = false; };
+  }, [app, compact]);
+
   const perform = async (label: string, callback: () => Promise<void>) => {
-    if (operationLock.current || libraryLock.current) return;
+    if (operationLock.current || libraryLock.current || styleBusy) return;
     operationLock.current = true;
     setBusy({ action: label, message: label }); setError(''); setNotice('');
     try { await callback(); } catch (err) { setError(errorText(err)); } finally { operationLock.current = false; setBusy(null); }
@@ -146,16 +177,19 @@ export default function App() {
     receiveProject(next); setExported(undefined); setLibrary(undefined);
   };
   const goHome = () => void perform('返回首页', async () => {
-    await flushSave(); projectRef.current = undefined; setProject(undefined); setLibrary(undefined);
-  });
-  const create = (route: 'full' | 'reconstruct') => void perform('创建项目', async () => {
     await flushSave();
+    if (projectRef.current) await app.releaseProject(projectRef.current.id);
+    projectRef.current = undefined; setProject(undefined); setLibrary(undefined);
+  });
+  const create = (route: 'full' | 'reconstruct') => perform('创建项目', async () => {
+    await flushSave();
+    setCompactAction(route === 'reconstruct' ? 'reconstruct' : 'generate');
     let next = await app.createProject(route === 'reconstruct' ? '图片复刻' : '未命名科研图', route);
     receiveProject(next); setExported(undefined); setFeedback(''); setPreviewMode('visual');
     if (route === 'reconstruct') { next = await app.importFiles(next.id, 'target'); receiveProject(next); }
   });
-  const open = (id: string) => void perform('打开项目', async () => { await flushSave(); receiveProject(await app.openProject(id)); setExported(undefined); setFeedback(''); setPreviewMode('editable'); });
-  const remove = (id: string) => void perform('删除作品', async () => {
+  const open = (id: string) => perform('打开项目', async () => { await flushSave(); const next = await app.openProject(id); receiveProject(next); setCompactAction(next.target || next.stage === 'reconstruct' ? 'reconstruct' : 'generate'); setExported(undefined); setFeedback(''); setPreviewMode('editable'); });
+  const remove = (id: string) => perform('删除作品', async () => {
     await flushSave();
     const result = await app.deleteProject(id);
     if (!result.deleted) return;
@@ -181,11 +215,11 @@ export default function App() {
     await flushSave(); if (!projectRef.current) return;
     const id = projectRef.current.id;
     let next: Project;
-    try { next = await app.run(id, action, instruction ?? (action === 'refine' ? feedback.trim() : undefined)); }
+    try { runStarted.current = true; next = await app.run(id, action, instruction ?? (action === 'refine' ? feedback.trim() : undefined)); }
     catch (err) {
       try { receiveProject(await app.openProject(id)); } catch { /* Keep the original run error. */ }
       throw err;
-    }
+    } finally { runStarted.current = false; }
     receiveProject(next); setExported(undefined);
     if (['generate', 'edit-image', 'regenerate-image', 'refine-image'].includes(action)) setPreviewMode('visual');
     if (['edit-image', 'regenerate-image', 'refine-image'].includes(action)) setImageInstruction('');
@@ -222,23 +256,50 @@ export default function App() {
   const stageIndex = STAGES.findIndex(item => item.id === stage);
   const stageInfo = STAGES[stageIndex] ?? STAGES[0];
   const isSample = project?.history.some(h => /example|示例/i.test(h.action + ' ' + h.message)) || /离线示例/.test(project?.name || '');
-  const changeStage = (next: Stage) => { if (!busy) { changeProject({ stage: next }); setNotice(''); if (next === 'review' || next === 'export') setPreviewMode('editable'); } };
+  const changeStage = (next: Stage) => { if (!busy && !styleBusy) { changeProject({ stage: next }); setNotice(''); if (next === 'review' || next === 'export') setPreviewMode('editable'); } };
 
-  const referencePicker = project && <ReferencePicker name={activeReference?.name} onOpen={() => openLibrary('select')} onClear={() => changeProject({ styleId: undefined, customReference: undefined, libraryReferenceId: undefined })}/>;
+  const styleMode = project?.styleMode || 'custom';
+  const styleLabel = styleMode === 'none' ? '不使用参考风格' : styleMode === 'shared' ? '沿用统一风格' : '本图自定义';
+  const sharedDescription = [sharedStyle?.prompt, sharedStyle?.palette && `配色：${sharedStyle.palette}`, sharedStyle?.background && `背景：${sharedStyle.background}`, sharedStyle?.lines && `线条：${sharedStyle.lines}`].filter(Boolean).join(' · ');
+  const styleControls = project && <section className="project-style-controls">
+    <div className="field-title">图形风格</div>
+    <div className="style-mode-select" role="group" aria-label="风格来源">{(['shared', 'custom', 'none'] as const).map(mode => <button type="button" key={mode} className={styleMode === mode ? 'active' : ''} disabled={styleBusy} onClick={() => changeProject({ styleMode: mode })}>{mode === 'shared' ? '统一风格' : mode === 'custom' ? '本图自定义' : '不用参考风格'}</button>)}</div>
+    {styleMode === 'shared' ? <div className="style-shared-summary"><p>{sharedDescription || '尚未配置统一风格，可手写描述或选择参考图。'}</p>{sharedStyle?.reference && <p>参考图：{sharedStyle.reference.name}</p>}<button className="text-button" onClick={onEditSharedStyle}>编辑统一风格 <PencilLine size={13}/></button></div> : styleMode === 'custom' ? <StyleEditor key={project.id} api={app} value={project.brief.stylePrompt || ''} onChange={stylePrompt => changeBrief({ stylePrompt })} history={project.styleHistory} onHistoryChange={styleHistory => changeProject({ styleHistory })} referenceName={activeReference?.name} onChooseReference={() => openLibrary('select')} onClearReference={() => changeProject({ styleId: undefined, customReference: undefined, libraryReferenceId: undefined })} disabled={!!busy} onBusyChange={setStyleBusy}/> : <p className="field-hint">仅使用内容与绘图提示词，保留基础字体规范。</p>}
+  </section>;
+
+  const compactReady = !!project && !busy && !styleBusy && !libraryBusy && (compactAction === 'generate' ? canGenerate : !!target);
+  const compactStart = () => { if (compactReady) run(compactAction); };
+  const actionsRef = useRef<PaneActions>({ flush: flushSave, start: compactStart, create, open, remove, showLibrary: () => openLibrary('browse'), showSettings: () => setSettingsOpen(true) });
+  actionsRef.current = { flush: flushSave, start: compactStart, create, open, remove, showLibrary: () => openLibrary('browse'), showSettings: () => setSettingsOpen(true) };
+  useLayoutEffect(() => { onRegister?.({ flush: () => actionsRef.current.flush(), start: () => actionsRef.current.start(), create: route => actionsRef.current.create(route), open: id => actionsRef.current.open(id), remove: id => actionsRef.current.remove(id), showLibrary: () => actionsRef.current.showLibrary(), showSettings: () => actionsRef.current.showSettings() }); }, [onRegister]);
+  const paneMessage = error ? '需要处理' : busy ? busy.message : project?.scene ? '可编辑图已完成' : target ? '图片已就绪' : project ? '等待开始' : '未开始';
+  useEffect(() => { onState?.({ projectId: project?.id, label: project?.name || `创作 ${paneIndex + 1}`, running: !!busy || styleBusy, ready: compactReady, message: paneMessage, thumbnail: previewUrl, fraction: busy?.fraction }); }, [onState, project?.id, styleBusy, project?.name, paneIndex, !!busy, compactReady, paneMessage, previewUrl, busy?.fraction]);
+
+  if (compact) return <article className={`creation-card${busy ? ' is-running' : ''}`} data-pane={paneIndex + 1} data-pane-id={`pane-${paneIndex + 1}`}>
+    <header className="creation-card-heading"><span className="pane-number">{String(paneIndex + 1).padStart(2, '0')}</span><div><strong>{project?.name || '新的创作'}</strong><small>{busy ? '运行中' : project ? styleLabel : '从想法或图片开始'}</small></div><button className="icon-button" aria-label={`展开子窗口 ${paneIndex + 1}`} onClick={onExpand}><Maximize2 size={16}/></button></header>
+    {error && <div className="pane-error" role="alert">{error}<button aria-label="关闭错误提示" onClick={() => setError('')}><X size={13}/></button></div>}
+    {!boot ? <p className="pane-loading">正在载入…</p> : !project ? <div className="creation-empty"><div className="creation-empty-art"><Layers3 size={32} strokeWidth={1}/><span>✦</span></div><h2>这一张，想画什么？</h2><p>每个子窗口单独设置，自由并行。</p><div className="creation-empty-actions"><Button icon={Plus} onClick={() => create('full')} disabled={!!busy}>新建科研图</Button><Button icon={Upload} onClick={() => create('reconstruct')} disabled={!!busy}>上传图片</Button></div><button className="text-button" onClick={onExpand}>打开已有作品 <ArrowRight size={13}/></button></div> : <>
+      <button className={`creation-preview${previewUrl ? ' has-image' : ''}`} onClick={onExpand} aria-label={`查看创作 ${paneIndex + 1}`} >{previewUrl ? <img src={previewUrl} alt="当前图形预览"/> : <><Sparkles size={24} strokeWidth={1.2}/><span>图片将在这里呈现</span></>}</button>
+      <fieldset disabled={!!busy || libraryBusy} className="creation-inputs"><label>主题与内容<textarea rows={2} aria-label="主题与内容" placeholder="描述想画的图…" value={project.brief.topic} onChange={e => changeBrief({ topic: e.target.value })}/></label><button type="button" className="creation-style-badge" onClick={() => { changeStage('brief'); onExpand?.(); }}><Images size={13}/><span>{styleLabel}{styleMode === 'custom' && activeReference ? ` · ${activeReference.name}` : ''}</span><ChevronRight size={12}/></button><div className="creation-action-row"><select aria-label="执行任务" value={compactAction} onChange={e => setCompactAction(e.target.value as 'generate' | 'reconstruct')}><option value="generate">生成图片</option><option value="reconstruct">可编辑复刻</option></select><button className="text-button" onClick={() => importAssets('target')}><Upload size={13}/>换图</button></div></fieldset>
+      {busy?.metrics && <LiveRunSummary run={busy.metrics}/>}<footer className="creation-card-footer"><span title={busy?.message || paneMessage}>{busy && <LoaderCircle className="spin" size={13}/>} {paneMessage}</span>{busy ? <Button icon={Square} onClick={() => void cancel()}>停止</Button> : <Button variant="accent" icon={compactAction === 'generate' ? Sparkles : Layers3} disabled={!compactReady} onClick={compactStart}>开始</Button>}</footer>
+      {busy && <div className={`pane-progress${busy.fraction == null ? ' indeterminate' : ''}`}><i style={{ width: `${busy.fraction == null ? 35 : Math.max(0, Math.min(100, busy.fraction * 100))}%` }}/></div>}
+    </>}
+  </article>;
 
   return <div className="app-shell">
-    <header className="topbar"><button className="brand" onClick={goHome} disabled={!!busy || libraryBusy} aria-label="返回首页"><BrandMark className="brand-mark"/><span>MK Figure</span></button>
+    <header className="topbar"><button className="brand" onClick={onHome || goHome} disabled={!!busy || styleBusy || libraryBusy} aria-label="返回首页">{onExpand ? <><ArrowLeft size={15}/><span>返回首页</span></> : <><BrandMark className="brand-mark"/><span>MK Figure</span></>}</button>
       {project && !library && <div className="project-title"><span className="crumb-sep" aria-hidden="true">/</span><input ref={nameInput} className={`project-name${renaming ? ' editing' : ''}`} aria-label="项目名称" readOnly={!renaming} value={renaming ? nameDraft : project.name} onChange={e => setNameDraft(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') void rename(); if (e.key === 'Escape') setRenaming(false); }} disabled={!!busy}/>{renaming ? <><button className="name-action" onClick={() => void rename()} disabled={!!busy}><Check size={14}/>保存</button><button className="icon-button" aria-label="取消重命名" onClick={() => setRenaming(false)}><X size={14}/></button></> : <button className="icon-button name-edit" aria-label="重命名" title="重命名" disabled={!!busy} onClick={() => { setNameDraft(project.name); setRenaming(true); }}><PencilLine size={14}/></button>}<span className={`save-status ${saved === 'error' ? 'bad' : ''}`}>{saved === 'saving' ? <><LoaderCircle size={12} className="spin"/>正在保存</> : saved === 'error' ? <><AlertCircle size={12}/>未保存</> : <><Check size={12}/>已自动保存</>}</span>{isSample && <span className="sample-badge">历史示例 · 非 AI 生成</span>}</div>}
       <div className="topbar-right"><button className="connection-button" title="修改模型与推理强度" onClick={() => setSettingsOpen(true)} disabled={!!busy || libraryBusy}><span>{`Codex · ${modelLabel}`}</span><ChevronDown size={14}/></button></div></header>
     {error && <div role="alert" className="global-message error-message"><AlertCircle size={17}/><span>{error}</span><button aria-label="关闭错误提示" onClick={() => setError('')}><X size={16}/></button></div>}
     {notice && <div role="status" className="global-message notice-message"><CheckCircle2 size={17}/><span>{notice}</span><button aria-label="关闭提示" onClick={() => setNotice('')}><X size={16}/></button></div>}
-    {!boot ? <div className="loading-screen">{error ? <div className="loading-error"><h2>工作区暂时无法连接</h2><p>请检查桌面应用是否完整启动。</p></div> : <p role="status">正在载入…</p>}</div> : library ? <LibraryPage selecting={library.mode === 'select'} selectedId={project?.libraryReferenceId || (!project?.customReference ? project?.styleId : undefined)} onBusyChange={libraryBusyChanged} onSelect={selectReference} onBack={() => { if (!libraryLock.current) setLibrary(undefined); }}/> : !project ? <main className="welcome">
+    {!boot ? <div className="loading-screen">{error ? <div className="loading-error"><h2>工作区暂时无法连接</h2><p>请检查桌面应用是否完整启动。</p></div> : <p role="status">正在载入…</p>}</div> : library ? <LibraryPage api={app} selecting={library.mode === 'select'} selectedId={project?.libraryReferenceId || (!project?.customReference ? project?.styleId : undefined)} onBusyChange={libraryBusyChanged} onSelect={selectReference} onBack={() => { if (!libraryLock.current) setLibrary(undefined); }}/> : !project ? <main className="welcome">
       <div className="welcome-heading"><h1><SparkMark/>绘制科研图</h1><p>从想法或图片开始，导出可编辑的 PPT 与 SVG。</p></div>
       <div className="start-routes"><button className="route-card featured" onClick={() => create('full')} disabled={!!busy}><span className="route-icon"><WandSparkles size={19} strokeWidth={1.6}/></span><strong>新建科研图</strong><p>从主题或论文生成科研图。</p><span className="route-link" aria-hidden="true"><ArrowRight size={15}/></span></button><button className="route-card" onClick={() => create('reconstruct')} disabled={!!busy}><span className="route-icon"><ImagePlus size={19} strokeWidth={1.6}/></span><strong>图片复刻</strong><p>将已有图片转为可编辑图形。</p><span className="route-link" aria-hidden="true"><ArrowRight size={15}/></span></button><button className="route-card" onClick={() => openLibrary('browse')} disabled={!!busy}><span className="route-icon"><Images size={19} strokeWidth={1.6}/></span><strong>图片素材库</strong><p>收藏参考图与小图标。</p><span className="route-link" aria-hidden="true"><ArrowRight size={15}/></span></button></div>
+
       <section className="recent-projects"><div className="section-heading"><h2>最近的作品</h2><span>{boot.projects.length} 个项目</span></div>{boot.projects.length ? <div className="recent-list">{boot.projects.map(p => <div className="recent-item" data-project-id={p.id} key={p.id}><button className="recent-open" aria-label={`打开 ${p.name}`} title={p.name} onClick={() => open(p.id)} disabled={!!busy}><FileImage size={16} strokeWidth={1.6}/><strong>{p.name}</strong><small>{STAGES.find(s => s.id === p.stage)?.label} · {new Date(p.updatedAt).toLocaleDateString('zh-CN')}</small></button><button className="recent-delete" aria-label={`删除 ${p.name}`} title="移入回收站" onClick={() => remove(p.id)} disabled={!!busy}><Trash2 size={15}/></button></div>)}</div> : <p className="empty-recent">还没有作品。从上面任选一种方式开始。</p>}</section>
       <footer className="welcome-footer"><span><ShieldCheck size={14}/>本地保存 · 运行时发送所需资料</span></footer>
     </main> : <div className="workspace">
-      <aside className="sidebar"><div className="project-area"><button className="new-project" disabled={!!busy} onClick={() => create('full')}><span className="new-project-icon"><Plus size={14} strokeWidth={2.2}/></span>新建作品</button><span className="sidebar-eyebrow">当前项目</span><div className="project-picker"><select aria-label="切换项目" value={project.id} disabled={!!busy} onChange={e => open(e.target.value)}>{boot.projects.map(p => <option value={p.id} key={p.id}>{p.name}</option>)}</select><ChevronDown size={14}/></div></div><nav aria-label="创作阶段" className="step-nav"><span className="sidebar-eyebrow">创作步骤</span>{STAGES.map((s, index) => { const done = (s.id === 'brief' && !!project.brief.topic) || (s.id === 'visual' && !!project.generated.length) || (s.id === 'reconstruct' && !!project.scene) || (s.id === 'review' && !!project.qa) || (s.id === 'export' && !!exported); return <button key={s.id} className={`step-button${stage === s.id ? ' active' : ''}${done ? ' done' : ''}`} aria-current={stage === s.id ? 'step' : undefined} disabled={!!busy} onClick={() => changeStage(s.id)}><span className="step-marker" aria-hidden="true">{done && stage !== s.id ? <Check size={12} strokeWidth={2.4}/> : index + 1}</span><span><strong>{s.label}</strong><small>{s.detail}</small></span></button>; })}</nav><div className="sidebar-bottom"><button className="sidebar-settings" disabled={!!busy} onClick={() => setSettingsOpen(true)}><Settings2 size={16}/>模型与连接<span><ChevronRight size={15}/></span></button><div className="version">MK Figure <span>v{boot.version}</span></div></div></aside>
+      <aside className="sidebar"><nav aria-label="创作阶段" className="step-nav"><span className="sidebar-eyebrow">创作步骤</span>{STAGES.map((s, index) => { const done = (s.id === 'brief' && !!project.brief.topic) || (s.id === 'visual' && !!project.generated.length) || (s.id === 'reconstruct' && !!project.scene) || (s.id === 'review' && !!project.qa) || (s.id === 'export' && !!exported); return <button key={s.id} className={`step-button${stage === s.id ? ' active' : ''}${done ? ' done' : ''}`} aria-current={stage === s.id ? 'step' : undefined} disabled={!!busy} onClick={() => changeStage(s.id)}><span className="step-marker" aria-hidden="true">{done && stage !== s.id ? <Check size={12} strokeWidth={2.4}/> : index + 1}</span><span><strong>{s.label}</strong><small>{s.detail}</small></span></button>; })}</nav><div className="sidebar-bottom"><button className="sidebar-settings" disabled={!!busy} onClick={() => setSettingsOpen(true)}><Settings2 size={16}/>模型与连接<span><ChevronRight size={15}/></span></button><div className="version">MK Figure <span>v{boot.version}</span></div></div></aside>
       <main className="work-main">
         {busy && <div className="progress-banner" role="status"><LoaderCircle className="spin" size={19}/><div><strong>{ACTIONS[busy.action as RunAction] || busy.action}</strong><span>{busy.message}</span>{busy.metrics && <LiveRunSummary run={busy.metrics}/>}</div><button onClick={() => void cancel()} disabled={!project}><Square size={12} fill="currentColor"/>停止</button><div className={`progress-track ${busy.fraction == null ? 'indeterminate' : ''}`}><i style={busy.fraction != null ? { width: `${Math.max(0, Math.min(100, busy.fraction * 100))}%` } : undefined}/></div></div>}
         <div className="work-columns"><section className="form-panel"><fieldset disabled={!!busy} className="stage-fields">
@@ -249,22 +310,18 @@ export default function App() {
             <details className="brief-details"><summary>补充重点与资料 <span>选填</span></summary><Field label="核心内容"><textarea rows={3} placeholder="关键模块、关系与结论" value={project.brief.focus} onChange={e => changeBrief({ focus: e.target.value })}/></Field>
             <div className="field"><div className="field-title">论文与方法资料<span>选填</span></div><button className="upload-zone compact" onClick={() => importAssets('sources')}><Upload size={20}/><span><strong>选择参考资料</strong><small>PDF、PPTX、文本或图片</small></span><Plus size={17}/></button>{project.sources.length > 0 && <div className="asset-list">{project.sources.map(a => <div key={a.id} className="asset-row"><FileText size={16}/><span><strong>{a.name}</strong><small>{a.warnings?.join(' · ') || assetSize(a)}</small></span><button aria-label={`移除 ${a.name}`} onClick={() => changeProject({ sources: project.sources.filter(s => s.id !== a.id) })}><X size={14}/></button></div>)}</div>}</div>
             </details><div className="field-row"><Field label="图中文字" hint="选填"><select value={project.brief.language} onChange={e => changeBrief({ language: e.target.value as Brief['language'] })}><option value="zh">中文</option><option value="en">English</option><option value="bilingual">中英双语</option><option value="original">沿用原图语言</option></select></Field><Field label="使用场景" hint="选填"><select value={project.brief.purpose} onChange={e => changeBrief({ purpose: e.target.value as Brief['purpose'] })}><option value="paper">论文插图</option><option value="slides">汇报 PPT</option></select></Field></div>
-            {referencePicker}
-            <Field label="风格要求" hint="选填 · 可手写"><textarea rows={2} placeholder="例如：简洁学术风格，蓝绿色配色，横向布局" value={project.brief.stylePrompt || ''} onChange={e => changeBrief({ stylePrompt: e.target.value })}/></Field>
-            <div className="stage-actions"><Button icon={PencilLine} onClick={() => changeStage('visual')}>编辑绘图提示词</Button><Button variant="accent" icon={Sparkles} onClick={() => run('generate')} disabled={!canGenerate}>生成视觉稿</Button></div>
+            {styleControls}
+            <details className="brief-details"><summary>绘图提示词与画面设置 <span>选填</span></summary>            <Field label="绘图提示词" hint="选填 · 可手写"><textarea className="prompt-area" rows={9} placeholder="留空也能生成：使用前面的内容、所选风格与风格要求。也可直接填写完整绘图提示词。" value={project.brief.prompt} onChange={e => changeBrief({ prompt: e.target.value })}/></Field><div className="under-field"><button className="text-button" onClick={() => run('prompt')} disabled={!canGenerate}><WandSparkles size={14}/>AI 优化提示词（可选）</button><span>{project.brief.prompt.length} 字</span></div>
+            <div className="field-row"><Field label="画面比例"><select value={project.brief.aspectRatio} onChange={e => changeBrief({ aspectRatio: e.target.value as Brief['aspectRatio'] })}><option value="auto">根据内容自动安排</option><option value="2:1">2:1 · 论文横版</option><option value="16:9">16:9 · 汇报横版</option><option value="3:2">3:2</option><option value="4:3">4:3</option><option value="1:1">1:1 · 方形</option></select></Field><Field label="导出宽度" hint="mm"><input type="number" min={30} max={600} step={1} value={project.brief.widthMm} onChange={e => changeBrief({ widthMm: Number(e.target.value) || 180 })}/></Field></div>
+</details>
+            <div className="stage-actions"><Button variant="accent" icon={Sparkles} onClick={() => run('generate')} disabled={!canGenerate || styleBusy}>生成视觉稿</Button></div>
             <button className="text-button optional-ai" onClick={() => run(project.sources.length ? 'analyze' : 'prompt')} disabled={!canGenerate}><WandSparkles size={14}/>AI 整理内容（可选）</button>
           </>}
           {stage === 'visual' && <>
             <div className="summary-strip"><FileText size={16}/><span>{project.brief.topic || '从提示词开始绘制'}<small>{project.brief.language === 'en' ? '英文' : project.brief.language === 'bilingual' ? '中英双语' : project.brief.language === 'original' ? '原图语言' : '中文'} · {project.brief.purpose === 'paper' ? '论文插图' : '汇报 PPT'} · {project.sources.length} 份内容资料</small></span><button title="修改内容" onClick={() => changeStage('brief')}><PencilLine size={15}/></button></div>
             {target && <><ImageRevision mode={imageRevisionMode} useOriginal={useOriginalImage} instruction={imageInstruction} onMode={setImageRevisionMode} onOriginal={setUseOriginalImage} onInstruction={setImageInstruction} onRun={run}/><Button variant="next" icon={ArrowRight} onClick={() => changeStage('reconstruct')}>使用当前图片复刻</Button></>}
-            <details className="visual-generation-settings" key={target ? 'with-image' : 'empty'} open={!target}><summary>{target ? '重新设置内容与风格' : '生成设置'}</summary>
-            {referencePicker}
-            <Field label="风格要求" hint="选填 · 可手写"><textarea rows={2} placeholder="补充配色、构图或字体偏好" value={project.brief.stylePrompt || ''} onChange={e => changeBrief({ stylePrompt: e.target.value })}/></Field>
-            <Field label="绘图提示词" hint="选填 · 可手写"><textarea className="prompt-area" rows={9} placeholder="留空也能生成：使用前面的内容、所选风格与风格要求。也可直接填写完整绘图提示词。" value={project.brief.prompt} onChange={e => changeBrief({ prompt: e.target.value })}/></Field><div className="under-field"><button className="text-button" onClick={() => run('prompt')} disabled={!canGenerate}><WandSparkles size={14}/>AI 优化提示词（可选）</button><span>{project.brief.prompt.length} 字</span></div>
-            <div className="field-row"><Field label="画面比例"><select value={project.brief.aspectRatio} onChange={e => changeBrief({ aspectRatio: e.target.value as Brief['aspectRatio'] })}><option value="auto">根据内容自动安排</option><option value="2:1">2:1 · 论文横版</option><option value="16:9">16:9 · 汇报横版</option><option value="3:2">3:2</option><option value="4:3">4:3</option><option value="1:1">1:1 · 方形</option></select></Field><Field label="导出宽度" hint="mm"><input type="number" min={30} max={600} step={1} value={project.brief.widthMm} onChange={e => changeBrief({ widthMm: Number(e.target.value) || 180 })}/></Field></div>
-            <div className="model-strip"><Sparkles size={17}/><span>生图模型<strong>{modelLabel}</strong></span><button onClick={() => setSettingsOpen(true)}>更改</button></div>
-            <div className="stage-actions"><Button icon={Upload} onClick={() => importAssets('target')}>使用已有图片</Button><Button variant="accent" icon={Sparkles} onClick={() => run('generate')} disabled={!canGenerate}>生成视觉稿</Button></div>
-            </details>
+            <button className="style-summary-link" onClick={() => changeStage('brief')}><span>{styleLabel}{styleMode === 'shared' && sharedStyle?.reference ? ` · ${sharedStyle.reference.name}` : styleMode === 'custom' && activeReference ? ` · ${activeReference.name}` : ''}</span><span>修改内容与风格 <PencilLine size={13}/></span></button>
+            {!target && <div className="stage-actions"><Button icon={Upload} onClick={() => importAssets('target')}>使用已有图片</Button><Button variant="accent" icon={Sparkles} onClick={() => run('generate')} disabled={!canGenerate || styleBusy}>生成视觉稿</Button></div>}
             {project.generated.length > 0 && <div className="generated-history"><div className="field-title">已生成的视觉稿<span>{project.generated.length} 张</span></div><div>{project.generated.map((a, i) => <button key={a.id} className={target?.id === a.id ? 'selected' : ''} onClick={() => chooseVisualVersion(a)}><img src={a.previewUrl} alt={`视觉稿 ${i + 1}`}/><span>版本 {i + 1}</span></button>)}</div></div>}
           </>}
           {stage === 'reconstruct' && <>
@@ -301,7 +358,7 @@ export default function App() {
         </section></div>
       </main>
     </div>}
-    {settingsOpen && boot && <SettingsDialog settings={boot.settings} onClose={() => setSettingsOpen(false)} onSaved={settings => setBoot(prev => prev ? { ...prev, settings } : prev)}/>}
+    {settingsOpen && boot && <SettingsDialog api={app} settings={boot.settings} onClose={() => setSettingsOpen(false)} onSaved={settings => setBoot(prev => prev ? { ...prev, settings } : prev)}/>}
     {previewLarge && previewUrl && <div className="modal-backdrop preview-modal" onClick={() => setPreviewLarge(false)}><div className="preview-modal-top"><span>{project?.name} · {showingEditable ? '可编辑图' : '视觉稿'}</span><button className="icon-button" aria-label="关闭大图" onClick={() => setPreviewLarge(false)}><X size={22}/></button></div><img src={previewUrl} alt="科研图放大预览" onClick={e => e.stopPropagation()}/></div>}
     {sceneDraft && <TextEditor scene={sceneDraft} busy={!!busy} onChange={setSceneDraft} onClose={() => setSceneDraft(undefined)} onSave={saveTextEdits}/>}
   </div>;

@@ -1,0 +1,42 @@
+// Reopen the real-model result in the final packaged application. No cloud generation.
+import {_electron as electron} from 'playwright';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import JSZip from 'jszip';
+const root=process.cwd(),version=JSON.parse(await fs.readFile('package.json','utf8')).version;
+const out=path.join(root,'output','workspace',version,'live');
+const result=JSON.parse(await fs.readFile(path.join(out,'result.json'),'utf8'));
+assert.ok(result.passed);
+const directory=path.join(out,'final-exports'),pptDirectory=path.join(out,'final-ppt-only');
+await fs.mkdir(directory,{recursive:true});await fs.mkdir(pptDirectory,{recursive:true});
+const env={...process.env,MK_FIGURE_DATA_DIR:path.join(root,'.runtime','workspace-live',version)};delete env.ELECTRON_RUN_AS_NODE;
+const client=await electron.launch({executablePath:path.join(root,'release','win-unpacked','MK Figure.exe'),cwd:root,env,timeout:60000});
+try {
+  const page=await client.firstWindow();await page.locator('.studio-home').waitFor();
+  await client.evaluate(({BrowserWindow})=>{const win=BrowserWindow.getAllWindows()[0];win.setContentSize(1440,900);win.webContents.setBackgroundThrottling(false);});
+  const folder=path.join(out,'Neural ODE Research');
+  await page.evaluate(folder=>window.mkFigure.openFolder(folder),folder);
+  const project=await page.evaluate(id=>window.mkFigure.openProject(id),result.projectId);
+  assert.ok(project.scene);
+  await client.evaluate(({dialog},directory)=>{dialog.showOpenDialog=async()=>({canceled:false,filePaths:[directory]});},directory);
+  const exported=await page.evaluate(id=>window.mkFigure.exportProject(id,['pptx','svg','png']),project.id);
+  await client.evaluate(({dialog},directory)=>{dialog.showOpenDialog=async()=>({canceled:false,filePaths:[directory]});},pptDirectory);
+  const ppt=await page.evaluate(id=>window.mkFigure.exportProject(id,['pptx']),project.id);
+  assert.equal(ppt.files.length,1);assert.equal((await fs.readdir(pptDirectory)).length,1);
+  const zip=await JSZip.loadAsync(await fs.readFile(ppt.files[0]));const xml=await zip.file('ppt/slides/slide1.xml').async('string');
+  const textCount=(xml.match(/<a:t>/g)||[]).length;assert.ok(textCount>10);assert.ok(!xml.includes('m:oMath'));
+  const svg=await fs.readFile(exported.files.find(file=>file.endsWith('.svg')),'utf8');
+  const preview=await fs.readFile(path.join(folder,'.mkfigure','projects',project.id,'preview.svg'),'utf8');
+  const normalize=s=>s.replace(/(<svg\b[^>]*?)\swidth="[^"]*"/,'$1').replace(/(<svg\b[^>]*?)\sheight="[^"]*"/,'$1');
+  assert.equal(normalize(svg),normalize(preview));
+  await page.reload();await page.locator('.studio-home').waitFor();
+  await page.locator('.folder-project-row > button').filter({hasText:project.name}).first().click();
+  await page.getByRole('textbox',{name:'项目名称',exact:true}).waitFor();
+  await page.evaluate(()=>document.fonts.ready);await page.screenshot({path:path.join(out,'09-packaged-result.png')});
+  const scale=Math.min(2,4096/Math.max(project.scene.width,project.scene.height));
+  const dimensions=await client.evaluate(({nativeImage},file)=>nativeImage.createFromPath(file).getSize(),exported.files.find(file=>file.endsWith('.png')));
+  assert.deepEqual(dimensions,{width:Math.round(project.scene.width*scale),height:Math.round(project.scene.height*scale)});
+  const summary={passed:true,version,packagedApplication:true,projectId:project.id,files:exported.files,pptOnly:ppt.files[0],textCount,pngDimensions:dimensions,svgMatchesWorkbench:true,liveModelCalls:0};
+  await fs.writeFile(path.join(out,'packaged-result.json'),JSON.stringify(summary,null,2));console.log(JSON.stringify(summary));
+} finally {await client.close().catch(()=>{});}

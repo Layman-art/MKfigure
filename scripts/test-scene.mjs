@@ -12,6 +12,7 @@ export async function seedTestScene(page, name = '科研图验证样例') {
     return window.mkFigure.renderScene(created.id,scene);
   }, {name,scene:EXAMPLE_SCENE});
   await page.reload();
+  if(await page.locator('.workspace-overview').count())await page.getByRole('button',{name:'展开子窗口 1',exact:true}).click();
   await page.getByRole('button',{name:`打开 ${name}`,exact:true}).first().click();
   await page.getByRole('img',{name:'可编辑科研图预览'}).waitFor();
   return project;

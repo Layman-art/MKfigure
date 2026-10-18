@@ -7,7 +7,7 @@ import '@fontsource/source-serif-4/latin-400.css';
 import '@fontsource/source-serif-4/latin-500.css';
 import '@fontsource/noto-serif-sc/400.css';
 import '@fontsource/noto-serif-sc/500.css';
-import App from './App';
+import WorkspaceShell from './WorkspaceShell';
 import './styles.css';
 
-createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);
+createRoot(document.getElementById('root')!).render(<React.StrictMode><WorkspaceShell /></React.StrictMode>);

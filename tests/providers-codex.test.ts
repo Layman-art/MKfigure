@@ -1,7 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PassThrough } from 'node:stream';
 import { EventEmitter } from 'node:events';
-import { mkdtemp, readFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, stat } from 'node:fs/promises';
+import { mkdirSync, rmdirSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { ProviderOptions } from '../src/main/providers/types';
@@ -23,9 +24,94 @@ function fakeChild(handler: (message: any, emit: (message: any) => void) => void
   return { child, messages };
 }
 const options: ProviderOptions = { cwd: tmpdir(), codexExecutable: process.execPath, getKey: () => undefined, getConfig: id => ({ id, enabled: true, baseUrl: '', model: 'chosen-model', vision: true }) };
-beforeEach(() => state.spawn.mockReset());
+beforeEach(() => { state.spawn.mockReset(); });
+const isolatedRoots: string[] = [];
+afterEach(async () => { for (const root of isolatedRoots.splice(0)) await rm(root, { recursive: true, force: true }); });
 
 describe('Codex official app-server stdio protocol', () => {
+  it('reports the connected runtime version without exposing initialize metadata', async () => {
+    state.spawn.mockImplementation(() => fakeChild((message, emit) => {
+      if (message.method === 'initialize') emit({ id: message.id, result: { userAgent: 'Codex Desktop/0.163.0 (Windows; x86_64)', codexHome: '/private/path' } });
+      if (message.method === 'account/read') emit({ id: message.id, result: { account: { type: 'chatgpt' } } });
+    }).child);
+    const provider = new CodexProvider(options);
+    try {
+      const status = await provider.status();
+      expect(status.runtimeVersion).toBe('0.163.0');
+      expect(JSON.stringify(status)).not.toContain('/private/path');
+    } finally { provider.dispose(); }
+  });
+  it('does not recursively clean an image workspace replaced by a junction', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'mk-codex-cleanup-'));
+    isolatedRoots.push(root);
+    const outside = join(root, 'preserve');
+    mkdirSync(outside);
+    const marker = join(outside, 'marker.txt');
+    writeFileSync(marker, 'keep');
+    let replaced = '';
+    state.spawn.mockImplementation((_exe, _args, spawnOptions) => fakeChild((message, emit) => {
+      if (message.method === 'initialize') emit({ id: message.id, result: {} });
+      if (message.method === 'thread/start') emit({ id: message.id, result: { thread: { id: 't' } } });
+      if (message.method === 'turn/start') {
+        replaced = spawnOptions.cwd;
+        rmdirSync(replaced); // Newly created and still empty, no recursive deletion.
+        symlinkSync(outside, replaced, process.platform === 'win32' ? 'junction' : 'dir');
+        emit({ id: message.id, result: { turn: { id: 'r' } } });
+        emit({ method: 'item/completed', params: { threadId: 't', item: { type: 'imageGeneration', id: 'img', status: 'completed', result: png } } });
+        emit({ method: 'turn/completed', params: { threadId: 't', turn: { status: 'completed' } } });
+      }
+    }).child);
+    const provider = new CodexProvider({ ...options, cwd: root });
+    try {
+      await provider.generateImage({ provider: 'codex', model: 'model', prompt: 'image', outputDir: join(root, 'results') });
+      expect(await readFile(marker, 'utf8')).toBe('keep');
+      // Cleanup deliberately leaves the redirected entry untouched for inspection.
+      expect((await stat(replaced)).isDirectory()).toBe(true);
+    } finally { provider.dispose(); }
+  });
+  it('isolates concurrent native image output directories and rejects another request file', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'mk-codex-isolation-'));
+    isolatedRoots.push(root);
+    const workdirs: string[] = [];
+    const completions: Array<() => void> = [];
+    state.spawn.mockImplementation((_exe, _args, spawnOptions) => {
+      const cwd = spawnOptions.cwd as string;
+      workdirs.push(cwd);
+      return fakeChild((message, emit) => {
+        if (message.method === 'initialize') emit({ id: message.id, result: {} });
+        if (message.method === 'thread/start') {
+          expect(message.params.cwd).toBe(cwd);
+          emit({ id: message.id, result: { thread: { id: 't' } } });
+        }
+        if (message.method === 'turn/start') {
+          emit({ id: message.id, result: { turn: { id: 'r' } } });
+          const ownPath = join(cwd, 'output.png');
+          writeFileSync(ownPath, Buffer.from(png, 'base64'));
+          completions.push(() => {
+            const savedPath = message.params.input[0].text === 'wrong-file' ? join(workdirs[0], 'output.png') : ownPath;
+            emit({ method: 'item/completed', params: { threadId: 't', item: { type: 'imageGeneration', id: 'img', status: 'completed', savedPath } } });
+            emit({ method: 'turn/completed', params: { threadId: 't', turn: { status: 'completed' } } });
+          });
+        }
+      }).child;
+    });
+    const provider = new CodexProvider({ ...options, cwd: root });
+    try {
+      const request = { provider: 'codex' as const, model: 'model', outputDir: join(root, 'results') };
+      const first = provider.generateImage({ ...request, prompt: 'own-file' });
+      await vi.waitFor(() => expect(completions).toHaveLength(1));
+      const second = provider.generateImage({ ...request, prompt: 'wrong-file' });
+      const rejected = expect(second).rejects.toThrow('本次请求工作目录');
+      await vi.waitFor(() => expect(completions).toHaveLength(2));
+      expect(new Set(workdirs).size).toBe(2);
+      completions[1]();
+      await rejected;
+      expect((await stat(workdirs[0])).isDirectory()).toBe(true);
+      completions[0]();
+      expect(await readFile((await first).path)).toEqual(Buffer.from(png, 'base64'));
+      for (const cwd of workdirs) await expect(stat(cwd)).rejects.toMatchObject({ code: 'ENOENT' });
+    } finally { provider.dispose(); }
+  });
   it('handshakes before requests; routes out-of-order replies and declines tools', async () => {
     let one: any;
     const mock = fakeChild((message, emit) => {
