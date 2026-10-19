@@ -93,13 +93,13 @@
       <br><sub>文件夹工作区：资料与创作过程一起保留</sub>
     </td>
     <td width="50%" align="center">
-      <img src="docs/assets/hnsse-method-preview.png" alt="HNSSE 方法图在 MK Figure 中的放大视觉稿预览">
-      <br><sub>方法图预览：HNSSE 组件建模与解析融合</sub>
+      <img src="docs/assets/hnsse-method-preview.png" alt="保留原导出界面、在画布内替换为 HNSSE 方法图的展示示意">
+      <br><sub>导出界面：HNSSE 方法图展示</sub>
     </td>
   </tr>
 </table>
 
-前三张截图来自 0.6.0 Windows 程序；HNSSE 方法图截图来自 0.6.2 Windows 程序，展示作者提供的 PPT 经 PowerPoint 渲染后载入工作台的放大视觉稿，不代表此次完成了模型生成或可编辑复刻。此前 Neural ODE 示例的生成、复刻、导出及 PowerPoint 编辑验证范围见[验证记录](docs/validation-0.6.0.md)。
+界面截图来自 0.6.0 Windows 程序。右下图为展示合成图，仅将原截图画布中的科研图替换为作者提供的 HNSSE 方法图，保留其余界面；其中项目名称、元素数量及运行数据仍属于原 Neural ODE 示例。真实生成、复刻、导出及 PowerPoint 编辑验证范围见[验证记录](docs/validation-0.6.0.md)。
 
 ## 快速开始
 
