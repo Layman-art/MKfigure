@@ -103,6 +103,32 @@
 
 ## 快速开始
 
+### 让 Codex 帮你安装
+
+在 Codex 中复制下面任意一条指令，即可按需安装。**Skill** 用于在 Codex 对话中绘图；**桌面平台**是独立的 MK Figure 软件，也可以两者一起安装。
+
+**只安装 Skill**
+
+```text
+请从 https://github.com/Layman-art/MKfigure 安装 mk-figure-skill 目录到我的 Codex skills 目录。只安装 Skill，不安装桌面软件；已有同名版本先备份。安装后检查文件完整性，并告诉我如何开始使用。
+```
+
+**只安装桌面平台**
+
+```text
+请帮我下载安装 MK Figure：https://github.com/Layman-art/MKfigure 。先检测我的操作系统和处理器架构，从 GitHub Releases 选择适配的最新可用桌面安装包，核对校验和后安装。只安装桌面软件，不安装独立 Skill；保留已有作品和设置，完成后告诉我如何登录 Codex 并开始创作。
+```
+
+**Skill + 桌面平台一起安装**
+
+```text
+请帮我一站式安装 MK Figure 桌面软件和 Codex Skill：https://github.com/Layman-art/MKfigure 。检测系统和处理器架构，从 GitHub Releases 下载适配的最新可用桌面安装包，核对校验和后安装；同时将仓库中的 mk-figure-skill 目录安装到 Codex skills 目录。已有 Skill 先备份，保留已有作品和设置。完成后分别检查安装结果，并给我一条可直接使用的绘图指令。
+```
+
+Codex 可协助下载、安装与检查；系统权限确认、安装向导或账户登录需要时由你完成。桌面包按平台选择，Windows 与 macOS 的最新可用版本可能不同；不要将 GitHub 的 Source code 压缩包当作安装程序。
+
+### 手动安装与开始创作
+
 1. Windows 下载 [v0.6.2 安装包](https://github.com/Layman-art/MKfigure/releases/tag/v0.6.2) 并运行安装程序；macOS 暂用 [v0.4.1](https://github.com/Layman-art/MKfigure/releases/tag/v0.4.1)，解压 ZIP 后将应用拖入“应用程序”。
 2. 打开 **模型与连接**，登录 Codex 或检测已有登录，选择账户支持的模型与推理强度。
 3. 点击“打开文件夹”选择创作目录，再输入主题、粘贴资料或上传已有图片，选择参考风格；无需先让 AI 改写提示词。
