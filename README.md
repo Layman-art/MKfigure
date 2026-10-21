@@ -105,18 +105,12 @@
 
 ### 让 Codex 帮你安装
 
-在 Codex 中复制下面任意一条指令，即可按需安装。**Skill** 用于在 Codex 对话中绘图；**桌面平台**是独立的 MK Figure 软件，也可以两者一起安装。
+在 Codex 中复制下面任意一条指令，即可选择只安装 Skill，或将 Skill 与桌面平台一起安装。这里的 **Skill 是 `mk-figure-skill`**，用于在 Codex 对话中完成科研图生成、修改、可编辑 PPTX/SVG 复刻与检查；它已合并原 `ppt-editable` 的复刻与局部修复方法，无需另装 `ppt-editable`。**桌面平台**是独立的 MK Figure 软件。
 
 **只安装 Skill**
 
 ```text
 请从 https://github.com/Layman-art/MKfigure 安装 mk-figure-skill 目录到我的 Codex skills 目录。只安装 Skill，不安装桌面软件；已有同名版本先备份。安装后检查文件完整性，并告诉我如何开始使用。
-```
-
-**只安装桌面平台**
-
-```text
-请帮我下载安装 MK Figure：https://github.com/Layman-art/MKfigure 。先检测我的操作系统和处理器架构，从 GitHub Releases 选择适配的最新可用桌面安装包，核对校验和后安装。只安装桌面软件，不安装独立 Skill；保留已有作品和设置，完成后告诉我如何登录 Codex 并开始创作。
 ```
 
 **Skill + 桌面平台一起安装**
