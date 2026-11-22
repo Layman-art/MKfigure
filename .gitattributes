@@ -1,1 +1,2 @@
 *.svg text eol=lf
+resources/paper-gallery/** -text

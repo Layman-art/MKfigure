@@ -16,4 +16,9 @@ describe('direct generation without AI prompt preparation', () => {
     expect(generationPrompt({...brief,prompt:'Draw two connected blocks',language:'en'})).toContain('Draw two connected blocks');
     expect(()=>generationPrompt({...brief,stylePrompt:'蓝色'})).toThrow('请填写绘图内容');
   });
+  it('accepts an evidence image alone and rejects a layout-only request', () => {
+    const image = {id:'input',name:'Topology'};
+    expect(generationPrompt(brief,'',[{...image,role:'content'}])).toContain('CONTENT EVIDENCE');
+    expect(()=>generationPrompt(brief,'',[{...image,role:'layout'}])).toThrow('请填写绘图内容');
+  });
 });

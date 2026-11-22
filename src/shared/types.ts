@@ -4,19 +4,35 @@ export type ModelInfo = { id: string; name: string; description?: string; suppor
 export const PANE_COUNT = 6;
 export interface ModelCatalogState { models: ModelInfo[]; updatedAt?: string; error?: string; stale: boolean; }
 export interface StyleMessage { role: 'user' | 'assistant'; text: string; }
-export interface SharedStyle { prompt: string; palette: string; background: string; lines: string; reference?: { name: string; file: string }; updatedAt?: string; history?: StyleMessage[]; }
+export interface SharedStyle { prompt: string; palette: string; background: string; lines: string; reference?: { name: string; file: string; citation?: PaperCitation }; layoutPlan?: FigureLayoutPlan; updatedAt?: string; history?: StyleMessage[]; }
 export interface FolderInfo { id: string; name: string; path?: string; style: SharedStyle; projects: ProjectSummary[]; }
 export interface RecentFolder { path: string; name: string; }
 export interface FolderState { folder: FolderInfo; recentFolders: RecentFolder[]; selected: boolean; localProjectCount: number; }
 export interface StyleSuggestion { text: string; usage?: TokenUsage; model: string; durationMs: number; }
 export interface ProviderConfig { id: ProviderId; enabled: boolean; baseUrl: string; model: string; vision: boolean; hasKey?: boolean; codexPath?: string; }
 export interface AppSettings { activeProvider: ProviderId; providers: ProviderConfig[]; imageProvider: 'codex' | 'openai' | 'custom'; imageModel: string; reasoningEffort: string; }
-export interface Brief { topic: string; focus: string; language: 'zh' | 'en' | 'bilingual' | 'original'; purpose: 'paper' | 'slides'; aspectRatio: 'auto' | '2:1' | '16:9' | '3:2' | '4:3' | '1:1'; widthMm: number; prompt: string; stylePrompt?: string; notes: string; fullVector: boolean; }
-export interface Asset { id: string; name: string; kind: 'image' | 'pdf' | 'pptx' | 'text'; mime: string; path: string; previewUrl?: string; width?: number; height?: number; text?: string; warnings?: string[]; }
+export interface Brief { topic: string; focus: string; language: 'zh' | 'en' | 'bilingual' | 'original'; purpose: 'paper' | 'slides'; aspectRatio: 'auto' | '2:1' | '16:9' | '3:2' | '4:3' | '1:1'; widthMm: number; prompt: string; stylePrompt?: string; notes: string; fullVector: boolean; contentImageIds?: string[]; layoutPlan?: FigureLayoutPlan; }
+export interface Asset { id: string; name: string; kind: 'image' | 'pdf' | 'pptx' | 'text'; mime: string; path: string; previewUrl?: string; width?: number; height?: number; text?: string; warnings?: string[]; citation?: PaperCitation; }
 export interface StyleReference { id: string; name: string; description: string; previewUrl: string; path: string; }
 export type LibraryCategory = 'reference' | 'icon';
 export interface LibraryItem { id: string; name: string; category: LibraryCategory; source: 'builtin' | 'user'; mime: string; extension: string; width: number; height: number; thumbnailUrl: string; createdAt?: string; }
 export interface LibraryImportResult { items: LibraryItem[]; importedIds: string[]; errors: string[]; }
+export interface PaperCitation {
+  id: string; title: string; authors: string[]; venue: string; year: number; paper: string; pdf_source?: string;
+}
+export interface PaperFigure extends PaperCitation {
+  pattern: string; image: string; tier?: string; award?: string; score?: number; w?: number; h?: number;
+}
+export interface FigureLayoutPlan {
+  arrangement: 'horizontal' | 'vertical' | 'parallel' | 'grid';
+  panels: string[];
+  notes: string;
+  referenceIds: string[];
+  citations?: PaperCitation[];
+}
+export interface LayoutRecommendation { figure: PaperFigure; reason: string; }
+export interface LocalEditRegion { targetId: string; x: number; y: number; width: number; height: number; }
+export interface GalleryCacheStatus { available: number; total: number; running: boolean; error?: string; }
 export interface ElementBase { id: string; type: 'text' | 'rect' | 'ellipse' | 'line' | 'path' | 'image'; groupId?: string; role?: 'label' | 'formula' | 'decoration'; x: number; y: number; w: number; h: number; rotation?: number; }
 export interface TextElement extends ElementBase { type: 'text'; text: string; fontFamily?: string; fontSize: number; color: string; bold?: boolean; italic?: boolean; align?: 'left' | 'center' | 'right'; }
 export interface ShapeElement extends ElementBase { type: 'rect' | 'ellipse'; fill: string; stroke?: string; strokeWidth?: number; radius?: number; opacity?: number; }
@@ -55,6 +71,13 @@ export interface WorkspaceApi {
   createProject(name: string, route: 'full' | 'reconstruct'): Promise<Project>;
   deleteProject(projectId: string): Promise<{ deleted: boolean; projects: ProjectSummary[] }>;
   listLibrary(): Promise<LibraryItem[]>;
+  listPaperFigures(): Promise<PaperFigure[]>;
+  recommendPaperLayouts(query: string): Promise<LayoutRecommendation[]>;
+  analyzePaperLayout(plan: FigureLayoutPlan, task: string): Promise<FigureLayoutPlan>;
+  galleryCache(action?: 'start' | 'stop'): Promise<GalleryCacheStatus>;
+  openPaperFigureLink(id: string, kind: 'paper' | 'pdf'): Promise<void>;
+  openPaperGallerySource(kind: 'gallery' | 'rights'): Promise<void>;
+  copyPaperGalleryLink(url: string): Promise<void>;
   importLibraryFiles(category: LibraryCategory): Promise<LibraryImportResult>;
   updateLibraryItem(id: string, patch: { name?: string; category?: LibraryCategory }): Promise<LibraryItem>;
   deleteLibraryItem(id: string): Promise<{ deleted: boolean; items: LibraryItem[] }>;
@@ -68,7 +91,7 @@ export interface WorkspaceApi {
   providerStatus(id: ProviderId): Promise<ProviderStatus>;
   loginCodex(): Promise<ProviderStatus>;
   listModels(id: ProviderId): Promise<ModelInfo[]>;
-  run(projectId: string, action: RunAction, feedback?: string): Promise<Project>;
+  run(projectId: string, action: RunAction, feedback?: string, region?: LocalEditRegion): Promise<Project>;
   cancelRun(projectId: string): Promise<void>;
   renderScene(projectId: string, scene: FigureScene): Promise<Project>;
   exportProject(projectId: string, formats: Array<'pptx' | 'svg' | 'png'>): Promise<{ directory: string; files: string[] }>;

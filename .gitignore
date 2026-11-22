@@ -14,6 +14,7 @@ src/main/providers/.protocol-temp/
 src/main/providers/.live-image-test/
 resources/codex/_downloads/
 resources/codex/
+resources/paper-gallery/images/
 **/__pycache__/
 *.pyc
 tests/artifacts/

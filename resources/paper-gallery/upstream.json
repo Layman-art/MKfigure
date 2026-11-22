@@ -1,0 +1,52 @@
+{
+  "project": "Top-Conf Figure Gallery",
+  "repository": "https://github.com/qwdwqfwq/topconf-paper-figure-gallery",
+  "revision": "b330dadd61612f6281052defe20181737397cd43",
+  "homepage": "https://qwdwqfwq.github.io/topconf-paper-figure-gallery/",
+  "catalog": "data/figures.json",
+  "offlineBrowserCatalog": "assets/figures.js",
+  "upstreamCatalog": "https://github.com/qwdwqfwq/topconf-paper-figure-gallery/blob/b330dadd61612f6281052defe20181737397cd43/data/figures.json",
+  "catalogSha256": "8949316de6703bc9d20ec8a60d81bb521b2b585c7dafc348fd89b62adfa062fb",
+  "figures": 3449,
+  "jpegBytes": 332163207,
+  "imageTreeSha256": "4e25d59f2a196a4e7556f7e99528fa839fa343e316eed2552ddb9e0032044ace",
+  "imageTreeHashMethod": "SHA-256 of the concatenation of each UTF-8 path, NUL, and raw SHA-256 digest, sorted by path.",
+  "byVenue": {
+    "aaai": 301,
+    "acl": 384,
+    "cvpr": 308,
+    "iclr": 745,
+    "icml": 746,
+    "neurips": 965
+  },
+  "byYear": {
+    "2023": 615,
+    "2024": 833,
+    "2025": 1259,
+    "2026": 742
+  },
+  "byPattern": {
+    "architecture": 513,
+    "comparison": 7,
+    "conceptual": 439,
+    "framework": 283,
+    "pipeline": 396,
+    "results": 4,
+    "taxonomy": 247,
+    "teaser": 1560
+  },
+  "rights": {
+    "codeLicense": "LICENSE",
+    "attributionNotice": "NOTICE.md",
+    "figureRightsPolicy": "IMAGES_POLICY.md",
+    "figureRights": "Paper images retain their original rights. Follow the terms of the cited paper and its rights holders.",
+    "attributionFields": [
+      "title",
+      "authors",
+      "venue",
+      "year",
+      "paper",
+      "pdf_source"
+    ]
+  }
+}

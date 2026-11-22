@@ -20,11 +20,13 @@ export interface CompleteRequest {
   /** Cumulative snapshot for this request, never a token delta. */
   onUsage?: (usage: TokenUsage) => void;
 }
+export type ImageInputRole = 'content' | 'layout' | 'style';
 export interface ImageRequest {
   provider: 'codex' | 'openai' | 'custom';
   model: string;
   prompt: string;
   mode?: 'create' | 'edit';
+  referenceRoles?: ImageInputRole[];
   references?: Array<{ dataUrl: string; path?: string }>;
   signal?: AbortSignal;
   outputDir: string;

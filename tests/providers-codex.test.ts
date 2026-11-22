@@ -160,11 +160,15 @@ describe('Codex official app-server stdio protocol', () => {
   });
   it('accepts imageGeneration event bytes, never an assistant claim', async () => {
     let withImage = true;
+    const urls = ['data:image/png;base64,'+png,'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4z8AAAAMBAQDJ/pLvAAAAAElFTkSuQmCC','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYPgPAAEDAQAIicLsAAAAAElFTkSuQmCC'];
     state.spawn.mockImplementation(() => fakeChild((message, emit) => {
       if (message.method === 'initialize') emit({ id: message.id, result: {} });
-      if (message.method === 'thread/start') emit({ id: message.id, result: { thread: { id: 't' } } });
+      if (message.method === 'thread/start') {
+        expect(message.params.developerInstructions).toContain('1. content, 2. layout, 3. style');
+        emit({ id: message.id, result: { thread: { id: 't' } } });
+      }
       if (message.method === 'turn/start') {
-        expect(message.params.input[1]).toMatchObject({ type: 'image', url: `data:image/png;base64,${png}` });
+        expect(message.params.input.slice(1)).toEqual(urls.map(url => ({type:'image',url})));
         emit({ id: message.id, result: { turn: { id: 'r' } } });
         if (withImage) emit({ method: 'item/completed', params: { threadId: 't', item: { type: 'imageGeneration', id: 'img', status: 'completed', result: png, failure: null } } });
         emit({ method: 'item/completed', params: { threadId: 't', item: { type: 'agentMessage', id: 'a', text: 'Successfully generated image', phase: 'final_answer' } } });
@@ -172,7 +176,7 @@ describe('Codex official app-server stdio protocol', () => {
       }
     }).child);
     const provider = new CodexProvider(options);
-    const request = { provider: 'codex' as const, model: 'chosen-model', prompt: 'Generate', references: [{ dataUrl: `data:image/png;base64,${png}` }], outputDir: await mkdtemp(join(tmpdir(), 'mk-codex-')) };
+    const request = { provider: 'codex' as const, model: 'chosen-model', prompt: 'Generate', referenceRoles: ['content','layout','style'] as Array<'content'|'layout'|'style'>, references: urls.map(dataUrl=>({dataUrl})), outputDir: await mkdtemp(join(tmpdir(), 'mk-codex-')) };
     const image = await provider.generateImage(request);
     expect(await readFile(image.path)).toEqual(Buffer.from(png, 'base64'));
     withImage = false;

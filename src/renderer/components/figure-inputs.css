@@ -1,0 +1,6 @@
+.generation-inputs{border-top:1px solid var(--line,#dfdacf);padding:10px 0;margin:4px 0 8px;font-size:13px}
+.generation-inputs summary{cursor:pointer;font-weight:600}.generation-inputs summary span{color:#795537;padding-left:5px}
+.generation-inputs fieldset{padding:0;margin:12px 0;border:0}.generation-inputs legend,.generation-inputs strong{font-size:12px;font-weight:650}
+.generation-inputs p,.generation-inputs ul{margin:3px 0 9px;line-height:1.5;color:#625d53}.generation-inputs ul{padding-left:19px}
+.generation-inputs label{display:flex;align-items:center;gap:7px;padding:4px 0}.generation-inputs label span{overflow-wrap:anywhere}
+.generation-inputs label img{width:42px;height:30px;object-fit:contain;border:1px solid #e5ded3;border-radius:3px}

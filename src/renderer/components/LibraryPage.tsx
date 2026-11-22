@@ -1,20 +1,29 @@
 import { useEffect, useRef, useState } from 'react';
-import { AlertCircle, ArrowDownToLine, ArrowLeft, Check, CheckCircle2, Images, LoaderCircle, Search, Trash2, Upload, X } from 'lucide-react';
+import { AlertCircle, ArrowDownToLine, ArrowLeft, BookOpen, Check, CheckCircle2, Images, LoaderCircle, Search, Trash2, Upload, X } from 'lucide-react';
 import type { LibraryCategory, LibraryItem, WorkspaceApi } from '../../shared/types';
 import { errorText } from '../display';
 import { Button, Field } from './Controls';
+import PaperGallery from './PaperGallery';
 
 type Filter = 'all' | LibraryCategory;
 type Preview = { item: LibraryItem; url: string };
 
-export default function LibraryPage({ api = window.mkFigure, selecting, selectedId, onBack, onSelect, onBusyChange }: {
+type LibraryPageProps = {
   api?: WorkspaceApi;
   selecting: boolean;
   selectedId?: string;
   onBack: () => void;
   onSelect: (id: string) => Promise<void>;
   onBusyChange: (busy: boolean) => void;
-}) {
+};
+
+export default function LibraryPage({ startWithPapers = false, ...props }: LibraryPageProps & { startWithPapers?:boolean }) {
+  const [papers, setPapers] = useState(startWithPapers);
+  if(papers)return <PaperGallery {...props} api={props.api || window.mkFigure} onBack={startWithPapers ? props.onBack : () => setPapers(false)}/>;
+  return <PersonalLibraryPage {...props} onOpenPapers={() => setPapers(true)}/>;
+}
+
+function PersonalLibraryPage({ api = window.mkFigure, selecting, selectedId, onBack, onSelect, onBusyChange, onOpenPapers }: LibraryPageProps & {onOpenPapers:()=>void}) {
   const app = api;
   const [items, setItems] = useState<LibraryItem[]>([]);
   const [filter, setFilter] = useState<Filter>(selecting ? 'reference' : 'all');
@@ -95,7 +104,7 @@ export default function LibraryPage({ api = window.mkFigure, selecting, selected
   return <main className="library-page">
     <div className="library-heading">
       <button className="library-back text-button" onClick={() => { if (!operation.current) onBack(); }} disabled={!!busy}><ArrowLeft size={16}/>{selecting ? '返回创作' : '返回首页'}</button>
-      <div><div><h1>{selecting ? '选择风格参考' : '图片素材库'}</h1><p>{selecting ? '选一张图片，作为当前作品的风格参考。' : '收藏参考图与小图标，随时取用。'}</p></div><span className="library-count"><Images size={17}/>{items.length} 张素材</span></div>
+      <div><div><h1>{selecting ? '选择风格参考' : '图片素材库'}</h1><p>{selecting ? '选一张图片，作为当前作品的风格参考。' : '收藏参考图与小图标，随时取用。'}</p></div><div className="library-count"><Images size={17}/>{items.length} 张素材<Button icon={BookOpen} onClick={onOpenPapers} disabled={!!busy}>顶会主图库</Button></div></div>
     </div>
     <div className="library-toolbar">
       <div className="library-filters" aria-label="素材分类">{([{ id: 'all', label: '全部' }, { id: 'reference', label: '参考图' }, { id: 'icon', label: '图标' }] as const).map(tab => <button key={tab.id} aria-pressed={filter === tab.id} className={filter === tab.id ? 'active' : ''} onClick={() => setFilter(tab.id)}>{tab.label}<span>{counts[tab.id]}</span></button>)}</div>

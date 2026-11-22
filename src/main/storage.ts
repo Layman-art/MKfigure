@@ -6,6 +6,7 @@ import { safeStorage, nativeImage } from 'electron';
 import type { AppSettings, Asset, Brief, Project, ProjectSummary, ProviderId, RunAction, StyleReference } from '../shared/types';
 
 import { PANE_COUNT } from '../shared/types';
+import { cleanLayoutPlan, MAX_CONTENT_IMAGES } from '../shared/figure-inputs';
 import { generationPrompt } from './generation-prompt';
 
 export const DEFAULT_BRIEF: Brief = { topic: '', focus: '', language: 'zh', purpose: 'paper', aspectRatio: 'auto', widthMm: 180, prompt: '', stylePrompt: '', notes: '', fullVector: true };
@@ -25,6 +26,8 @@ const cleanText = (v: unknown, max: number) => typeof v === 'string' ? v.slice(0
 export function cleanBrief(value: unknown): Brief {
   const b = value as Partial<Brief>;
   return { topic: cleanText(b?.topic, 12000), focus: cleanText(b?.focus, 12000), prompt: cleanText(b?.prompt, 40000), stylePrompt: cleanText(b?.stylePrompt, 6000), notes: cleanText(b?.notes, 60000),
+    ...(Array.isArray(b?.contentImageIds) && {contentImageIds:[...new Set(b.contentImageIds.filter(id=>typeof id==='string'))].slice(0,MAX_CONTENT_IMAGES)}),
+    ...(b?.layoutPlan && {layoutPlan:cleanLayoutPlan(b.layoutPlan)}),
     language: ['zh','en','bilingual','original'].includes(b?.language || '') ? b.language! : 'zh',
     purpose: b?.purpose === 'slides' ? 'slides' : 'paper', aspectRatio: ['auto','2:1','16:9','3:2','4:3','1:1'].includes(b?.aspectRatio || '') ? b.aspectRatio! : 'auto',
     widthMm: typeof b?.widthMm === 'number' && Number.isFinite(b.widthMm) ? Math.min(1000, Math.max(50, b.widthMm)) : 180, fullVector: b?.fullVector !== false };

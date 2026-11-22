@@ -4,6 +4,9 @@ import type { Asset, Bootstrap, Brief, FigureScene, ProgressEvent, Project, RunA
 import BrandMark from './BrandMark';
 import { Button, Field } from './components/Controls';
 import StyleEditor from './components/StyleEditor';
+import LayoutPlanner from './components/LayoutPlanner';
+import GenerationInputs from './components/GenerationInputs';
+import type { LocalEditRegion } from '../shared/types';
 import './creation-workspace.css';
 import LibraryPage from './components/LibraryPage';
 import ImageRevision, { type ImageRevisionMode } from './components/ImageRevision';
@@ -211,11 +214,11 @@ export default function App({ api = window.mkFigure, compact = false, paneIndex 
     changeProject({ target: asset, scene: undefined, qa: undefined, previewSvg: undefined, previewPng: undefined });
     setSceneDraft(undefined); setPreviewMode('visual');
   };
-  const run = (action: RunAction, instruction?: string) => void perform(ACTIONS[action], async () => {
+  const run = (action: RunAction, instruction?: string, region?: LocalEditRegion) => void perform(ACTIONS[action], async () => {
     await flushSave(); if (!projectRef.current) return;
     const id = projectRef.current.id;
     let next: Project;
-    try { runStarted.current = true; next = await app.run(id, action, instruction ?? (action === 'refine' ? feedback.trim() : undefined)); }
+    try { runStarted.current = true; next = await app.run(id, action, instruction ?? (action === 'refine' ? feedback.trim() : undefined),region); }
     catch (err) {
       try { receiveProject(await app.openProject(id)); } catch { /* Keep the original run error. */ }
       throw err;
@@ -259,6 +262,8 @@ export default function App({ api = window.mkFigure, compact = false, paneIndex 
   const changeStage = (next: Stage) => { if (!busy && !styleBusy) { changeProject({ stage: next }); setNotice(''); if (next === 'review' || next === 'export') setPreviewMode('editable'); } };
 
   const styleMode = project?.styleMode || 'custom';
+  const effectiveLayout=project?.brief.layoutPlan??(styleMode==='shared'?sharedStyle?.layoutPlan:undefined);
+  const inputStyle=styleMode==='shared'?sharedStyle?.reference:styleMode==='custom'?activeReference:undefined;
   const styleLabel = styleMode === 'none' ? '不使用参考风格' : styleMode === 'shared' ? '沿用统一风格' : '本图自定义';
   const sharedDescription = [sharedStyle?.prompt, sharedStyle?.palette && `配色：${sharedStyle.palette}`, sharedStyle?.background && `背景：${sharedStyle.background}`, sharedStyle?.lines && `线条：${sharedStyle.lines}`].filter(Boolean).join(' · ');
   const styleControls = project && <section className="project-style-controls">
@@ -311,6 +316,9 @@ export default function App({ api = window.mkFigure, compact = false, paneIndex 
             <div className="field"><div className="field-title">论文与方法资料<span>选填</span></div><button className="upload-zone compact" onClick={() => importAssets('sources')}><Upload size={20}/><span><strong>选择参考资料</strong><small>PDF、PPTX、文本或图片</small></span><Plus size={17}/></button>{project.sources.length > 0 && <div className="asset-list">{project.sources.map(a => <div key={a.id} className="asset-row"><FileText size={16}/><span><strong>{a.name}</strong><small>{a.warnings?.join(' · ') || assetSize(a)}</small></span><button aria-label={`移除 ${a.name}`} onClick={() => changeProject({ sources: project.sources.filter(s => s.id !== a.id) })}><X size={14}/></button></div>)}</div>}</div>
             </details><div className="field-row"><Field label="图中文字" hint="选填"><select value={project.brief.language} onChange={e => changeBrief({ language: e.target.value as Brief['language'] })}><option value="zh">中文</option><option value="en">English</option><option value="bilingual">中英双语</option><option value="original">沿用原图语言</option></select></Field><Field label="使用场景" hint="选填"><select value={project.brief.purpose} onChange={e => changeBrief({ purpose: e.target.value as Brief['purpose'] })}><option value="paper">论文插图</option><option value="slides">汇报 PPT</option></select></Field></div>
             {styleControls}
+            {styleMode==='shared'&&!project.brief.layoutPlan&&sharedStyle?.layoutPlan&&<p className="field-hint">沿用文件夹版式 · {sharedStyle.layoutPlan.panels.join(' / ')}。可在下方为本图单独设置。</p>}
+            <LayoutPlanner key={project.id} api={app} initialQuery={[project.brief.topic,project.brief.focus].filter(Boolean).join(' ')} value={project.brief.layoutPlan} onChange={layoutPlan=>changeBrief({layoutPlan})} disabled={!!busy}/>
+            <GenerationInputs sources={project.sources} ids={project.brief.contentImageIds} layout={effectiveLayout} style={inputStyle} onChange={contentImageIds=>changeBrief({contentImageIds})}/>
             <details className="brief-details"><summary>绘图提示词与画面设置 <span>选填</span></summary>            <Field label="绘图提示词" hint="选填 · 可手写"><textarea className="prompt-area" rows={9} placeholder="留空也能生成：使用前面的内容、所选风格与风格要求。也可直接填写完整绘图提示词。" value={project.brief.prompt} onChange={e => changeBrief({ prompt: e.target.value })}/></Field><div className="under-field"><button className="text-button" onClick={() => run('prompt')} disabled={!canGenerate}><WandSparkles size={14}/>AI 优化提示词（可选）</button><span>{project.brief.prompt.length} 字</span></div>
             <div className="field-row"><Field label="画面比例"><select value={project.brief.aspectRatio} onChange={e => changeBrief({ aspectRatio: e.target.value as Brief['aspectRatio'] })}><option value="auto">根据内容自动安排</option><option value="2:1">2:1 · 论文横版</option><option value="16:9">16:9 · 汇报横版</option><option value="3:2">3:2</option><option value="4:3">4:3</option><option value="1:1">1:1 · 方形</option></select></Field><Field label="导出宽度" hint="mm"><input type="number" min={30} max={600} step={1} value={project.brief.widthMm} onChange={e => changeBrief({ widthMm: Number(e.target.value) || 180 })}/></Field></div>
 </details>
@@ -319,7 +327,7 @@ export default function App({ api = window.mkFigure, compact = false, paneIndex 
           </>}
           {stage === 'visual' && <>
             <div className="summary-strip"><FileText size={16}/><span>{project.brief.topic || '从提示词开始绘制'}<small>{project.brief.language === 'en' ? '英文' : project.brief.language === 'bilingual' ? '中英双语' : project.brief.language === 'original' ? '原图语言' : '中文'} · {project.brief.purpose === 'paper' ? '论文插图' : '汇报 PPT'} · {project.sources.length} 份内容资料</small></span><button title="修改内容" onClick={() => changeStage('brief')}><PencilLine size={15}/></button></div>
-            {target && <><ImageRevision mode={imageRevisionMode} useOriginal={useOriginalImage} instruction={imageInstruction} onMode={setImageRevisionMode} onOriginal={setUseOriginalImage} onInstruction={setImageInstruction} onRun={run}/><Button variant="next" icon={ArrowRight} onClick={() => changeStage('reconstruct')}>使用当前图片复刻</Button></>}
+            {target && <><ImageRevision target={target} mode={imageRevisionMode} useOriginal={useOriginalImage} instruction={imageInstruction} onMode={setImageRevisionMode} onOriginal={setUseOriginalImage} onInstruction={setImageInstruction} onRun={run}/><Button variant="next" icon={ArrowRight} onClick={() => changeStage('reconstruct')}>使用当前图片复刻</Button></>}
             <button className="style-summary-link" onClick={() => changeStage('brief')}><span>{styleLabel}{styleMode === 'shared' && sharedStyle?.reference ? ` · ${sharedStyle.reference.name}` : styleMode === 'custom' && activeReference ? ` · ${activeReference.name}` : ''}</span><span>修改内容与风格 <PencilLine size={13}/></span></button>
             {!target && <div className="stage-actions"><Button icon={Upload} onClick={() => importAssets('target')}>使用已有图片</Button><Button variant="accent" icon={Sparkles} onClick={() => run('generate')} disabled={!canGenerate || styleBusy}>生成视觉稿</Button></div>}
             {project.generated.length > 0 && <div className="generated-history"><div className="field-title">已生成的视觉稿<span>{project.generated.length} 张</span></div><div>{project.generated.map((a, i) => <button key={a.id} className={target?.id === a.id ? 'selected' : ''} onClick={() => chooseVisualVersion(a)}><img src={a.previewUrl} alt={`视觉稿 ${i + 1}`}/><span>版本 {i + 1}</span></button>)}</div></div>}

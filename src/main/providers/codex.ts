@@ -331,6 +331,7 @@ export class CodexProvider {
     return result.text;
   }
   async generateImage(request: ImageRequest): Promise<{ path: string; model: string }> {
+    if (request.referenceRoles && request.referenceRoles.length !== (request.references?.length ?? 0)) throw new Error('图片与用途标记数量不一致');
     if (request.mode === 'edit' && request.references?.length !== 1) throw new Error('修改视觉稿需要且仅需要一张原图');
     checkAbort(request.signal);
     // Native image tools may use fixed output names. Isolate their files as well
@@ -340,9 +341,9 @@ export class CodexProvider {
     try {
       const task = request.mode === 'edit'
         ? 'Edit the single attached image using the native image_generation tool and the user\'s editing prompt. The attached image is the source image to modify, not a visual style reference. Supply that source image to the native tool for editing. Preserve all content, layout, typography, colors and scientific meaning that the user did not ask to change. Do not replace this edit with an unrelated new image. If the native tool cannot use the source image for editing, explain that plainly instead of claiming an edit.'
-        : 'Create the requested scientific illustration using the native image_generation tool. Use any attached reference images for visual style only.';
+        : 'Create the requested scientific illustration using the native image_generation tool. Supply the attached images to the tool in their original order and honor each numbered attachment role. Content evidence may supply scientific labels and connectivity; layout examples supply structure, and style references supply appearance. Treat attachments without a designated content role as visual references only.';
       const result = await this.run({ provider: 'codex', model: request.model, signal: request.signal, onEvent: request.onEvent, onUsage: request.onUsage, reasoningEffort: request.reasoningEffort,
-        system: task + ' Do not fabricate scientific evidence or results. Do not draw using code, SVG, ASCII, or external tools. Do not claim success without actually invoking image generation. If the native tool is unavailable, explain that plainly.',
+        system: task + (request.referenceRoles?.length ? '\nAttachment roles in supplied order: ' + request.referenceRoles.map((role,i) => (i+1) + '. ' + role).join(', ') + '.' : '') + ' Do not fabricate scientific evidence or results. Do not draw using code, SVG, ASCII, or external tools. Do not claim success without actually invoking image generation. If the native tool is unavailable, explain that plainly.',
         prompt: request.prompt, images: request.references }, true, cwd);
       const image = result.images.find(item => item.status === 'completed' && !item.failure);
       if (!image) {

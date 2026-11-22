@@ -1,8 +1,9 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
-import type { FolderState, Project, RecentFolder, SharedStyle, StyleMessage } from '../shared/types';
+import type { FolderState, PaperCitation, Project, RecentFolder, SharedStyle, StyleMessage } from '../shared/types';
 import { Store, atomicJson } from './storage';
+import { cleanLayoutPlan } from '../shared/figure-inputs';
 
 export const EMPTY_STYLE: SharedStyle = { prompt: '', palette: '', background: '', lines: '' };
 const text = (value: unknown, max: number) => typeof value === 'string' ? value.slice(0, max) : '';
@@ -11,7 +12,8 @@ export function cleanStyleHistory(input: unknown): StyleMessage[] {
 }
 export function cleanStyle(input: unknown): SharedStyle {
   const value = input as Partial<SharedStyle> | undefined;
-  return { prompt:text(value?.prompt,6000), palette:text(value?.palette,1000), background:text(value?.background,1000), lines:text(value?.lines,1000), history:cleanStyleHistory(value?.history) };
+  return { prompt:text(value?.prompt,6000), palette:text(value?.palette,1000), background:text(value?.background,1000), lines:text(value?.lines,1000), history:cleanStyleHistory(value?.history),
+    ...(value?.layoutPlan && {layoutPlan:cleanLayoutPlan(value.layoutPlan)}) };
 }
 export function styleText(style: SharedStyle) {
   return [style.prompt, style.palette && `配色：${style.palette}`, style.background && `背景：${style.background}`, style.lines && `线条与图标：${style.lines}`].filter(Boolean).join('\n');
@@ -57,7 +59,10 @@ export class FolderWorkspace {
       if(value.format!=='mk-figure-workspace'||value.version!==1||typeof value.id!=='string'||!/^[a-zA-Z0-9-]{1,80}$/.test(value.id))throw new Error('无法识别此 MK Figure 工作区版本');
       const style=cleanStyle(value.style);
       const ref=value.style?.reference;
-      if(ref&&typeof ref.file==='string'&&/^style-[a-zA-Z0-9-]+\.png$/.test(ref.file))style.reference={name:text(ref.name,160),file:ref.file};
+      if(ref&&typeof ref.file==='string'&&/^style-[a-zA-Z0-9-]+\.png$/.test(ref.file)){
+        style.reference={name:text(ref.name,160),file:ref.file};
+        if(ref.citation && typeof ref.citation.id==='string' && typeof ref.citation.title==='string' && Array.isArray(ref.citation.authors))style.reference.citation=ref.citation;
+      }
       style.updatedAt=text(value.style?.updatedAt,40)||undefined;
       return {...value,style};
     } catch(error) {
@@ -113,11 +118,11 @@ export class FolderWorkspace {
       const next={...this.document,style};await atomicJson(path.join(this.metaRoot,'workspace.json'),next);this.document=next;return structuredClone(style);
     });this.writes=task;return task;
   }
-  async setReference(reference?:{name:string;data:Buffer}) {
+  async setReference(reference?:{name:string;data:Buffer;citation?:PaperCitation}) {
     this.assertSelected();
     const task=this.writes.catch(()=>undefined).then(async()=>{
       let ref:SharedStyle['reference'];
-      if(reference){const file=`style-${randomUUID()}.png`;await fs.writeFile(path.join(this.metaRoot,file),reference.data,{flag:'wx'});ref={name:text(reference.name,160),file};}
+      if(reference){const file=`style-${randomUUID()}.png`;await fs.writeFile(path.join(this.metaRoot,file),reference.data,{flag:'wx'});ref={name:text(reference.name,160),file,...(reference.citation&&{citation:reference.citation})};}
       const style={...this.document.style,reference:ref,updatedAt:new Date().toISOString()};
       const next={...this.document,style};await atomicJson(path.join(this.metaRoot,'workspace.json'),next);this.document=next;return structuredClone(style);
     });this.writes=task;return task;
@@ -128,12 +133,14 @@ export class FolderWorkspace {
     if(project.styleMode!=='shared')return project;
     // Capture before any await: later edits to the shared profile affect only subsequent requests.
     const style=structuredClone(this.document.style),root=this.metaRoot;
+    project.brief.layoutPlan=project.brief.layoutPlan??style.layoutPlan;
     project.brief.stylePrompt=styleText(style);project.styleId=undefined;project.customReference=undefined;project.libraryReferenceId=undefined;
     if(style.reference) {
       const file=path.join(root,style.reference.file);await normalFile(file);
       const id=randomUUID(),destination=path.join(this.store.projectDir(project.id),'assets',`${id}.png`);
       await fs.copyFile(file,destination);
       project.customReference={id,name:style.reference.name,kind:'image',mime:'image/png',path:path.basename(destination)};
+      if(style.reference.citation)project.customReference.citation=style.reference.citation;
     }
     return project;
   }

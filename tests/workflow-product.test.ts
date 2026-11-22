@@ -3,11 +3,14 @@ import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promis
 import { tmpdir } from 'node:os';
 import { basename, dirname, extname, join, resolve } from 'node:path';
 import JSZip from 'jszip';
+import { PNG } from 'pngjs';
 import type { FigureScene, ProgressEvent, TokenUsage } from '../src/shared/types';
 import type { ProviderHub } from '../src/main/providers/types';
 
 const state = vi.hoisted(() => ({
   render: vi.fn(),
+  prepareLocalEdit: vi.fn(),
+  sameImagePixels: vi.fn(),
   png: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a1XkAAAAASUVORK5CYII=',
 }));
 vi.mock('electron', () => {
@@ -20,6 +23,7 @@ vi.mock('electron', () => {
   });
   return { safeStorage: {}, nativeImage: { createFromPath: image, createFromBuffer: image } };
 });
+vi.mock('../src/main/local-image-edit', () => ({prepareLocalEdit:state.prepareLocalEdit,sameImagePixels:state.sameImagePixels}));
 vi.mock('../src/main/render', () => ({ renderSvgPng: state.render, fontAvailability: () => null }));
 // PDF extraction is unrelated; its CommonJS debug entry reads a bundled sample
 // when imported under Vitest. Keep real image ingestion and Store behaviour.
@@ -75,6 +79,8 @@ async function fixture() {
 beforeEach(() => {
   vi.useFakeTimers({ toFake: ['Date'] });
   vi.setSystemTime(startTime);
+  state.prepareLocalEdit.mockReset();
+  state.sameImagePixels.mockReset().mockResolvedValue(false);
   state.render.mockReset().mockResolvedValue(Buffer.from(state.png, 'base64'));
 });
 afterEach(async () => {
@@ -121,6 +127,40 @@ describe('direct content and style generation', () => {
     expect(saved.runs![0]).toMatchObject({ action: 'generate', status: 'completed', model: 'chosen-model', reasoningEffort: 'xhigh', durationMs: 4200, usageComplete: false });
     // An image service that did not report tokens has unknown usage, not zero.
     expect(saved.runs![0].usage).toBeUndefined();
+  });
+  it.each([true,false])('passes selected pixels in role order to both planning and generation, duplicate style %s', async duplicate => {
+    const {store,project,hub,complete,generateImage} = await fixture();
+    const citation = {id:'demo',title:'Layout sample',authors:['A'],venue:'Demo',year:2024,paper:'https://example.org/paper'};
+    const example = {name:'Layout sample',dataUrl:'data:image/png;base64,QUJD',citation};
+    const workflow = new Workflow(store,()=>hub,()=>{},undefined,async()=>[example]);
+    await store.mutate(project.id,p => {
+      p.sources = [{...p.target!,id:'skip',path:'never-read.png'}, {...p.target!,id:'evidence',name:'source evidence'}];
+      p.brief.contentImageIds = ['evidence'];
+      p.brief.layoutPlan = {arrangement:'parallel',panels:['Left','Right'],notes:'Two lanes',referenceIds:['demo'],citations:[citation]};
+      p.customReference = {...p.target!,id:'style',citation:duplicate ? citation : undefined};
+    });
+    const roles = duplicate ? ['content','layout'] : ['content','layout','style'];
+    const pngUrl = 'data:image/png;base64,' + state.png;
+    const expectedImages = [pngUrl,example.dataUrl,...(duplicate ? [] : [pngUrl])];
+    complete.mockResolvedValue('A publication figure with parallel lanes');
+    generateImage.mockResolvedValue({dataUrl:pngUrl});
+    await workflow.run(project.id,'prompt');
+    expect(complete.mock.calls[0][0].images?.map(i=>i.dataUrl)).toEqual(expectedImages);
+    await workflow.run(project.id,'generate');
+    const req = generateImage.mock.calls[0][0];
+    expect(req.references?.map(i=>i.dataUrl)).toEqual(expectedImages);
+    expect(req.referenceRoles).toEqual(roles);
+    for (const prompt of [complete.mock.calls[0][0].prompt,req.prompt]) {
+      expect(prompt).toContain('parallel branches');
+      expect(prompt).toContain('Two lanes');
+      expect(prompt).toMatch(/Image 1.*CONTENT EVIDENCE/);
+      expect(prompt).toMatch(/Image 2.*LAYOUT REFERENCE/);
+    }
+    const dir = join(store.projectDir(project.id),'generation');
+    const name = (await readdir(dir)).find(name=>name.startsWith('operation-'))!;
+    const record = await readFile(join(dir,name),'utf8');
+    expect(record).not.toContain('data:image');
+    expect(JSON.parse(record).inputImages.map((i:{role:string})=>i.role)).toEqual(roles);
   });
 });
 
@@ -188,6 +228,14 @@ describe('visual draft changes', () => {
     expect(operation.sourceTargetId).toBeUndefined();
   });
 
+  it('rejects an unchanged prompt-only redraw without sending the original', async () => {
+    const {store,project,workflow,generateImage} = await editFixture();
+    state.sameImagePixels.mockResolvedValue(true);
+    generateImage.mockResolvedValue({dataUrl:'data:image/png;base64,'+state.png});
+    await expect(workflow.run(project.id,'regenerate-image','Redraw the figure')).rejects.toThrow('像素相同');
+    expect(generateImage.mock.calls[0][0].references).toEqual([]);
+    expect((await store.load(project.id)).target!.id).toBe('source-image');
+  });
   it('retains an uploaded source in the draft history when it was not previously generated', async () => {
     const { store, project, workflow, generateImage } = await fixture();
     expect((await store.load(project.id)).generated).toHaveLength(0);
@@ -224,6 +272,69 @@ describe('visual draft changes', () => {
     expect(await operationFor(store, project.id)).toMatchObject({ prompt: editedPrompt, feedback, sourceTargetId: 'source-image' });
   });
 
+  const region = {targetId:'source-image',x:4,y:5,width:8,height:9};
+  const canvas = {width:9,height:9,contentX:0,contentY:0,contentWidth:8,contentHeight:9};
+  it('uses only the crop for both planning and editing, and commits the merged image', async () => {
+    const {store,project,workflow,complete,generateImage,sourcePath} = await editFixture();
+    store.settings.activeProvider='deepseek';
+    store.settings.providers.find(p=>p.id==='deepseek')!.vision=false;
+    const crop = {dataUrl:'data:image/png;base64,Y3JvcA=='};
+    const result = {dataUrl:'data:image/png;base64,ZWRpdA=='};
+    const finish = vi.fn().mockResolvedValue({dataUrl:'data:image/png;base64,' + state.png,changedPixels:1});
+    state.prepareLocalEdit.mockResolvedValue({image:crop,canvas,finish});
+    complete.mockResolvedValue('Use a larger label');
+    generateImage.mockResolvedValue(result);
+    const saved = await workflow.run(project.id,'refine-image','Larger type',region);
+    expect(state.prepareLocalEdit).toHaveBeenCalledWith(sourcePath,region);
+    expect(complete.mock.calls[0][0]).toMatchObject({provider:'codex',images:[crop]});
+    expect(generateImage.mock.calls[0][0].references).toEqual([crop]);
+    expect(finish).toHaveBeenCalledWith(result);
+    expect(saved.generated.map(a=>a.id)).toEqual([region.targetId,saved.target!.id]);
+    expect(await operationFor(store,project.id)).toMatchObject({region,canvas,changedPixels:1,resultAssetId:saved.target!.id});
+  });
+  it('saves a real composite whose pixels match the original outside the selection', async () => {
+    const {store,project,workflow,sourcePath,generateImage} = await editFixture();
+    const realPixels = await vi.importActual<typeof import('../src/main/local-image-edit')>('../src/main/local-image-edit');
+    state.prepareLocalEdit.mockImplementation(realPixels.prepareLocalEdit);
+    const source = new PNG({width:5,height:3});
+    for (let i=0;i<source.data.length;i++) source.data[i]=50+i;
+    const original = PNG.sync.write(source);
+    await writeFile(sourcePath,original);
+    const selection = {targetId:'source-image',x:1,y:1,width:2,height:1};
+    generateImage.mockImplementation(async request => {
+      const crop = PNG.sync.read(Buffer.from(request.references![0].dataUrl.split(',')[1],'base64'));
+      expect([crop.width,crop.height]).toEqual([3,2]);
+      expect(crop.data.subarray(0,8)).toEqual(source.data.subarray(24,32));
+      expect(crop.data.subarray(8)).toEqual(Buffer.alloc(16));
+      crop.data[1]=200;
+      return {dataUrl:'data:image/png;base64,'+PNG.sync.write(crop).toString('base64')};
+    });
+    const result = await workflow.run(project.id,'edit-image','Recolor',selection);
+    const onDisk = PNG.sync.read(await readFile(store.resolveAsset(project.id,result.target!)));
+    const expected = Buffer.from(source.data);
+    expected[25]=200;
+    expect(onDisk.data).toEqual(expected);
+    expect(await readFile(sourcePath)).toEqual(original);
+    expect(await operationFor(store,project.id)).toMatchObject({changedPixels:1});
+  });
+  it.each(['unchanged','cancelled','stale','switched'] as const)('preserves editable state on a %s edit', async failure => {
+    const {store,project,workflow,generateImage} = await editFixture();
+    state.prepareLocalEdit.mockResolvedValue({image:{dataUrl:'crop'},canvas,finish:async()=>{
+      if (failure==='switched') await store.mutate(project.id,p=>{p.target={...p.target!,id:'other'};});
+      else workflow.cancel(project.id);
+      return {dataUrl:'data:image/png;base64,'+state.png,changedPixels:1};
+    }});
+    state.sameImagePixels.mockResolvedValue(true);
+    generateImage.mockResolvedValue({dataUrl:'data:image/png;base64,'+state.png});
+    const selection = failure === 'stale' ? {...region,targetId:'old'} : failure === 'unchanged' ? undefined : region;
+    const messages = {stale:'重新框选',switched:'原图已切换',cancelled:'已停止',unchanged:'像素相同'};
+    await expect(workflow.run(project.id,'edit-image','Larger type',selection)).rejects.toThrow(messages[failure]);
+    if (failure === 'stale') expect(generateImage).not.toHaveBeenCalled();
+    const saved = await store.load(project.id);
+    expect(saved.target!.id).toBe(failure==='switched' ? 'other' : region.targetId);
+    expect(saved.scene).toEqual(scene);
+    expect(saved.generated).toHaveLength(1);
+  });
   it.each(['edit-image', 'refine-image', 'regenerate-image'] as const)('rejects empty input before sending %s', async action => {
     const { project, workflow, complete, generateImage, store } = await editFixture();
     await expect(workflow.run(project.id, action, '  ')).rejects.toThrow('请填写修改意见');

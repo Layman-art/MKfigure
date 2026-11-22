@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, Check, FileImage, FolderOpen, Grid2X2, Home, Images, LoaderCircle, Palette, PanelLeftClose, PanelLeftOpen, Settings2, Trash2, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookOpen, Check, FileImage, FolderOpen, Grid2X2, Home, Images, LoaderCircle, Palette, PanelLeftClose, PanelLeftOpen, Settings2, Trash2, X } from 'lucide-react';
 import { PANE_COUNT, type AppSettings, type FolderState } from '../shared/types';
 import App, { type PaneActions, type PaneState } from './App';
 import BrandMark from './BrandMark';
@@ -21,7 +21,7 @@ export default function WorkspaceShell() {
   const [sidebar, setSidebar] = useState(true);
   const [error, setError] = useState('');
   const [switching, setSwitching] = useState(false);
-  const [library, setLibrary] = useState(false);
+  const [library, setLibrary] = useState<'personal' | 'papers'>();
   const [libraryBusy, setLibraryBusy] = useState(false);
   const [styleOpen, setStyleOpen] = useState(false);
   const [styleBusy, setStyleBusy] = useState(false);
@@ -113,7 +113,7 @@ export default function WorkspaceShell() {
     catch (err) { setError(errorText(err)); }
   };
   const overview = mode === 'parallel' && expanded === null;
-  const showLibrary = useCallback(() => setLibrary(true), []);
+  const showLibrary = useCallback(() => setLibrary('personal'), []);
   const projectList = <div className="folder-projects">{folder?.projects.map(project => <div className="folder-project-row" key={project.id}><button title={project.name} className={expanded !== null && states[expanded]?.projectId === project.id ? 'active' : ''} onClick={() => void openProject(project.id)} disabled={switching}><FileImage size={14}/><span>{project.name}</span>{states.some(state => state.projectId === project.id && state.running) && <LoaderCircle size={12} className="spin"/>}</button><button className="folder-project-delete" aria-label={`删除 ${project.name}`} title="移入回收站" disabled={switching || states.some(state => state.projectId === project.id && state.running)} onClick={() => void removeProject(project.id)}><Trash2 size={12}/></button></div>)}{folder && !folder.projects.length && <p>作品将自动保存在这里</p>}</div>;
   return <div className={`studio-shell${sidebar ? '' : ' sidebar-collapsed'}`}>
     <aside className="studio-sidebar" hidden={!sidebar}>
@@ -123,6 +123,7 @@ export default function WorkspaceShell() {
         <button className={mode === 'single' ? 'active' : ''} onClick={() => void single().catch(err => setError(errorText(err)))} disabled={switching || !selected} title={!selected ? '请先打开文件夹' : undefined}><FileImage size={17}/>单图创作</button>
         <button className={mode === 'parallel' ? 'active' : ''} disabled={switching || !selected} title={!selected ? '请先打开文件夹' : undefined} onClick={() => { setMode('parallel'); setExpanded(null); }}><Grid2X2 size={17}/>并行创作</button>
         <button onClick={showLibrary}><Images size={17}/>图片素材库</button>
+        <button onClick={() => setLibrary('papers')}><BookOpen size={17}/>顶会主图库</button>
       </nav>
       <div className="folder-heading"><span>创作文件夹</span><button aria-label="打开文件夹" title={running ? '任务完成后可切换文件夹' : '打开文件夹'} disabled={blocked} onClick={() => void changeFolder()}><FolderOpen size={16}/></button></div>
       <div className="workspace-folder-list" aria-label="创作文件夹列表">
@@ -149,7 +150,7 @@ export default function WorkspaceShell() {
       {mode === 'parallel' && <nav className="workspace-taskbar" aria-label="并行创作任务">{states.map((state, index) => <button key={index} className={`workspace-task${expanded === index ? ' active' : ''}`} onClick={() => setExpanded(index)}><span className="workspace-task-index">{state.running ? <LoaderCircle className="spin" size={13}/> : state.thumbnail ? <Check size={13}/> : index + 1}</span><span><strong>{state.label}</strong><small>{state.message}</small></span></button>)}</nav>}
       <div className={overview ? 'creation-grid' : 'creation-expanded'} hidden={!selected || mode === 'home'}>{states.map((_, index) => <section key={`${generation}-${index}`} className="pane-host" data-pane-id={`pane-${index + 1}`} hidden={!selected || mode === 'home' || !overview && expanded !== index} aria-label={`创作子窗口 ${index + 1}`}><App api={window.mkFigure.panes[index]} compact={expanded !== index || mode === 'home'} paneIndex={index} sharedStyle={folder?.style} onHome={home} onEditSharedStyle={editStyle} {...callbacks.current[index]}/></section>)}</div>
     </main>
-    {library && <div className="studio-overlay" role="dialog" aria-label="图片素材库"><LibraryPage selecting={false} onSelect={async () => {}} onBack={() => { if (!libraryBusy) setLibrary(false); }} onBusyChange={setLibraryBusy}/></div>}
+    {library && <div className="studio-overlay" role="dialog" aria-label={library === 'papers' ? '顶会主图库' : '图片素材库'}><LibraryPage startWithPapers={library === 'papers'} selecting={false} onSelect={async () => {}} onBack={() => { if (!libraryBusy) setLibrary(undefined); }} onBusyChange={setLibraryBusy}/></div>}
     {styleOpen && selected && folder && <SharedStylePanel style={folder.style} onClose={() => setStyleOpen(false)} onSaved={() => void refresh()} onBusyChange={setStyleBusy}/>}
     {settings && <SettingsDialog settings={settings} onClose={() => setSettings(undefined)} onSaved={setSettings}/>}
     {switching && <div className="studio-switching" role="status"><LoaderCircle className="spin" size={19}/>正在更新工作区…</div>}
