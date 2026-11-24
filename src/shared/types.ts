@@ -19,9 +19,28 @@ export interface LibraryItem { id: string; name: string; category: LibraryCatego
 export interface LibraryImportResult { items: LibraryItem[]; importedIds: string[]; errors: string[]; }
 export interface PaperCitation {
   id: string; title: string; authors: string[]; venue: string; year: number; paper: string; pdf_source?: string;
+  figure?: string; page?: number; doi?: string; figureUrl?: string;
 }
+export type StudyDimension = '2d' | '3d';
+export type StudyForm = 'curve' | 'bar' | 'scatter' | 'distribution' | 'heatmap' | 'field' | 'qualitative' | 'surface' | 'pointcloud' | 'volume' | 'mesh' | 'map' | 'contour' | 'timeseries' | 'uncertainty'
+  | 'histogram' | 'density' | 'boxplot' | 'violin' | 'ecdf' | 'parity' | 'residual'
+  | 'sensitivity' | 'spectrum' | 'trajectory' | 'region' | 'network' | 'stacked' | 'radar'
+  | 'polar' | 'confusion' | 'flow' | 'chord' | 'pareto' | 'tornado' | 'ternary'
+  | 'pie' | 'calendar' | 'raster' | 'waterfall' | 'vector' | 'embedding' | 'spatiotemporal'
+  | 'interval' | 'roc' | 'ablation' | 'scenario' | 'multipanel' | 'bar3d' | 'parallel'
+  | 'ridgeline' | 'forest' | 'windrose' | 'treemap' | 'mosaic';
+export type StudyCategory = 'result' | 'mechanism' | 'algorithm';
 export interface PaperFigure extends PaperCitation {
   pattern: string; image: string; tier?: string; award?: string; score?: number; w?: number; h?: number;
+  supplement?: {
+    category: 'main' | StudyCategory; sha256: string; description: string;
+    dimensions?: StudyDimension[]; forms?: StudyForm[]; sourceUrl?: string;
+    pdfVersion?: 'author-public' | 'proceedings' | 'publisher'; publisherPdf?: string;
+    collection?: 'journal'; license?: string; imageSource?: string; topics?: string[];
+    imagePanels?: { url: string; label: string }[];
+    pdfSha256?: string; cropPdfPoints?: [number, number, number, number];
+    archive?: { offset: number; length: number };
+  };
 }
 export interface FigureLayoutPlan {
   arrangement: 'horizontal' | 'vertical' | 'parallel' | 'grid';
@@ -32,7 +51,7 @@ export interface FigureLayoutPlan {
 }
 export interface LayoutRecommendation { figure: PaperFigure; reason: string; }
 export interface LocalEditRegion { targetId: string; x: number; y: number; width: number; height: number; }
-export interface GalleryCacheStatus { available: number; total: number; running: boolean; error?: string; }
+export interface GalleryCacheStatus { available: number; total: number; running: boolean; downloadable?: number; error?: string; }
 export interface ElementBase { id: string; type: 'text' | 'rect' | 'ellipse' | 'line' | 'path' | 'image'; groupId?: string; role?: 'label' | 'formula' | 'decoration'; x: number; y: number; w: number; h: number; rotation?: number; }
 export interface TextElement extends ElementBase { type: 'text'; text: string; fontFamily?: string; fontSize: number; color: string; bold?: boolean; italic?: boolean; align?: 'left' | 'center' | 'right'; }
 export interface ShapeElement extends ElementBase { type: 'rect' | 'ellipse'; fill: string; stroke?: string; strokeWidth?: number; radius?: number; opacity?: number; }
@@ -75,7 +94,8 @@ export interface WorkspaceApi {
   recommendPaperLayouts(query: string): Promise<LayoutRecommendation[]>;
   analyzePaperLayout(plan: FigureLayoutPlan, task: string): Promise<FigureLayoutPlan>;
   galleryCache(action?: 'start' | 'stop'): Promise<GalleryCacheStatus>;
-  openPaperFigureLink(id: string, kind: 'paper' | 'pdf'): Promise<void>;
+  installGalleryArchive(): Promise<number | null>;
+  openPaperFigureLink(id: string, kind: 'paper' | 'pdf' | 'figure'): Promise<void>;
   openPaperGallerySource(kind: 'gallery' | 'rights'): Promise<void>;
   copyPaperGalleryLink(url: string): Promise<void>;
   importLibraryFiles(category: LibraryCategory): Promise<LibraryImportResult>;

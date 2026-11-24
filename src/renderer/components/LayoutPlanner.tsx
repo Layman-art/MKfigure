@@ -1,5 +1,8 @@
+import { createPortal } from 'react-dom';
+import PaperGallery from './PaperGallery';
 import { useEffect, useId, useRef, useState } from 'react';
 import type { FigureLayoutPlan, LayoutRecommendation, PaperCitation, WorkspaceApi } from '../../shared/types';
+import { citationFromFigure, paperFigureName } from '../../shared/gallery-taxonomy';
 import { errorText } from '../display';
 import { figureImage, patternNames } from '../paper-gallery';
 import '../layout-planner.css';
@@ -13,10 +16,6 @@ function newPlan(query: string): FigureLayoutPlan {
   return { arrangement: parallel ? 'parallel' : compare ? 'grid' : 'horizontal',
     panels: parallel ? ['输入', '分支 A', '分支 B', '融合输出'] : compare ? ['对照 A', '对照 B'] : ['输入', '处理过程', '输出'],
     notes: '', referenceIds: [] };
-}
-
-function citation({ id, title, authors, venue, year, paper, pdf_source }: PaperCitation): PaperCitation {
-  return { id, title, authors, venue, year, paper, pdf_source };
 }
 
 export function LayoutSketch({ arrangement, panels }: Pick<FigureLayoutPlan, 'arrangement' | 'panels'>) {
@@ -77,6 +76,13 @@ export default function LayoutPlanner({ api, initialQuery, value, onChange, disa
   const sequence = useRef(0);
   const selected = value?.referenceIds || [];
   const selectedKey = selected.join('|');
+  const [picking, setPicking] = useState(false);
+  const pickerDialog = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const dialog = pickerDialog.current;
+    if (picking && dialog && !dialog.open) dialog.showModal();
+    return () => { if (dialog?.open) dialog.close(); };
+  }, [picking]);
   const [expanded, setExpanded] = useState(!!value);
   const known = new Map([...lookup, ...results.map(result => result.figure), ...(value?.citations || [])].map(c => [c.id, c]));
   const locked = disabled || !!busy;
@@ -102,7 +108,7 @@ export default function LayoutPlanner({ api, initialQuery, value, onChange, disa
     const referenceIds = selected.includes(row.id) ? selected.filter(id => id !== row.id) : [...selected, row.id];
     if (referenceIds.length > 3) return;
     known.set(row.id, row);
-    onChange({ ...prev, referenceIds, citations: referenceIds.flatMap(id => known.has(id) ? [citation(known.get(id)!)] : []) });
+    onChange({ ...prev, referenceIds, citations: referenceIds.flatMap(id => known.has(id) ? [citationFromFigure(known.get(id)!)] : []) });
   }
   async function analyze() {
     if (locked || !value || !selected.length) return;
@@ -118,17 +124,18 @@ export default function LayoutPlanner({ api, initialQuery, value, onChange, disa
     <div className="mk-layout-body">
       <label>检索任务<textarea rows={2} value={query} maxLength={4000} disabled={locked} placeholder="例如，机器人扩散策略，或双分支特征融合" onChange={e => { setCustomQuery(e.target.value); setResults([]); setSearched(false); }}/></label>
       <div className="mk-layout-actions"><button type="button" disabled={locked || !query.trim()} onClick={() => void search()}>{busy === 'search' ? '正在检索…' : '按任务推荐'}</button>
+        <button type="button" disabled={locked || selected.length >= 3} onClick={() => setPicking(true)}>从图库选版式参考</button>
         {!value && <button type="button" disabled={locked} onClick={() => onChange(newPlan(query))}>手动建版式</button>}</div>
       {searched && !results.length && <p role="status">图库没有词语或图型匹配。可换用主题的英文术语，或手动建版式。</p>}
       {results.length > 0 && <><small>选择 1–3 张作为版式参考</small><div className="mk-layout-results">{results.map(({ figure, reason }) => <article key={figure.id}>
         <button type="button" className="mk-layout-choice" disabled={locked || (!selected.includes(figure.id) && selected.length >= 3)} aria-pressed={selected.includes(figure.id)} onClick={() => toggle(figure)}>
-          <img src={figureImage(figure.id)} alt="" loading="lazy"/><span>{selected.includes(figure.id) ? '已选' : '选用'}</span></button>
-        <strong>{figure.title}</strong><small title={figure.authors.join(', ')}>{figure.authors[0]} · {figure.venue.toUpperCase()} {figure.year} · {patternNames[figure.pattern]?.[0] || figure.pattern}</small><p>{reason}</p>
+          <img src={figureImage(figure.id,!!figure.supplement)} alt="" loading="lazy" onError={e=>{e.currentTarget.hidden=true;}}/><span>{selected.includes(figure.id) ? '已选' : '选用'}</span></button>
+        <strong>{paperFigureName(figure)}</strong><small title={figure.authors.join(', ')}>{figure.authors[0]} · {figure.venue.toUpperCase()} {figure.year} · {patternNames[figure.pattern]?.[0] || figure.pattern}</small><p>{reason}</p>
         <button type="button" className="mk-layout-link" onClick={() => openSource(figure.id)}>论文出处 ↗</button>
       </article>)}</div></>}
       {value && <>
         <div className="mk-layout-planhead"><strong>版式草图</strong><button type="button" className="mk-layout-link" disabled={locked} onClick={() => { onChange(undefined); setError(''); }}>清空版式</button></div>
-        {selected.length > 0 && <ul className="mk-layout-picked">{selected.map(id => <li key={id}><img src={figureImage(id)} alt=""/><button type="button" className="mk-layout-link" onClick={() => openSource(id)}>{known.get(id)?.title || id} ↗</button>
+        {selected.length > 0 && <ul className="mk-layout-picked">{selected.map(id => <li key={id}><img src={figureImage(id,true)} alt="" onError={e=>{e.currentTarget.hidden=true;}}/><button type="button" className="mk-layout-link" onClick={() => openSource(id)}>{known.has(id) ? paperFigureName(known.get(id)!) : id} ↗</button>
           <button type="button" aria-label={'移除参考图 ' + (known.get(id)?.title || id)} disabled={locked} onClick={() => onChange({ ...value, referenceIds: selected.filter(key => key !== id), citations: value.citations?.filter(c => c.id !== id) })}>移除</button></li>)}</ul>}
         <label>面板排列<select value={value.arrangement} disabled={locked} onChange={e => onChange({ ...value, arrangement: e.target.value as Arrangement })}>{Object.entries(names).map(([id,name]) => <option key={id} value={id}>{name}</option>)}</select></label>
         <LayoutSketch arrangement={value.arrangement} panels={value.panels}/>
@@ -138,6 +145,14 @@ export default function LayoutPlanner({ api, initialQuery, value, onChange, disa
         <label>版式说明<textarea rows={2} disabled={locked} value={value.notes} maxLength={2000} placeholder="记录阅读顺序、连接关系或需要保留的细节" onChange={e => onChange({ ...value, notes: e.target.value })}/></label>
         {selected.length > 0 && <div className="mk-layout-actions"><button type="button" disabled={locked} onClick={() => void analyze()}>{busy === 'analyze' ? '正在读图…' : '读参考图细化版式'}</button><small>将所选参考图交给视觉模型</small></div>}
       </>}
+      {picking && createPortal(<dialog ref={pickerDialog} className="mk-layout-picker" aria-label="从图库选版式参考"
+        onCancel={e => { if (e.target === e.currentTarget) { e.preventDefault(); setPicking(false); } }}>
+        <PaperGallery api={api} selecting selectedLayoutIds={selected} onBack={() => setPicking(false)}
+          onSelect={async (_, row) => {
+            if (locked || selected.includes(row.id) || selected.length >= 3) return;
+            toggle(row); setPicking(false);
+          }}/>
+      </dialog>, document.body)}
       {error && <p className="mk-layout-error" role="alert">{error}</p>}
     </div>
   </details>;

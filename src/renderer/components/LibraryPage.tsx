@@ -104,7 +104,7 @@ function PersonalLibraryPage({ api = window.mkFigure, selecting, selectedId, onB
   return <main className="library-page">
     <div className="library-heading">
       <button className="library-back text-button" onClick={() => { if (!operation.current) onBack(); }} disabled={!!busy}><ArrowLeft size={16}/>{selecting ? '返回创作' : '返回首页'}</button>
-      <div><div><h1>{selecting ? '选择风格参考' : '图片素材库'}</h1><p>{selecting ? '选一张图片，作为当前作品的风格参考。' : '收藏参考图与小图标，随时取用。'}</p></div><div className="library-count"><Images size={17}/>{items.length} 张素材<Button icon={BookOpen} onClick={onOpenPapers} disabled={!!busy}>顶会主图库</Button></div></div>
+      <div><div><h1>{selecting ? '选择风格参考' : '图片素材库'}</h1><p>{selecting ? '选一张图片，作为当前作品的风格参考。' : '收藏参考图与小图标，随时取用。'}</p></div><div className="library-count"><Images size={17}/>{items.length} 张素材<Button icon={BookOpen} onClick={onOpenPapers} disabled={!!busy}>论文图库</Button></div></div>
     </div>
     <div className="library-toolbar">
       <div className="library-filters" aria-label="素材分类">{([{ id: 'all', label: '全部' }, { id: 'reference', label: '参考图' }, { id: 'icon', label: '图标' }] as const).map(tab => <button key={tab.id} aria-pressed={filter === tab.id} className={filter === tab.id ? 'active' : ''} onClick={() => setFilter(tab.id)}>{tab.label}<span>{counts[tab.id]}</span></button>)}</div>

@@ -5,9 +5,13 @@ import { pathToFileURL } from 'node:url';
 import { Store, cleanBrief, safeId, safeName } from './storage';
 import { addGeneratedImage, importAsset } from './assets';
 import { ImageLibrary } from './library';
-import { citationFromFigure, GALLERY_RIGHTS, GALLERY_SITE, PaperGallery } from './paper-gallery';
+import { GALLERY_RIGHTS, GALLERY_SITE, PaperGallery } from './paper-gallery';
+import { citationFromFigure, LOCAL_GALLERY, paperFigureName } from '../shared/gallery-taxonomy';
 import { Workflow, parseModelJson } from './workflow';
 import { GalleryImageCache } from './gallery-cache';
+import { sniffImage } from './providers/common';
+import { webpToPng } from './local-image-edit';
+import { readPublicImage, readPublicPanels, renderPublicFigure } from './gallery-source-renderer';
 import { LayoutRecommender } from './layout-recommendations';
 import { cleanLayoutPlan } from '../shared/figure-inputs';
 import type { FigureLayoutPlan, LocalEditRegion } from '../shared/types';
@@ -50,14 +54,18 @@ const resources=()=>app.isPackaged?process.resourcesPath:path.resolve('resources
 async function libraryReference(id:string):Promise<{name:string;dataUrl:string;citation?:PaperCitation}> {
   if(!id.startsWith('paper:'))return library.referenceImage(id);
   const figure=await paperGallery.figure(id.slice('paper:'.length));
-  const image=nativeImage.createFromBuffer(await paperGallery.image(figure.id));
+  const bytes=await paperGallery.image(figure.id);
+  const image=nativeImage.createFromBuffer(sniffImage(bytes)==='image/webp'?await webpToPng(bytes):bytes);
   if(image.isEmpty())throw new Error('无法读取这张论文主图。');
-  return {name:figure.title,dataUrl:image.toDataURL(),citation:citationFromFigure(figure)};
+  return {name:paperFigureName(figure),dataUrl:image.toDataURL(),citation:citationFromFigure(figure)};
 }
 async function loadLayoutReferences(ids:string[]) {
   return Promise.all(ids.map(async id=>{
     const figure=await paperGallery.figure(id);
-    return {name:figure.title,citation:citationFromFigure(figure),dataUrl:'data:image/jpeg;base64,'+(await paperGallery.image(id)).toString('base64')};
+    const bytes=await paperGallery.image(id);
+    const mime=sniffImage(bytes);
+    if (!mime) throw Error('参考图格式无效。');
+    return {name:paperFigureName(figure),citation:citationFromFigure(figure),dataUrl:'data:'+mime+';base64,'+bytes.toString('base64')};
   }));
 }
 async function bundledCodex() {
@@ -168,21 +176,41 @@ app.whenReady().then(async()=>{
   store=new Store(app.getPath('userData'),resources());await store.init();folders=new FolderWorkspace(store);await folders.init();await fs.mkdir(path.join(store.directory,'codex-work'),{recursive:true});await resetHub();
   library=new ImageLibrary(path.join(store.directory,'library'),resources());await library.init();
   const galleryRoot=path.join(resources(),'paper-gallery');
-  const imageCache=new GalleryImageCache(galleryRoot,path.join(store.directory,'gallery-images'),(url,options)=>net.fetch(url instanceof URL?url.href:url,options));
+  const imageCache=new GalleryImageCache(galleryRoot,path.join(store.directory,'gallery-images'),
+    (url,options)=>net.fetch(url instanceof URL?url.href:url,options), async(row,signal)=>{
+      const info=row.supplement!;
+      if (info.imagePanels?.length || info.imageSource) {
+        try {
+          return info.imagePanels?.length ? await readPublicPanels(info.imagePanels,signal) : await readPublicImage(info.imageSource!,signal);
+        }
+        catch (error) { if (!row.pdf_source || !row.page || !info.cropPdfPoints || signal.aborted) throw error; }
+      }
+      if (!row.pdf_source || !row.page || !info.cropPdfPoints) throw Error('此图请从原文图位查看。');
+      return renderPublicFigure({pdfUrl:row.pdf_source,page:row.page,cropPdfPoints:info.cropPdfPoints,pdfSha256:info.pdfSha256},signal);
+    });
   paperGallery=new PaperGallery(galleryRoot,imageCache);
   const recommender=new LayoutRecommender(path.join(resources(),'layout-index'));
   protocol.handle('mk-gallery',async request=>{
     const url=new URL(request.url);
-    if(request.method!=='GET'||url.host!=='figure')return new Response(null,{status:404});
+    if(request.method!=='GET'||!['figure','thumbnail'].includes(url.host))return new Response(null,{status:404});
     try{
-      const bytes=await paperGallery.image(decodeURIComponent(url.pathname.slice(1)),request.signal);
-      return new Response(new Uint8Array(bytes),{headers:{'Content-Type':'image/jpeg','X-Content-Type-Options':'nosniff'}});
+      const id=decodeURIComponent(url.pathname.slice(1));
+      const bytes=url.host==='thumbnail'?await paperGallery.thumbnail(id,request.signal):await paperGallery.image(id,request.signal);
+      if (!bytes) return new Response(null,{status:404});
+      const mime=sniffImage(bytes);
+      if (!mime) return new Response(null,{status:415});
+      return new Response(new Uint8Array(bytes),{headers:{'Content-Type':mime,'X-Content-Type-Options':'nosniff'}});
     }catch{return new Response(null,{status:404});}
   });
   workflow=new Workflow(store,()=>hub,event=>{const paneId=registry.owner(event.projectId);if(paneId!==undefined&&mainWindow&&!mainWindow.isDestroyed())mainWindow.webContents.send('mk:progress',{paneId,event});},p=>folders.effectiveProject(p),loadLayoutReferences);
   handler('galleryCache',async(_paneId:number,action?:'start'|'stop')=>{
     if(action!==undefined&&action!=='start'&&action!=='stop')throw Error('无效的离线图库操作');
     return imageCache.status(await paperGallery.list(),action);
+  });
+  handler('installGalleryArchive',async()=>{
+    const picked=await dialog.showOpenDialog(mainWindow!,{title:'安装 MK Figure 2.0 开放图包',properties:['openFile'],filters:[{name:'MK Figure 开放图包',extensions:['zip']}]});
+    if (picked.canceled || !picked.filePaths[0]) return null;
+    return imageCache.installArchive(await paperGallery.list(),picked.filePaths[0]);
   });
   handler('recommendPaperLayouts',async(_paneId:number,raw:string)=>recommender.recommend(await paperGallery.list(),String(raw||'').slice(0,4000)));
   handler('analyzePaperLayout',async(paneId:number,input:FigureLayoutPlan,task:string)=>{
@@ -256,14 +284,15 @@ app.whenReady().then(async()=>{
   handler('openProject',async(paneId:number,id:string)=>{const project=await store.load(safeId(id));claimProject(paneId,id);return store.hydrate(project);});
   handler('listLibrary',(_paneId:number)=>library.list());
   handler('listPaperFigures',()=>paperGallery.list());
-  handler('openPaperFigureLink',async(_paneId:number,id:string,kind:'paper'|'pdf')=>shell.openExternal(await paperGallery.paperUrl(id,kind)));
+  handler('openPaperFigureLink',async(_paneId:number,id:string,kind:'paper'|'pdf'|'figure')=>shell.openExternal(await paperGallery.paperUrl(id,kind)));
   handler('openPaperGallerySource',(_paneId:number,kind:'gallery'|'rights')=>{
     if(kind!=='gallery'&&kind!=='rights')throw new Error('未知的图库来源。');
     return shell.openExternal(kind==='gallery'?GALLERY_SITE:GALLERY_RIGHTS);
   });
   handler('copyPaperGalleryLink',(_paneId:number,value:string)=>{
     const url=new URL(value);
-    if(url.origin+url.pathname!==GALLERY_SITE||url.username||url.password)throw new Error('无效的图库分享链接。');
+    const base=url.protocol+'//'+url.host+url.pathname;
+    if(![GALLERY_SITE,LOCAL_GALLERY].includes(base)||url.username||url.password)throw new Error('无效的图库分享链接。');
     clipboard.writeText(url.href);
   });
   handler('importLibraryFiles',async(_paneId:number,category:LibraryCategory)=>{

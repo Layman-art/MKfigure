@@ -29,3 +29,5 @@
 .mk-layout-panels { display: grid; gap: 4px; }
 .mk-layout-panels > div { display: grid; grid-template-columns: 1.2em minmax(0,1fr) auto; align-items: center; gap: 6px; font-size: 12px; }
 .mk-layout-error { color: var(--danger, #934233); }
+.mk-layout-picker { width: min(1440px, 96vw); height: 94vh; max-width: 96vw; max-height: 94vh; padding: 0; border: 1px solid var(--line, #dcd8cd); border-radius: 12px; overflow: hidden; }
+.mk-layout-picker::backdrop { background: rgb(36 33 29 / 48%); }

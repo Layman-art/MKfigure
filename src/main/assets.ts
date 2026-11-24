@@ -10,6 +10,8 @@ import type { Store } from './storage';
 import { webpToPng } from './local-image-edit';
 
 const MAX_BYTES = 30 * 1024 * 1024;
+// The bundled PDF.js parser expects Uint8Array's copying slice semantics for cross-reference entries.
+const parsePdf = pdf as (bytes: Uint8Array, options?: pdf.Options) => Promise<pdf.Result>;
 const mimeMap: Record<string,string> = { '.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.pdf':'application/pdf','.pptx':'application/vnd.openxmlformats-officedocument.presentationml.presentation','.txt':'text/plain','.md':'text/markdown' };
 function collectText(value: unknown, output: string[]) {
   if (!value || typeof value !== 'object') return;
@@ -33,7 +35,7 @@ export async function importAsset(store: Store, projectId: string, file: string)
     const size = img.getSize(); if (size.width > 10000 || size.height > 10000 || size.width * size.height > 40000000) throw new Error('图片过大，请缩小到 4000 万像素以内'); Object.assign(asset, size);
   } else if (asset.kind === 'pdf') {
     try {
-      const result = await pdf(buffer, { pagerender: async (page: any) => { const c = await page.getTextContent(); return `\n[Page ${page.pageNumber}]\n${c.items.map((x: any) => x.str || '').join(' ')}`; } });
+      const result = await parsePdf(Uint8Array.from(buffer), { pagerender: async (page: any) => { const c = await page.getTextContent(); return `\n[Page ${page.pageNumber}]\n${c.items.map((x: any) => x.str || '').join(' ')}`; } });
       asset.text = result.text.slice(0, 150000); asset.warnings = [];
       if (!asset.text.trim()) asset.warnings.push('未提取到文字，可能是扫描版；请另提供图片或文字说明');
       if (result.text.length > 150000) asset.warnings.push('文字较长，已保留前 150,000 个字符；请核对需要表达的章节');

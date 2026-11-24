@@ -15,7 +15,7 @@ describe('layout editor', () => {
     const plan: FigureLayoutPlan = { arrangement: 'grid', panels: ['基线','本文方法'], referenceIds: ['paper1'], notes: '对比共同坐标',
       citations: [{ id: 'paper1', authors:['A. Author'], title:'Prior paper', venue:'iclr', year: 2024, paper:'https://example.org' }] };
     const html = renderToStaticMarkup(React.createElement(LayoutPlanner, { api: {} as WorkspaceApi, initialQuery: '对比', value: plan, onChange: () => {} }));
-    expect(html).toContain('mk-gallery://figure/paper1');
+    expect(html).toContain('mk-gallery://thumbnail/paper1');
     expect(html).toContain('Prior paper'); expect(html).toContain('对比共同坐标');
     expect(html).toContain('读参考图细化版式'); expect(html).toContain('清空版式');
   });

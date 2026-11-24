@@ -15,6 +15,8 @@ src/main/providers/.live-image-test/
 resources/codex/_downloads/
 resources/codex/
 resources/paper-gallery/images/
+resources/paper-gallery/journals/images/
+resources/paper-gallery/supplement/images/
 **/__pycache__/
 *.pyc
 tests/artifacts/

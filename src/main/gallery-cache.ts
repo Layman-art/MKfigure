@@ -2,9 +2,35 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { createHash, randomUUID } from 'node:crypto';
 import type { GalleryCacheStatus, PaperFigure } from '../shared/types';
+import { sniffImage } from './providers/common';
 
 const missing = (error: unknown) => (error as NodeJS.ErrnoException)?.code === 'ENOENT';
 const digest = (bytes: Buffer) => createHash('sha256').update(bytes).digest('hex');
+const OPEN_ARCHIVE = 'https://github.com/Layman-art/MKfigure/releases/download/v2.0.0/MK-Figure-2.0.0-Open-Figures.zip';
+const cacheName = (row: PaperFigure, hash: string) => hash + path.extname(row.image);
+type SourceResolver = (row: PaperFigure, signal: AbortSignal) => Promise<Buffer>;
+
+async function optionalFile(file: string) {
+  try { return await fs.readFile(file); } catch (error) { if (!missing(error)) throw error; }
+}
+
+// A locally rendered PDF crop has its own digest and never receives the archived crop's checksum.
+async function renderedFile(file: string) {
+  const data = await optionalFile(file);
+  if (!data || data.length <= 65 || data[64] !== 10) return;
+  const bytes = data.subarray(65);
+  if (digest(bytes) === data.toString('ascii',0,64)) return bytes;
+}
+
+async function atomicWrite(file: string, contents: Buffer, signal?: AbortSignal) {
+  await fs.mkdir(path.dirname(file),{recursive:true});
+  const temp=file+'.'+randomUUID()+'.tmp';
+  try {
+    await fs.writeFile(temp,contents);
+    signal?.throwIfAborted();
+    await fs.rename(temp,file);
+  } finally { await fs.rm(temp,{force:true}).catch(()=>{}); }
+}
 
 async function verifiedFile(file: string, hash: string) {
   try {
@@ -27,7 +53,7 @@ export class GalleryImageCache {
   private batch?: AbortController;
   private error?: string;
   constructor(private readonly root: string, private readonly directory: string,
-    private readonly request: typeof fetch = fetch) {}
+    private readonly request: typeof fetch = fetch, private readonly resolveSource?: SourceResolver) {}
 
   private metadata() {
     return this.index ??= Promise.all(['upstream.json', 'data/image-hashes.json'].map(file =>
@@ -51,11 +77,12 @@ export class GalleryImageCache {
       let cursor=0;
       const inspect = async () => {
         while (cursor<rows.length) {
-          const row=rows[cursor++], hash=hashes[row.id];
+          const row=rows[cursor++], hash=row.supplement?.sha256 ?? hashes[row.id];
           if (!/^[a-f0-9]{64}$/.test(hash || '')) continue;
           const bundled = directories.get(path.dirname(row.image))!.has(path.basename(row.image));
           if ((bundled && await verifiedFile(path.join(this.root,row.image),hash)) ||
-            (cached.has(hash+'.jpg') && await verifiedFile(path.join(this.directory,hash+'.jpg'),hash))) {
+            (cached.has(cacheName(row,hash)) && await verifiedFile(path.join(this.directory,cacheName(row,hash)),hash)) ||
+            (row.supplement && cached.has(hash+'.rendered') && await renderedFile(path.join(this.directory,hash+'.rendered')))) {
             this.available.add(row.id);
           }
         }
@@ -93,14 +120,69 @@ export class GalleryImageCache {
     }
   }
 
+  async thumbnail(row: PaperFigure, signal?: AbortSignal): Promise<Buffer | undefined> {
+    const info = row.supplement;
+    if (!info) return this.read(row,signal);
+    signal?.throwIfAborted();
+    const hash = info.sha256;
+    // Opening a grid must never trigger full-paper downloads.
+    if (info.archive) {
+      const bundled=await optionalFile(path.join(this.root,'journals','previews',row.id+'.webp'));
+      if (bundled) return bundled;
+    }
+    return await optionalFile(path.join(this.directory,'previews',hash+'.webp')) ||
+      await verifiedFile(path.join(this.root,row.image),hash) ||
+      await verifiedFile(path.join(this.directory,cacheName(row,hash)),hash) ||
+      await renderedFile(path.join(this.directory,hash+'.rendered'));
+  }
+
   private async readOrFetch(row: PaperFigure, signal: AbortSignal): Promise<Buffer> {
     const {revision, hashes} = await this.metadata();
-    const hash = hashes[row.id];
+    const hash = row.supplement?.sha256 ?? hashes[row.id];
     if (!/^[a-f0-9]{64}$/.test(hash || '')) throw Error('该论文主图缺少校验信息');
-    const target = path.join(this.directory, hash+'.jpg');
+    const target = path.join(this.directory, cacheName(row,hash));
     const local = await verifiedFile(path.join(this.root,row.image),hash) || await verifiedFile(target,hash);
     if (local) return local;
     this.available.delete(row.id);
+    if (row.supplement) {
+      const derived=path.join(this.directory,hash+'.rendered');
+      const previous=await renderedFile(derived);
+      if (previous) return previous;
+      const part=row.supplement.archive;
+      if (part && Number.isSafeInteger(part.offset) && Number.isSafeInteger(part.length) && part.offset >= 0 && part.length > 0 && part.length <= 32*1024*1024) {
+        try {
+          const end=part.offset+part.length-1;
+          const response=await this.request(OPEN_ARCHIVE,{headers:{Range:`bytes=${part.offset}-${end}`},credentials:'omit',signal:AbortSignal.any([signal,AbortSignal.timeout(12000)])});
+          if (response.status===206 && response.headers.get('content-range')?.startsWith(`bytes ${part.offset}-${end}/`)) {
+            const reader=response.body?.getReader();
+            const chunks: Uint8Array[]=[];
+            let total=0;
+            if (reader) {
+              try {
+                while (true) {
+                  const {done,value}=await reader.read();
+                  if (done) break;
+                  total+=value.byteLength;
+                  if (total>part.length) break;
+                  chunks.push(value);
+                }
+              } finally { await reader.cancel().catch(()=>{}); }
+            }
+            if (total===part.length) {
+              const original=Buffer.concat(chunks);
+              if (digest(original)===hash) { await atomicWrite(target,original,signal); return original; }
+            }
+          } else { await response.body?.cancel(); }
+        } catch { signal.throwIfAborted(); }
+      }
+      if (!this.resolveSource || !(row.supplement.imageSource || row.supplement.imagePanels?.length || row.pdf_source && row.supplement.cropPdfPoints && row.page))
+        throw Error('增补图库原图暂不可用，可打开原文图位或安装离线图包。');
+      const bytes=await this.resolveSource(row,signal);
+      signal.throwIfAborted();
+      if (!sniffImage(bytes)) throw Error('原文未返回有效图像。');
+      await atomicWrite(derived,Buffer.concat([Buffer.from(digest(bytes)+'\n'),bytes]),signal);
+      return bytes;
+    }
     const relative = row.image.split('/').map(encodeURIComponent).join('/');
     const sources = [
       'https://raw.githubusercontent.com/qwdwqfwq/topconf-paper-figure-gallery/'+revision+'/'+relative,
@@ -118,14 +200,33 @@ export class GalleryImageCache {
     }
     signal.throwIfAborted();
     if (!verified) throw Error('暂时无法取得通过校验的论文主图。请连接网络后重试。');
-    await fs.mkdir(this.directory,{recursive:true});
-    const temporary = target+'.'+randomUUID()+'.tmp';
-    try {
-      await fs.writeFile(temporary,verified);
-      signal.throwIfAborted();
-      await fs.rename(temporary,target);
-    } finally { await fs.rm(temporary,{force:true}).catch(()=>{}); }
+    await atomicWrite(target,verified,signal);
     return verified;
+  }
+
+  async installArchive(rows: PaperFigure[], file: string) {
+    const records=rows.filter(row=>row.supplement?.archive);
+    if (!records.length) throw Error('当前版本没有配套的开放图包。');
+    const handle=await fs.open(file,'r');
+    const size=(await handle.stat()).size;
+    try {
+      for (const row of records) {
+        const info=row.supplement!, part=info.archive!;
+        if (!Number.isSafeInteger(part.offset) || !Number.isSafeInteger(part.length) || part.length<1 ||
+            part.length>32*1024*1024 || part.offset<0 || part.offset+part.length>size) throw Error('图包与当前版本不匹配。');
+        const bytes=Buffer.alloc(part.length);
+        let offset=0;
+        while (offset<bytes.length) {
+          const got=await handle.read(bytes,offset,bytes.length-offset,part.offset+offset);
+          if (!got.bytesRead) throw Error('图包不完整。');
+          offset+=got.bytesRead;
+        }
+        if (digest(bytes)!==info.sha256) throw Error('图包校验未通过。请使用此版本配套的开放图包。');
+        await atomicWrite(path.join(this.directory,cacheName(row,info.sha256)),bytes);
+        this.available.add(row.id);
+      }
+      return records.length;
+    } finally { await handle.close(); }
   }
 
   async status(rows: PaperFigure[], action?: 'start'|'stop'): Promise<GalleryCacheStatus> {
@@ -134,7 +235,7 @@ export class GalleryImageCache {
     if (action==='start' && !this.batch && this.available.size<rows.length) {
       const controller = new AbortController();
       this.batch=controller; this.error=undefined;
-      const todo=rows.filter(row=>!this.available.has(row.id));
+      const todo=rows.filter(row=>!row.supplement && !this.available.has(row.id));
       let cursor=0;
       const worker=async()=>{
         while(!controller.signal.aborted && cursor<todo.length) {
@@ -145,6 +246,7 @@ export class GalleryImageCache {
       };
       void Promise.allSettled(Array.from({length:4}, worker)).finally(()=>{ if(this.batch===controller) this.batch=undefined; });
     }
-    return {available:this.available.size,total:rows.length,running:!!this.batch,error:this.error};
+    return {available:this.available.size,total:rows.length,running:!!this.batch,error:this.error,
+      downloadable:rows.filter(row=>!row.supplement && !this.available.has(row.id)).length};
   }
 }

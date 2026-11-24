@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { PaperFigure } from '../src/shared/types';
-import { figureImage, galleryShareUrl, initialFilters, makeSearchIndex, queryFigures, readGalleryLink } from '../src/renderer/paper-gallery';
+import { studyFacetCounts, figureImage, galleryShareUrl, initialFilters, makeSearchIndex, queryFigures, readGalleryLink } from '../src/renderer/paper-gallery';
 import type { GalleryLocation } from '../src/renderer/paper-gallery';
 
 const make = (id: string, values: Partial<PaperFigure>): PaperFigure => ({
@@ -48,5 +48,58 @@ describe('paper gallery search and upstream links', () => {
     expect(ids({ ...initial, filters: { ...initialFilters, q: '流程图' } })).toEqual(['iclr24-02']);
     for (const bad of ['#f=%', 'https://other.example/?v=acl', 'file:///C:/x']) expect(readGalleryLink(bad, figures)).toBeNull();
     expect(galleryShareUrl({ ...initial, favoritesOnly: true })).toBe('https://qwdwqfwq.github.io/topconf-paper-figure-gallery/');
+  });
+});
+
+describe('local research figure collections', () => {
+  const result = (id: string, dimensions: ('2d' | '3d')[]) => make(id, {
+    figure: 'Figure 3', page: 7,
+    supplement: { category: 'result', sha256: 'a'.repeat(64), description: '端电压仿真', dimensions, forms: ['curve', 'field'] },
+  });
+  const main = make('mk-new-main', { supplement: { category: 'main', sha256: 'b'.repeat(64), description: '新主图' } });
+  const mech = make('mk-physical', { supplement: { category: 'mechanism', sha256: 'c'.repeat(64), description: '残差校正' } });
+  const data = [...figures, main, mech, result('mk-2d', ['2d']), result('mk-3d', ['3d']), result('mk-mixed', ['2d', '3d'])];
+  const studyFilters = { ...initialFilters, view: 'study' as const };
+  const search = makeSearchIndex(data);
+  const location = { ...initial, filters: studyFilters };
+  const select = (changes: Partial<typeof initialFilters>, saved = false) => queryFigures(data,
+    { ...location, filters: { ...studyFilters, ...changes }, favoritesOnly: saved }, new Set([main.id, 'mk-3d']), search).map(row => row.id);
+
+  it('keeps legacy and supplemental main figures together and separates study favorites', () => {
+    expect(select({ view: 'main' })).toHaveLength(4);
+    expect(select({ view: 'main' }, true)).toEqual([main.id]);
+    expect(select({}, true)).toEqual(['mk-3d']);
+    expect(select({ category: 'mechanism', q: '机理 残差' })).toEqual([mech.id]);
+    expect(select({ category: 'algorithm' })).toEqual([]);
+  });
+  it('intersects venue, result form, pure or mixed dimensions and bilingual metadata', () => {
+    for (const dimension of ['2d', '3d', 'mixed']) {
+      expect(select({ category: 'result', dimension, form: 'field', venue: 'acl', q: 'Figure 3 空间场 端电压' })).toEqual(['mk-' + dimension]);
+    }
+    expect(select({ form: 'mesh' })).toEqual([]);
+    expect(select({ dimension: 'mixed', form: 'curve', q: 'Mixed Line plot' })).toEqual(['mk-mixed']);
+  });
+  it('counts what each research filter will show including category transitions and favorites', () => {
+    const extra = { ...result('mk-cvpr-3d', ['3d']), venue: 'cvpr' };
+    const studies = [...data, extra];
+    const counts = studyFacetCounts(studies, { ...studyFilters, venue: 'acl', category: 'result', dimension: '3d', form: 'curve' }, false, new Set(), makeSearchIndex(studies));
+    expect(counts.venue).toMatchObject({ acl: 1, cvpr: 1, aaai: 0 });
+    expect(counts.dimension).toEqual({ '2d': 1, '3d': 1, mixed: 1 });
+    expect(counts.form).toMatchObject({ curve: 1, field: 1, mesh: 0 });
+    expect(counts.category).toEqual({ result: 1, mechanism: 1, algorithm: 0 });
+    const fromMechanism = studyFacetCounts(studies, { ...studyFilters, category: 'mechanism', q: '端电压' }, true, new Set(['mk-mixed']), makeSearchIndex(studies));
+    expect(fromMechanism.dimension).toEqual({ '2d': 0, '3d': 0, mixed: 1 });
+    expect(fromMechanism.form.field).toBe(1);
+  });
+  it('roundtrips the study view, filter-only links, local main figures and the deep-linked figure', () => {
+    const filtered = { ...location, filters: { ...studyFilters, category: 'result', dimension: 'mixed', form: 'field', q: '端电压' } };
+    for (const state of [filtered, { ...filtered, id: 'mk-mixed' }, { ...initial, id: main.id }]) {
+      expect(galleryShareUrl(state)).toMatch(/^mkfigure:\/\/gallery\//);
+      expect(readGalleryLink(galleryShareUrl(state), data)).toEqual(state);
+    }
+    const stale = readGalleryLink('mkfigure://gallery/?view=study&category=algorithm&dimension=3d&form=mesh#f=mk-2d', data);
+    expect(stale?.filters).toMatchObject({ view: 'study', category: 'all', dimension: 'all', form: 'all' });
+    expect(readGalleryLink('mkfigure://gallery/?view=study&category=algorithm#f=mk-absent', data)).toMatchObject({ filters: { view: 'study', category: 'algorithm' }, id: null });
+    for (const link of ['mkfigure://other/', 'mkfigure://gallery/extra', 'mkfigure://user@gallery/']) expect(readGalleryLink(link, data)).toBeNull();
   });
 });

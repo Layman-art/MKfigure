@@ -29,6 +29,58 @@ async function fixture(count=6) {
 afterEach(async()=>{await Promise.all(scratch.splice(0).map(p=>rm(p,{recursive:true,force:true})));});
 
 describe('verified public gallery cache',()=>{
+  it('keeps grid previews offline and caches a selected source rendering under its own digest',async()=>{
+    const f=await fixture(1), row=f.rows[0];
+    row.image='journals/images/'+row.id+'.webp';
+    row.supplement={category:'algorithm',collection:'journal',description:'Reviewed algorithm',sha256:f.hash(row.id),imageSource:'https://arxiv.org/html/1234.56789v1/fig1.png'};
+    const png=Buffer.from('89504e470d0a1a0a0000000000000000','hex');
+    const source=vi.fn(async()=>png), request=vi.fn<typeof fetch>();
+    const cache=new GalleryImageCache(f.root,f.cacheDir,request,source);
+    expect(await cache.thumbnail(row)).toBeUndefined();
+    expect(source).not.toHaveBeenCalled();
+    await cache.status([row],'start');
+    expect(source).not.toHaveBeenCalled();
+    expect(await Promise.all([cache.read(row),cache.read(row)])).toEqual([png,png]);
+    expect(source).toHaveBeenCalledTimes(1);
+    expect(request).not.toHaveBeenCalled();
+    const fresh=new GalleryImageCache(f.root,f.cacheDir,request);
+    expect(await fresh.status([row])).toMatchObject({available:1,downloadable:0});
+    expect(await fresh.thumbnail(row)).toEqual(png);
+    expect(await fresh.read(row)).toEqual(png);
+    await writeFile(join(f.cacheDir,row.supplement.sha256+'.rendered'),'corrupt');
+    await expect(fresh.read(row)).rejects.toThrow('增补图库');
+  });
+  it('verifies exactly the requested range or installs the same open figure from its matching archive',async()=>{
+    const f=await fixture(1),row=f.rows[0],bytes=f.bytes(row.id);
+    const prefix=Buffer.from('ZIP local header');
+    row.image='journals/images/'+row.id+'.webp';
+    row.supplement={category:'result',collection:'journal',description:'Verified open image',sha256:f.hash(row.id),archive:{offset:prefix.length,length:bytes.length}};
+    const end=prefix.length+bytes.length-1;
+    const request=vi.fn<typeof fetch>().mockImplementation(async()=>new Response(new Uint8Array(bytes),{status:206,headers:{'content-range':`bytes ${prefix.length}-${end}/200`}}));
+    const cache=new GalleryImageCache(f.root,f.cacheDir,request);
+    expect(await cache.read(row)).toEqual(bytes);
+    expect(request.mock.calls[0][1]?.headers).toEqual({Range:`bytes=${prefix.length}-${end}`});
+    expect(await readFile(join(f.cacheDir,f.hash(row.id)+'.webp'))).toEqual(bytes);
+    const pack=join(f.root,'open-pack.zip');
+    await writeFile(pack,Buffer.concat([prefix,Buffer.alloc(bytes.length)]));
+    await expect(cache.installArchive([row],pack)).rejects.toThrow('校验');
+    await writeFile(pack,Buffer.concat([prefix,bytes]));
+    expect(await cache.installArchive([row],pack)).toBe(1);
+  });
+  it('uses the bundled verified crop offline and reports a missing crop without requesting it from upstream',async()=>{
+    const f=await fixture(1), row=f.rows[0];
+    row.image='supplement/images/'+row.id+'.jpg';
+    row.supplement={category:'algorithm',description:'A sequence of updates',sha256:f.hash(row.id)};
+    await mkdir(join(f.root,'supplement','images'),{recursive:true});
+    await writeFile(join(f.root,row.image),f.bytes(row.id));
+    const request=vi.fn<typeof fetch>(),cache=new GalleryImageCache(f.root,f.cacheDir,request);
+    expect(await cache.status([row])).toMatchObject({available:1,total:1});
+    expect(await cache.read(row)).toEqual(f.bytes(row.id));
+    await writeFile(join(f.root,row.image),'invalid');
+    await expect(cache.read(row)).rejects.toThrow('增补图库');
+    expect(await cache.status([row])).toMatchObject({available:0,total:1});
+    expect(request).not.toHaveBeenCalled();
+  });
   it('deduplicates simultaneous views, rejects wrong pinned bytes, and reopens entirely offline',async()=>{
     const f=await fixture(1),row=f.rows[0];
     const request=vi.fn<typeof fetch>().mockResolvedValueOnce(new Response('wrong bytes')).mockImplementation(async url=>f.response(url));

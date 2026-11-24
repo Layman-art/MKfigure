@@ -28,12 +28,25 @@ export class LayoutRecommender {
   constructor(private readonly resourceDir: string) {}
 
   private async read() {
-    const [compressed, config] = await Promise.all([
+    const [compressed, config, journalIndex] = await Promise.all([
       fs.readFile(path.join(this.resourceDir, 'paper-terms.json.gz')),
       fs.readFile(path.join(this.resourceDir, 'concepts.json'), 'utf8'),
+      fs.readFile(path.join(this.resourceDir, '..', 'paper-gallery', 'journals', 'layout-terms.json.gz')).catch(error => {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') return undefined;
+        throw error;
+      }),
     ]);
     const corpus: Corpus = JSON.parse((await unzip(compressed)).toString('utf8'));
     if (corpus.version !== 1 || !Array.isArray(corpus.ids) || !corpus.terms) throw new Error('本地版式索引损坏，请重新安装或重建索引。');
+    if (journalIndex) {
+      const extra: Corpus = JSON.parse((await unzip(journalIndex)).toString('utf8'));
+      if (extra.version !== 1 || !Array.isArray(extra.ids) || !extra.terms) throw new Error('期刊图版式索引损坏。');
+      const offset = corpus.ids.length;
+      corpus.ids = corpus.ids.concat(extra.ids);
+      for (const [term, indices] of Object.entries(extra.terms)) {
+        corpus.terms[term] = (Object.hasOwn(corpus.terms, term) ? corpus.terms[term] : []).concat(indices.map(i => i + offset));
+      }
+    }
     const dictionary: Concept[] = JSON.parse(config);
     const rows = new Map(corpus.ids.map((id, i) => [id, i]));
     return { corpus, dictionary, rows };
@@ -74,7 +87,7 @@ export class LayoutRecommender {
       if (!hits && !genreEvidence) continue;
       const reason: string[] = [];
       if (titleHits.length) reason.push('标题含 ' + titleHits.slice(0, 4).join('、'));
-      if (indexHits.length) reason.push('题名与摘要索引命中 ' + indexHits.slice(0, 4).join('、'));
+      if (indexHits.length) reason.push((figure.supplement ? '该图的说明或分类匹配 ' : '题名与摘要索引命中 ') + indexHits.slice(0, 4).join('、'));
       if (patterns[figure.pattern]) reason.push('图库标注为' + patterns[figure.pattern] + '，' + suggestions[figure.pattern]);
       const score = raw * (0.5 + hits / groups.length) + (compatiblePattern ? 0.65 : 0);
       matches.push({ figure, reason: reason.join('。'), score });

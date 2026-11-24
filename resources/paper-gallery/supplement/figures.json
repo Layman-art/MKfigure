@@ -1,0 +1,5004 @@
+[
+  {
+    "id": "mk-aaai2026-881daac7151972-f1",
+    "title": "Goal-Oriented Time-Series Forecasting: Foundation Framework Design",
+    "authors": [
+      "Luca-Andrei Fechete",
+      "Mohamed Sana",
+      "Fadhel Ayed",
+      "Nicola Piovesan",
+      "Wenjie Li",
+      "Antonio De Domenico",
+      "Tareq Si Salem"
+    ],
+    "venue": "aaai",
+    "year": 2026,
+    "paper": "https://ojs.aaai.org/index.php/AAAI/article/view/39249",
+    "pdf_source": "https://arxiv.org/pdf/2504.17493v3",
+    "figure": "Figure 1",
+    "page": 2,
+    "image": "supplement/images/mk-aaai2026-881daac7151972-f1.jpg",
+    "w": 1593,
+    "h": 775,
+    "pattern": "conceptual",
+    "supplement": {
+      "category": "main",
+      "sha256": "e10da21c1d9dc6c26ca173d6f85a71f8b83921310cb33a2d65e10fe41c15df6e",
+      "description": "以无线网络为例画出数据采集、预测与下游资源决策之间的关系。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://doi.org/10.1609/aaai.v40i25.39249",
+      "pdfSha256": "bca78eeecc53210947c5ae42fafa019f00664d11cd954d89ec470c1cd76fb787",
+      "cropPdfPoints": [
+        313,
+        64,
+        542,
+        187
+      ],
+      "publisherPdf": "https://ojs.aaai.org/index.php/AAAI/article/download/39249/43210"
+    }
+  },
+  {
+    "id": "mk-aaai2026-3b31040e6fc8cc-f1",
+    "title": "Harmonic Dataset Distillation for Time Series Forecasting",
+    "authors": [
+      "Seungha Hong",
+      "Sanghwan Jang",
+      "Wonbin Kweon",
+      "Suyeon Kim",
+      "Gyuseok Lee",
+      "Hwanjo Yu"
+    ],
+    "venue": "aaai",
+    "year": 2026,
+    "paper": "https://ojs.aaai.org/index.php/AAAI/article/view/39328",
+    "pdf_source": "https://arxiv.org/pdf/2603.03760v1",
+    "figure": "Figure 1",
+    "page": 1,
+    "image": "supplement/images/mk-aaai2026-3b31040e6fc8cc-f1.jpg",
+    "w": 1672,
+    "h": 2130,
+    "pattern": "comparison",
+    "supplement": {
+      "category": "main",
+      "sha256": "142e53f04a4ab62454f783df9bd8b5781619480dd52522d727a023023449c8bc",
+      "description": "比较按窗口与按谐波蒸馏的时间序列，用波形、频谱并排显示保留的信息。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://doi.org/10.1609/aaai.v40i26.39328",
+      "pdfSha256": "fc5deabfb6b7ac2738551a036b15181b0af3e5ade3c5ad3775bcaad372a8891f",
+      "cropPdfPoints": [
+        316,
+        211,
+        560,
+        526
+      ],
+      "publisherPdf": "https://ojs.aaai.org/index.php/AAAI/article/download/39328/43289"
+    }
+  },
+  {
+    "id": "mk-aaai2026-3b31040e6fc8cc-f2",
+    "title": "Harmonic Dataset Distillation for Time Series Forecasting",
+    "authors": [
+      "Seungha Hong",
+      "Sanghwan Jang",
+      "Wonbin Kweon",
+      "Suyeon Kim",
+      "Gyuseok Lee",
+      "Hwanjo Yu"
+    ],
+    "venue": "aaai",
+    "year": 2026,
+    "paper": "https://ojs.aaai.org/index.php/AAAI/article/view/39328",
+    "pdf_source": "https://arxiv.org/pdf/2603.03760v1",
+    "figure": "Figure 2",
+    "page": 4,
+    "image": "supplement/images/mk-aaai2026-3b31040e6fc8cc-f2.jpg",
+    "w": 1837,
+    "h": 663,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "algorithm",
+      "sha256": "a3dee5591e223c9daef156d9e2131e20db3a765049570db2d7e0850eae72a187",
+      "description": "上下对照原始与合成序列，从 FFT、谐波筛选到逆变换与梯度匹配，展示数据蒸馏链路。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://doi.org/10.1609/aaai.v40i26.39328",
+      "pdfSha256": "fc5deabfb6b7ac2738551a036b15181b0af3e5ade3c5ad3775bcaad372a8891f",
+      "cropPdfPoints": [
+        48,
+        47,
+        562,
+        237
+      ],
+      "publisherPdf": "https://ojs.aaai.org/index.php/AAAI/article/download/39328/43289"
+    }
+  },
+  {
+    "id": "mk-aaai2026-3b31040e6fc8cc-f3",
+    "title": "Harmonic Dataset Distillation for Time Series Forecasting",
+    "authors": [
+      "Seungha Hong",
+      "Sanghwan Jang",
+      "Wonbin Kweon",
+      "Suyeon Kim",
+      "Gyuseok Lee",
+      "Hwanjo Yu"
+    ],
+    "venue": "aaai",
+    "year": 2026,
+    "paper": "https://ojs.aaai.org/index.php/AAAI/article/view/39328",
+    "pdf_source": "https://arxiv.org/pdf/2603.03760v1",
+    "figure": "Figure 3",
+    "page": 7,
+    "image": "supplement/images/mk-aaai2026-3b31040e6fc8cc-f3.jpg",
+    "w": 1817,
+    "h": 450,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "aabaed2ac012a6b10cdf076a210a93ef771ed87ef0d0a2bad1f9435966a9b12c",
+      "description": "前两幅曲线比较 ETTh1 与 Traffic 上的蒸馏规模效应，后两幅柱状图比较在不同预测骨干上的泛化。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://doi.org/10.1609/aaai.v40i26.39328",
+      "pdfSha256": "fc5deabfb6b7ac2738551a036b15181b0af3e5ade3c5ad3775bcaad372a8891f",
+      "cropPdfPoints": [
+        49,
+        47,
+        562,
+        185
+      ],
+      "publisherPdf": "https://ojs.aaai.org/index.php/AAAI/article/download/39328/43289",
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "curve",
+        "bar"
+      ]
+    }
+  },
+  {
+    "id": "mk-aaai2026-f92dbe4aba15c2-f1",
+    "title": "HN-MVTS: HyperNetwork-based Multivariate Time Series Forecasting",
+    "authors": [
+      "Andrey Savchenko",
+      "Oleg Kachan"
+    ],
+    "venue": "aaai",
+    "year": 2026,
+    "paper": "https://ojs.aaai.org/index.php/AAAI/article/view/39711",
+    "pdf_source": "https://arxiv.org/pdf/2511.08340v2",
+    "figure": "Figure 1",
+    "page": 2,
+    "image": "supplement/images/mk-aaai2026-f92dbe4aba15c2-f1.jpg",
+    "w": 1780,
+    "h": 441,
+    "pattern": "comparison",
+    "supplement": {
+      "category": "main",
+      "sha256": "5d2f6b1b4c0740a73813a0ba1dd10a767c51c2b116556378cfc7d9cc05e429c7",
+      "description": "左侧对照通道相关与通道独立预测，右侧用超网络根据通道嵌入生成预测器参数。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://doi.org/10.1609/aaai.v40i30.39711",
+      "pdfSha256": "872957ce0cdead778d96526c5a08a6aa58f258e969f2bd2f9405a491fa4881cb",
+      "cropPdfPoints": [
+        50,
+        48,
+        561,
+        177
+      ],
+      "publisherPdf": "https://ojs.aaai.org/index.php/AAAI/article/download/39711/43672"
+    }
+  },
+  {
+    "id": "mk-aaai2026-f92dbe4aba15c2-f3",
+    "title": "HN-MVTS: HyperNetwork-based Multivariate Time Series Forecasting",
+    "authors": [
+      "Andrey Savchenko",
+      "Oleg Kachan"
+    ],
+    "venue": "aaai",
+    "year": 2026,
+    "paper": "https://ojs.aaai.org/index.php/AAAI/article/view/39711",
+    "pdf_source": "https://arxiv.org/pdf/2511.08340v2",
+    "figure": "Figure 3",
+    "page": 7,
+    "image": "supplement/images/mk-aaai2026-f92dbe4aba15c2-f3.jpg",
+    "w": 1820,
+    "h": 485,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "96c154b05725822d40739f25e1f1ed088ea22afea1a5ff62a217e6ede6a84d16",
+      "description": "并列可视化 PEMS08 上的初始嵌入与三种骨干训练后的嵌入矩阵，观察通道结构随训练改变。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://doi.org/10.1609/aaai.v40i30.39711",
+      "pdfSha256": "872957ce0cdead778d96526c5a08a6aa58f258e969f2bd2f9405a491fa4881cb",
+      "cropPdfPoints": [
+        48,
+        47,
+        562,
+        194
+      ],
+      "publisherPdf": "https://ojs.aaai.org/index.php/AAAI/article/download/39711/43672",
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "heatmap"
+      ]
+    }
+  },
+  {
+    "id": "mk-aaai2026-d80c61eda073ec-f1",
+    "title": "ReCast: Reliability-aware Codebook-assisted Lightweight Time Series Forecasting",
+    "authors": [
+      "Xiang Ma",
+      "Taihua Chen",
+      "Pengcheng Wang",
+      "Xuemei Li",
+      "Caiming Zhang"
+    ],
+    "venue": "aaai",
+    "year": 2026,
+    "paper": "https://ojs.aaai.org/index.php/AAAI/article/view/39610",
+    "pdf_source": "https://arxiv.org/pdf/2511.11991",
+    "figure": "Figure 1",
+    "page": 2,
+    "image": "supplement/images/mk-aaai2026-d80c61eda073ec-f1.jpg",
+    "w": 1811,
+    "h": 872,
+    "pattern": "framework",
+    "supplement": {
+      "category": "main",
+      "sha256": "2cdeef2a0dc530d475bac14af8a4b36075af3e80468631f86379187752513fdb",
+      "description": "分三区展示局部分片量化、量化与残差双路预测，以及可靠性感知的码本更新。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://doi.org/10.1609/aaai.v40i29.39610",
+      "pdfSha256": "a260b663f89959a450f9463acdfc41b8a8fec4874fc878a5ea09dc45a7febabd",
+      "cropPdfPoints": [
+        50,
+        48,
+        561,
+        301
+      ],
+      "publisherPdf": "https://ojs.aaai.org/index.php/AAAI/article/download/39610/43571"
+    }
+  },
+  {
+    "id": "mk-aaai2026-d80c61eda073ec-f2",
+    "title": "ReCast: Reliability-aware Codebook-assisted Lightweight Time Series Forecasting",
+    "authors": [
+      "Xiang Ma",
+      "Taihua Chen",
+      "Pengcheng Wang",
+      "Xuemei Li",
+      "Caiming Zhang"
+    ],
+    "venue": "aaai",
+    "year": 2026,
+    "paper": "https://ojs.aaai.org/index.php/AAAI/article/view/39610",
+    "pdf_source": "https://arxiv.org/pdf/2511.11991",
+    "figure": "Figure 2",
+    "page": 4,
+    "image": "supplement/images/mk-aaai2026-d80c61eda073ec-f2.jpg",
+    "w": 1665,
+    "h": 886,
+    "pattern": "conceptual",
+    "supplement": {
+      "category": "mechanism",
+      "sha256": "3f45941b4755e1df8653d42eeedafed7c4ce5cd039602e9a72eea29360394046",
+      "description": "分别计算历史一致性、分布外敏感度与表示质量，再经分布鲁棒优化融合三种码本更新权重。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://doi.org/10.1609/aaai.v40i29.39610",
+      "pdfSha256": "a260b663f89959a450f9463acdfc41b8a8fec4874fc878a5ea09dc45a7febabd",
+      "cropPdfPoints": [
+        316,
+        46,
+        562,
+        193
+      ],
+      "publisherPdf": "https://ojs.aaai.org/index.php/AAAI/article/download/39610/43571"
+    }
+  },
+  {
+    "id": "mk-aaai2026-d80c61eda073ec-f4",
+    "title": "ReCast: Reliability-aware Codebook-assisted Lightweight Time Series Forecasting",
+    "authors": [
+      "Xiang Ma",
+      "Taihua Chen",
+      "Pengcheng Wang",
+      "Xuemei Li",
+      "Caiming Zhang"
+    ],
+    "venue": "aaai",
+    "year": 2026,
+    "paper": "https://ojs.aaai.org/index.php/AAAI/article/view/39610",
+    "pdf_source": "https://arxiv.org/pdf/2511.11991",
+    "figure": "Figure 4",
+    "page": 7,
+    "image": "supplement/images/mk-aaai2026-d80c61eda073ec-f4.jpg",
+    "w": 1835,
+    "h": 559,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "1a09d7fe517144dc7610b9cecde260930cb3ea19d7b40653864fa87fad53acf7",
+      "description": "左侧展示码字所属簇的二维投影，右侧四个训练轮次的局部视图追踪簇分配与代表码字的演变。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://doi.org/10.1609/aaai.v40i29.39610",
+      "pdfSha256": "a260b663f89959a450f9463acdfc41b8a8fec4874fc878a5ea09dc45a7febabd",
+      "cropPdfPoints": [
+        48,
+        46,
+        562,
+        208
+      ],
+      "publisherPdf": "https://ojs.aaai.org/index.php/AAAI/article/download/39610/43571",
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "scatter"
+      ]
+    }
+  },
+  {
+    "id": "mk-aaai2026-fec67849ade6a0-f1",
+    "title": "SimDiff: Simpler Yet Better Diffusion Model for Time Series Point Forecasting",
+    "authors": [
+      "Hang Ding",
+      "Xue Wang",
+      "Tian Zhou",
+      "Tao Yao"
+    ],
+    "venue": "aaai",
+    "year": 2026,
+    "paper": "https://ojs.aaai.org/index.php/AAAI/article/view/39217",
+    "pdf_source": "https://arxiv.org/pdf/2511.19256",
+    "figure": "Figure 1",
+    "page": 1,
+    "image": "supplement/images/mk-aaai2026-fec67849ade6a0-f1.jpg",
+    "w": 1520,
+    "h": 817,
+    "pattern": "conceptual",
+    "supplement": {
+      "category": "main",
+      "sha256": "67f492f6ccc6f717752aa4b6e36097a26ad51d73d1e9e88cd645e6b66c787d0e",
+      "description": "用多位预测者和天气样本解释从多个概率样本集成得到点预测的直觉。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://doi.org/10.1609/aaai.v40i25.39217",
+      "pdfSha256": "95825512f9315e79e958a0bb528c2bca99cf20fc8106b3dd2f59de95f41ff48d",
+      "cropPdfPoints": [
+        317,
+        214,
+        559,
+        340
+      ],
+      "publisherPdf": "https://ojs.aaai.org/index.php/AAAI/article/download/39217/43178"
+    }
+  },
+  {
+    "id": "mk-aaai2026-fec67849ade6a0-f2",
+    "title": "SimDiff: Simpler Yet Better Diffusion Model for Time Series Point Forecasting",
+    "authors": [
+      "Hang Ding",
+      "Xue Wang",
+      "Tian Zhou",
+      "Tao Yao"
+    ],
+    "venue": "aaai",
+    "year": 2026,
+    "paper": "https://ojs.aaai.org/index.php/AAAI/article/view/39217",
+    "pdf_source": "https://arxiv.org/pdf/2511.19256",
+    "figure": "Figure 2",
+    "page": 2,
+    "image": "supplement/images/mk-aaai2026-fec67849ade6a0-f2.jpg",
+    "w": 1827,
+    "h": 400,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "87a0f943374dfab33c107a763441798cd887766d59d03e1a2312ec96e9f31a5a",
+      "description": "在 ETTh1 上并排展示三种扩散方法的预测样本与区间，对照观测历史、真实未来和预测分布。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://doi.org/10.1609/aaai.v40i25.39217",
+      "pdfSha256": "95825512f9315e79e958a0bb528c2bca99cf20fc8106b3dd2f59de95f41ff48d",
+      "cropPdfPoints": [
+        48,
+        46,
+        562,
+        168
+      ],
+      "publisherPdf": "https://ojs.aaai.org/index.php/AAAI/article/download/39217/43178",
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "curve",
+        "distribution"
+      ]
+    }
+  },
+  {
+    "id": "mk-aaai2026-fec67849ade6a0-f3",
+    "title": "SimDiff: Simpler Yet Better Diffusion Model for Time Series Point Forecasting",
+    "authors": [
+      "Hang Ding",
+      "Xue Wang",
+      "Tian Zhou",
+      "Tao Yao"
+    ],
+    "venue": "aaai",
+    "year": 2026,
+    "paper": "https://ojs.aaai.org/index.php/AAAI/article/view/39217",
+    "pdf_source": "https://arxiv.org/pdf/2511.19256",
+    "figure": "Figure 3",
+    "page": 3,
+    "image": "supplement/images/mk-aaai2026-fec67849ade6a0-f3.jpg",
+    "w": 1597,
+    "h": 821,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "algorithm",
+      "sha256": "783d1479e551e5a88195b19e8c35014e206152fede42598ac29fa5fd00e196eb",
+      "description": "分区展示历史/未来窗口、训练目标与逆扩散步骤，说明同一预测器如何产生多个样本并集成。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://doi.org/10.1609/aaai.v40i25.39217",
+      "pdfSha256": "95825512f9315e79e958a0bb528c2bca99cf20fc8106b3dd2f59de95f41ff48d",
+      "cropPdfPoints": [
+        48,
+        46,
+        562,
+        285
+      ],
+      "publisherPdf": "https://ojs.aaai.org/index.php/AAAI/article/download/39217/43178"
+    }
+  },
+  {
+    "id": "mk-acl2026-cbfea0ded37ac9-f1",
+    "title": "EventWeave: A Dynamic Framework for Capturing Core and Supporting Events in Dialogue Systems",
+    "authors": [
+      "Zhengyi Zhao",
+      "Shubo Zhang",
+      "Yiming Du",
+      "Bin Liang",
+      "Baojun Wang",
+      "Zhongyang Li",
+      "Binyang Li",
+      "Kam-Fai Wong"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.198/",
+    "pdf_source": "https://aclanthology.org/2026.acl-long.198.pdf",
+    "figure": "Figure 1",
+    "page": 1,
+    "image": "supplement/images/mk-acl2026-cbfea0ded37ac9-f1.jpg",
+    "w": 888,
+    "h": 892,
+    "pattern": "conceptual",
+    "supplement": {
+      "category": "main",
+      "sha256": "027f37144181375736d34580cd89da64ea847eb8d4e5935f1bf354fb2d521efd",
+      "description": "以两段音乐节对话夹住中间的事件关系框，用颜色和相连的标记将核心事件与支持事件对应到具体话轮。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://aclanthology.org/volumes/2026.acl-long/",
+      "pdfSha256": "2c7df77e20d2f40dfcb1204a2143f9897293169f7ea84eea0896b95648e324ed",
+      "cropPdfPoints": [
+        303,
+        212,
+        528,
+        447
+      ]
+    }
+  },
+  {
+    "id": "mk-acl2026-cbfea0ded37ac9-f3",
+    "title": "EventWeave: A Dynamic Framework for Capturing Core and Supporting Events in Dialogue Systems",
+    "authors": [
+      "Zhengyi Zhao",
+      "Shubo Zhang",
+      "Yiming Du",
+      "Bin Liang",
+      "Baojun Wang",
+      "Zhongyang Li",
+      "Binyang Li",
+      "Kam-Fai Wong"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.198/",
+    "pdf_source": "https://aclanthology.org/2026.acl-long.198.pdf",
+    "figure": "Figure 3",
+    "page": 6,
+    "image": "supplement/images/mk-acl2026-cbfea0ded37ac9-f3.jpg",
+    "w": 824,
+    "h": 515,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "f8b9280bf95405c20dc466df5821d36db9915a2b3a3833a101df02d819639ed7",
+      "description": "在同一张散点图上用标记区分多种对话记忆方法，同时比较所用令牌数和回答的 ROUGE-L 分数。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://aclanthology.org/volumes/2026.acl-long/",
+      "pdfSha256": "2c7df77e20d2f40dfcb1204a2143f9897293169f7ea84eea0896b95648e324ed",
+      "cropPdfPoints": [
+        305,
+        253,
+        528,
+        398
+      ],
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "scatter"
+      ]
+    }
+  },
+  {
+    "id": "mk-acl2026-765c221e6fd1df-f1",
+    "title": "HERMES: KV Cache as Hierarchical Memory for Efficient Streaming Video Understanding",
+    "authors": [
+      "Haowei Zhang",
+      "Shudong Yang",
+      "Jinlan Fu",
+      "See-Kiong Ng",
+      "Xipeng Qiu"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.381/",
+    "pdf_source": "https://aclanthology.org/2026.acl-long.381.pdf",
+    "figure": "Figure 1",
+    "page": 2,
+    "image": "supplement/images/mk-acl2026-765c221e6fd1df-f1.jpg",
+    "w": 1730,
+    "h": 748,
+    "pattern": "framework",
+    "supplement": {
+      "category": "main",
+      "sha256": "01043b5c1617a3a2150757811e9d20fef28d66b222a2c56a9ba590ff2778bfca",
+      "description": "左侧沿视频帧流展示在线记忆管理，中间并列不同层的注意力分布，右侧以两张曲线图对照计算效率。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://aclanthology.org/volumes/2026.acl-long/",
+      "pdfSha256": "e01a9cb2f5292ac3ce5bcc0f16e0f8421448fab0bce593f5bf2c942a3ce28e13",
+      "cropPdfPoints": [
+        69,
+        71,
+        528,
+        271
+      ]
+    }
+  },
+  {
+    "id": "mk-acl2026-765c221e6fd1df-f2",
+    "title": "HERMES: KV Cache as Hierarchical Memory for Efficient Streaming Video Understanding",
+    "authors": [
+      "Haowei Zhang",
+      "Shudong Yang",
+      "Jinlan Fu",
+      "See-Kiong Ng",
+      "Xipeng Qiu"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.381/",
+    "pdf_source": "https://aclanthology.org/2026.acl-long.381.pdf",
+    "figure": "Figure 2",
+    "page": 3,
+    "image": "supplement/images/mk-acl2026-765c221e6fd1df-f2.jpg",
+    "w": 1780,
+    "h": 514,
+    "pattern": "conceptual",
+    "supplement": {
+      "category": "mechanism",
+      "sha256": "946c288387541bb46694586c6ca18fbba8b721fe7661a73cfb5888ae2d9f0709",
+      "description": "从浅层、第 26 层及其局部放大，依次看到第 8 层的对照；并列的注意力权重曲线展示视频令牌在不同层与位置的变化。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://aclanthology.org/volumes/2026.acl-long/",
+      "pdfSha256": "e01a9cb2f5292ac3ce5bcc0f16e0f8421448fab0bce593f5bf2c942a3ce28e13",
+      "cropPdfPoints": [
+        69,
+        67,
+        528,
+        198
+      ]
+    }
+  },
+  {
+    "id": "mk-acl2026-765c221e6fd1df-f3",
+    "title": "HERMES: KV Cache as Hierarchical Memory for Efficient Streaming Video Understanding",
+    "authors": [
+      "Haowei Zhang",
+      "Shudong Yang",
+      "Jinlan Fu",
+      "See-Kiong Ng",
+      "Xipeng Qiu"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.381/",
+    "pdf_source": "https://aclanthology.org/2026.acl-long.381.pdf",
+    "figure": "Figure 3",
+    "page": 4,
+    "image": "supplement/images/mk-acl2026-765c221e6fd1df-f3.jpg",
+    "w": 1805,
+    "h": 675,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "algorithm",
+      "sha256": "1f61321e9da4a9172b309359f29b68e357a6dc2fd013a499aa145ee6e89c34c5",
+      "description": "沿视频帧进入编码器，再按深、中、浅层分配不同的 KV 缓存管理操作，最后与用户问题共同完成流式问答。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://aclanthology.org/volumes/2026.acl-long/",
+      "pdfSha256": "e01a9cb2f5292ac3ce5bcc0f16e0f8421448fab0bce593f5bf2c942a3ce28e13",
+      "cropPdfPoints": [
+        69,
+        67,
+        528,
+        254
+      ]
+    }
+  },
+  {
+    "id": "mk-acl2026-575871a0262001-f1",
+    "title": "Hierarchical Policy Optimization for Simultaneous Translation of Unbounded Speech",
+    "authors": [
+      "Siqi Ouyang",
+      "Shuoyang Ding",
+      "Oleksii Hrinchuk",
+      "Vitaly Lavrukhin",
+      "Brian Yan",
+      "Boris Ginsburg",
+      "Lei Li"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.80/",
+    "pdf_source": "https://aclanthology.org/2026.acl-long.80.pdf",
+    "figure": "Figure 1",
+    "page": 2,
+    "image": "supplement/images/mk-acl2026-575871a0262001-f1.jpg",
+    "w": 880,
+    "h": 636,
+    "pattern": "architecture",
+    "supplement": {
+      "category": "main",
+      "sha256": "9cb5ee6d1d0cd15cacd0248aefa22fc8efadac8a7fddc232545f9bc41292482f",
+      "description": "从下向上画出流式语音编码器、交错的语音特征与已有译文、语言模型及译文，用堆叠位置表达逐段读入。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://aclanthology.org/volumes/2026.acl-long/",
+      "pdfSha256": "8cbcfd43b279099c7f2106ba5b9473de226ed455266a831433635aae701356b4",
+      "cropPdfPoints": [
+        304,
+        65,
+        528,
+        236
+      ]
+    }
+  },
+  {
+    "id": "mk-acl2026-575871a0262001-f3",
+    "title": "Hierarchical Policy Optimization for Simultaneous Translation of Unbounded Speech",
+    "authors": [
+      "Siqi Ouyang",
+      "Shuoyang Ding",
+      "Oleksii Hrinchuk",
+      "Vitaly Lavrukhin",
+      "Brian Yan",
+      "Boris Ginsburg",
+      "Lei Li"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.80/",
+    "pdf_source": "https://aclanthology.org/2026.acl-long.80.pdf",
+    "figure": "Figure 3",
+    "page": 6,
+    "image": "supplement/images/mk-acl2026-575871a0262001-f3.jpg",
+    "w": 1808,
+    "h": 1412,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "912be13debc5d20eaf4d01a53258b5310935e7fdac31789dc1c116db1ce3e5ad",
+      "description": "三行分别对应英译中、英译德和英译日，四列显示不同翻译质量指标如何随流式延迟变化；同一小图内对照多种策略。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://aclanthology.org/volumes/2026.acl-long/",
+      "pdfSha256": "8cbcfd43b279099c7f2106ba5b9473de226ed455266a831433635aae701356b4",
+      "cropPdfPoints": [
+        69,
+        67,
+        528,
+        431
+      ],
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "curve"
+      ]
+    }
+  },
+  {
+    "id": "mk-acl2026-575871a0262001-f5",
+    "title": "Hierarchical Policy Optimization for Simultaneous Translation of Unbounded Speech",
+    "authors": [
+      "Siqi Ouyang",
+      "Shuoyang Ding",
+      "Oleksii Hrinchuk",
+      "Vitaly Lavrukhin",
+      "Brian Yan",
+      "Boris Ginsburg",
+      "Lei Li"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.80/",
+    "pdf_source": "https://aclanthology.org/2026.acl-long.80.pdf",
+    "figure": "Figure 5",
+    "page": 7,
+    "image": "supplement/images/mk-acl2026-575871a0262001-f5.jpg",
+    "w": 1814,
+    "h": 390,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "8119729fa8faddb0f556169eaa9a3c9115bee1569bd83050faf1bc411a14a5c7",
+      "description": "多个并列分组柱图交叉比较不同训练奖励函数在不同翻译质量评价器上的得分。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://aclanthology.org/volumes/2026.acl-long/",
+      "pdfSha256": "8cbcfd43b279099c7f2106ba5b9473de226ed455266a831433635aae701356b4",
+      "cropPdfPoints": [
+        69,
+        246,
+        528,
+        357
+      ],
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "bar"
+      ]
+    }
+  },
+  {
+    "id": "mk-acl2026-e6a21f385d52d5-f1",
+    "title": "KG-MuLQA: A Framework for KG-based Multi-Level QA Extraction and Long-Context LLM Evaluation",
+    "authors": [
+      "Nikita Tatarinov",
+      "Vidhyakshaya Kannan",
+      "Haricharana Srinivasa",
+      "Arnav Raj",
+      "Harpreet Singh Anand",
+      "Varun Singh",
+      "Aditya Luthra",
+      "Ravij Lade",
+      "Agam Shah",
+      "Sudheer Chava"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.151/",
+    "pdf_source": "https://aclanthology.org/2026.acl-long.151.pdf",
+    "figure": "Figure 1",
+    "page": 1,
+    "image": "supplement/images/mk-acl2026-e6a21f385d52d5-f1.jpg",
+    "w": 884,
+    "h": 1124,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "main",
+      "sha256": "c643c9df15b1b8a2fd5f8c2808ee7948ab7c8a4e5551fe3c0fab9c28d7b43adf",
+      "description": "从信贷协议、实体标注与知识图谱逐层向下，经过问答对生成，最终落在长上下文模型评测。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://aclanthology.org/volumes/2026.acl-long/",
+      "pdfSha256": "eb18a50e28b5b1b3e430bb8dd7b7ff01d1fc7c8c0365799ed24e3068da6a55bf",
+      "cropPdfPoints": [
+        304,
+        217,
+        527,
+        512
+      ]
+    }
+  },
+  {
+    "id": "mk-acl2026-e6a21f385d52d5-f4",
+    "title": "KG-MuLQA: A Framework for KG-based Multi-Level QA Extraction and Long-Context LLM Evaluation",
+    "authors": [
+      "Nikita Tatarinov",
+      "Vidhyakshaya Kannan",
+      "Haricharana Srinivasa",
+      "Arnav Raj",
+      "Harpreet Singh Anand",
+      "Varun Singh",
+      "Aditya Luthra",
+      "Ravij Lade",
+      "Agam Shah",
+      "Sudheer Chava"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.151/",
+    "pdf_source": "https://aclanthology.org/2026.acl-long.151.pdf",
+    "figure": "Figure 4",
+    "page": 8,
+    "image": "supplement/images/mk-acl2026-e6a21f385d52d5-f4.jpg",
+    "w": 872,
+    "h": 520,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "866d37ee83028566852b2c2e3e555f351053f8462c7c66bf14875fbb93c1aefa",
+      "description": "按问题模板的结构复杂度排列横轴，用多条彩色折线与不确定带展示不同错误类型的趋势。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://aclanthology.org/volumes/2026.acl-long/",
+      "pdfSha256": "eb18a50e28b5b1b3e430bb8dd7b7ff01d1fc7c8c0365799ed24e3068da6a55bf",
+      "cropPdfPoints": [
+        305,
+        67,
+        528,
+        208
+      ],
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "curve"
+      ]
+    }
+  },
+  {
+    "id": "mk-acl2026-d613b6e6dab925-f1",
+    "title": "MuSe: Multi-Stage Graph Reasoning via Vision-Language Models",
+    "authors": [
+      "Guanyu Wang",
+      "Xu Chu",
+      "Zhijie Tan",
+      "Xinrong Chen",
+      "Tong Mo",
+      "Weiping Li"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.476/",
+    "pdf_source": "https://aclanthology.org/2026.acl-long.476.pdf",
+    "figure": "Figure 1",
+    "page": 1,
+    "image": "supplement/images/mk-acl2026-d613b6e6dab925-f1.jpg",
+    "w": 848,
+    "h": 610,
+    "pattern": "conceptual",
+    "supplement": {
+      "category": "main",
+      "sha256": "5e1d04c96218d4fdb5c2bb46dd8bd546b1ba01956b85bea91539b76bf2006c13",
+      "description": "上下两路分别显示整图输入和子图输入，用同一道图结构问题及对错标记说明视觉拥挤对推理的影响。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://aclanthology.org/volumes/2026.acl-long/",
+      "pdfSha256": "749ed8cb7b79bd1bf89cfc61ac549b578f2ed31c94f237d9ecc9aa3651a2ec1f",
+      "cropPdfPoints": [
+        304,
+        218,
+        527,
+        386
+      ]
+    }
+  },
+  {
+    "id": "mk-acl2026-d613b6e6dab925-f2",
+    "title": "MuSe: Multi-Stage Graph Reasoning via Vision-Language Models",
+    "authors": [
+      "Guanyu Wang",
+      "Xu Chu",
+      "Zhijie Tan",
+      "Xinrong Chen",
+      "Tong Mo",
+      "Weiping Li"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.476/",
+    "pdf_source": "https://aclanthology.org/2026.acl-long.476.pdf",
+    "figure": "Figure 2",
+    "page": 4,
+    "image": "supplement/images/mk-acl2026-d613b6e6dab925-f2.jpg",
+    "w": 1793,
+    "h": 869,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "algorithm",
+      "sha256": "a7b18117b36cf48c8b4570e4a4edac1e6af623abd319bb1a7fd64d8694f98c1f",
+      "description": "三轮交互从左到右展开，模型查看图、调用可视化器提取子图，再沿着查询所需的局部连边作答。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://aclanthology.org/volumes/2026.acl-long/",
+      "pdfSha256": "749ed8cb7b79bd1bf89cfc61ac549b578f2ed31c94f237d9ecc9aa3651a2ec1f",
+      "cropPdfPoints": [
+        68,
+        66,
+        528,
+        302
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-d7396a2252829c-f3",
+    "title": "ArtHOI: Taming Foundation Models for Monocular 4D Reconstruction of Hand-Articulated-Object Interactions",
+    "authors": [
+      "Zikai Wang",
+      "Zhilu Zhang",
+      "Yiqing Wang",
+      "Hui Li",
+      "Wangmeng Zuo"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Wang_ArtHOI_Taming_Foundation_Models_for_Monocular_4D_Reconstruction_of_Hand-Articulated-Object_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Wang_ArtHOI_Taming_Foundation_Models_for_Monocular_4D_Reconstruction_of_Hand-Articulated-Object_CVPR_2026_paper.pdf",
+    "figure": "Figure 3",
+    "page": 6,
+    "image": "supplement/images/mk-cvpr2026-d7396a2252829c-f3.jpg",
+    "w": 1857,
+    "h": 1062,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "7ec8a430845e60c0296637fdf71725d75ec20964a002ef0cbe1c40dd0310ba63",
+      "description": "分行展示不同数据来源的手–铰接物体交互，将输入帧与相机视角、侧视角的几何重建并排比较。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "eff8b2a6f4650aaab733513d4147881c569440646ce76560cae3051a4b40c907",
+      "cropPdfPoints": [
+        56,
+        67,
+        555,
+        349
+      ],
+      "dimensions": [
+        "3d"
+      ],
+      "forms": [
+        "mesh",
+        "qualitative"
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-0953db188b2c51-f1",
+    "title": "Diagram2Structure: Unlocking LLMs' Diagram Comprehension through DiagramDiff, a Framework for Structuring Offline Diagrams",
+    "authors": [
+      "Haoxiang Hu",
+      "Yaokun Li",
+      "Zeyuan Huang",
+      "Cangjun Gao",
+      "Qiang He",
+      "Qingkun Li",
+      "Xiaoming Deng",
+      "Cuixia Ma",
+      "Yu-Kun Lai",
+      "Yong-Jin Liu",
+      "Hongan Wang"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Hu_Diagram2Structure_Unlocking_LLMs_Diagram_Comprehension_through_DiagramDiff_a_Framework_for_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Hu_Diagram2Structure_Unlocking_LLMs_Diagram_Comprehension_through_DiagramDiff_a_Framework_for_CVPR_2026_paper.pdf",
+    "figure": "Figure 1",
+    "page": 1,
+    "image": "supplement/images/mk-cvpr2026-0953db188b2c51-f1.jpg",
+    "w": 955,
+    "h": 996,
+    "pattern": "comparison",
+    "supplement": {
+      "category": "main",
+      "sha256": "20cb6cdcd61b63036deecf1d094fe570ba5608962fd11151a705d9b4e9f5a579",
+      "description": "将同一张离线地图与问题分流给语言模型和 DiagramDiff，两列并排展示各自的中间表示与最终地图结果。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "5f5a4c8764b5e968b13768b080130d86aa229ef9d87c89c6059192ddfa1b3a5f",
+      "cropPdfPoints": [
+        315,
+        265,
+        555,
+        531
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-a4adb9621ecd0a-f1",
+    "title": "EchoFoley: Event-Centric Hierarchical Control for Video Grounded Creative Sound Generation",
+    "authors": [
+      "Bingxuan Li",
+      "Yiming Cui",
+      "Yicheng He",
+      "Yiwei Wang",
+      "Shu Zhang",
+      "Longyin Wen",
+      "Yulei Niu"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Li_EchoFoley_Event-Centric_Hierarchical_Control_for_Video_Grounded_Creative_Sound_Generation_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Li_EchoFoley_Event-Centric_Hierarchical_Control_for_Video_Grounded_Creative_Sound_Generation_CVPR_2026_paper.pdf",
+    "figure": "Figure 1",
+    "page": 1,
+    "image": "supplement/images/mk-cvpr2026-a4adb9621ecd0a-f1.jpg",
+    "w": 943,
+    "h": 678,
+    "pattern": "conceptual",
+    "supplement": {
+      "category": "main",
+      "sha256": "3c9dbad003a06271a69e113378d30f241969796bd80220d49bc0e0afb110708b",
+      "description": "同一段无声视频沿时间轴排列，中间以彩色卡片区分实例级、组级声音指令，底部在同一频谱上标出三个对应声音事件。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "3b75af7bb4b7a1affca1766edc7cfe5a504e5ea109e61d603a0a3d2f10d22a87",
+      "cropPdfPoints": [
+        315,
+        268,
+        555,
+        445
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-a4adb9621ecd0a-f4",
+    "title": "EchoFoley: Event-Centric Hierarchical Control for Video Grounded Creative Sound Generation",
+    "authors": [
+      "Bingxuan Li",
+      "Yiming Cui",
+      "Yicheng He",
+      "Yiwei Wang",
+      "Shu Zhang",
+      "Longyin Wen",
+      "Yulei Niu"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Li_EchoFoley_Event-Centric_Hierarchical_Control_for_Video_Grounded_Creative_Sound_Generation_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Li_EchoFoley_Event-Centric_Hierarchical_Control_for_Video_Grounded_Creative_Sound_Generation_CVPR_2026_paper.pdf",
+    "figure": "Figure 4",
+    "page": 6,
+    "image": "supplement/images/mk-cvpr2026-a4adb9621ecd0a-f4.jpg",
+    "w": 842,
+    "h": 771,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "a7a8921112d5e11e0734de6f4cec0fc895884932eeb6a2e6aab921e887e15976",
+      "description": "横轴衡量音频对指令的遵从度，纵轴衡量视听一致性，不同颜色与形状的模型标记在同一平面上比较。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "3b75af7bb4b7a1affca1766edc7cfe5a504e5ea109e61d603a0a3d2f10d22a87",
+      "cropPdfPoints": [
+        57,
+        265,
+        296,
+        462
+      ],
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "scatter"
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-a4adb9621ecd0a-f7",
+    "title": "EchoFoley: Event-Centric Hierarchical Control for Video Grounded Creative Sound Generation",
+    "authors": [
+      "Bingxuan Li",
+      "Yiming Cui",
+      "Yicheng He",
+      "Yiwei Wang",
+      "Shu Zhang",
+      "Longyin Wen",
+      "Yulei Niu"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Li_EchoFoley_Event-Centric_Hierarchical_Control_for_Video_Grounded_Creative_Sound_Generation_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Li_EchoFoley_Event-Centric_Hierarchical_Control_for_Video_Grounded_Creative_Sound_Generation_CVPR_2026_paper.pdf",
+    "figure": "Figure 7",
+    "page": 8,
+    "image": "supplement/images/mk-cvpr2026-a4adb9621ecd0a-f7.jpg",
+    "w": 1416,
+    "h": 1026,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "algorithm",
+      "sha256": "800cdee590a4e0d3980eb0b6f32e9ce68e54a4830d811b6bc62d63fa0245c7d5",
+      "description": "EchoVidia 的推理流程从视频和文字定位可能发声的帧，再设计带时间属性的声音事件并合成音频；下方的智能体通过动作池调度三个阶段。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "3b75af7bb4b7a1affca1766edc7cfe5a504e5ea109e61d603a0a3d2f10d22a87",
+      "cropPdfPoints": [
+        58,
+        72,
+        294,
+        243
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-e732a3f5b46f12-f1",
+    "title": "From Events to Clarity: The Event-Guided Diffusion Framework for Dehazing",
+    "authors": [
+      "Ling Wang",
+      "Yunfan Lu",
+      "Wenzong Ma",
+      "Huizai Yao",
+      "Pengteng Li",
+      "Hui Xiong"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Wang_From_Events_to_Clarity_The_Event-Guided_Diffusion_Framework_for_Dehazing_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Wang_From_Events_to_Clarity_The_Event-Guided_Diffusion_Framework_for_Dehazing_CVPR_2026_paper.pdf",
+    "figure": "Figure 1",
+    "page": 1,
+    "image": "supplement/images/mk-cvpr2026-e732a3f5b46f12-f1.jpg",
+    "w": 929,
+    "h": 269,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "main",
+      "sha256": "bbfda2b0ce54893dc884c050c809b8d5feeb537e7df3a061140b75fc1d254bd1",
+      "description": "左侧将连续事件与有雾图像叠放，中间通过去雾模型，右侧给出恢复图。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "6e78bddc85982d46ce199cbd8824a836bb860533c53615192d3f2b121210d700",
+      "cropPdfPoints": [
+        315,
+        222,
+        556,
+        301
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-e732a3f5b46f12-f8",
+    "title": "From Events to Clarity: The Event-Guided Diffusion Framework for Dehazing",
+    "authors": [
+      "Ling Wang",
+      "Yunfan Lu",
+      "Wenzong Ma",
+      "Huizai Yao",
+      "Pengteng Li",
+      "Hui Xiong"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Wang_From_Events_to_Clarity_The_Event-Guided_Diffusion_Framework_for_Dehazing_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Wang_From_Events_to_Clarity_The_Event-Guided_Diffusion_Framework_for_Dehazing_CVPR_2026_paper.pdf",
+    "figure": "Figure 8",
+    "page": 8,
+    "image": "supplement/images/mk-cvpr2026-e732a3f5b46f12-f8.jpg",
+    "w": 948,
+    "h": 362,
+    "pattern": "conceptual",
+    "supplement": {
+      "category": "mechanism",
+      "sha256": "5f70a1c4aed77ade0b4a16eb9a2b1b6cc0d5a95b6c96e9b6b250d061a8eb3a28",
+      "description": "并列两幅事件特征热图，借红色响应展示不同场景的边缘与结构位置。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "6e78bddc85982d46ce199cbd8824a836bb860533c53615192d3f2b121210d700",
+      "cropPdfPoints": [
+        57,
+        360,
+        296,
+        450
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-a28f20f0a24804-f4",
+    "title": "HeroGS: Hierarchical Guidance for Robust 3D Gaussian Splatting under Sparse Views",
+    "authors": [
+      "Jiashu Li",
+      "Xumeng Han",
+      "Zhaoyang Wei",
+      "Zipeng Wang",
+      "Kuiran Wang",
+      "Guorong Li",
+      "Zhenjun Han",
+      "Jianbin Jiao"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Li_HeroGS_Hierarchical_Guidance_for_Robust_3D_Gaussian_Splatting_under_Sparse_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Li_HeroGS_Hierarchical_Guidance_for_Robust_3D_Gaussian_Splatting_under_Sparse_CVPR_2026_paper.pdf",
+    "figure": "Figure 4",
+    "page": 7,
+    "image": "supplement/images/mk-cvpr2026-a28f20f0a24804-f4.jpg",
+    "w": 1678,
+    "h": 1017,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "0f9527cdfd204d0417cfbca73c571c5b536dbb874451254179edfa8d37306072",
+      "description": "同一稀疏训练视角条件下，逐行列出 LLFF 场景，逐列比较原始 3DGS、正则化基线和 HeroGS 的二维新视角渲染。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "d44b62fb82127132531648b67f6751b4b0e9a4dbe729771027cad1b7e0c2abfd",
+      "cropPdfPoints": [
+        56,
+        67,
+        555,
+        340
+      ],
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "qualitative"
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-a28f20f0a24804-f6",
+    "title": "HeroGS: Hierarchical Guidance for Robust 3D Gaussian Splatting under Sparse Views",
+    "authors": [
+      "Jiashu Li",
+      "Xumeng Han",
+      "Zhaoyang Wei",
+      "Zipeng Wang",
+      "Kuiran Wang",
+      "Guorong Li",
+      "Zhenjun Han",
+      "Jianbin Jiao"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Li_HeroGS_Hierarchical_Guidance_for_Robust_3D_Gaussian_Splatting_under_Sparse_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Li_HeroGS_Hierarchical_Guidance_for_Robust_3D_Gaussian_Splatting_under_Sparse_CVPR_2026_paper.pdf",
+    "figure": "Figure 6",
+    "page": 8,
+    "image": "supplement/images/mk-cvpr2026-a28f20f0a24804-f6.jpg",
+    "w": 903,
+    "h": 274,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "0b5b160eecbf7b7d44f70e9994218c493e26082a2382b9426965459046920081",
+      "description": "一对图表比较训练期间的 PSNR 轨迹与不同方法的高斯数量，分别以曲线和分组柱表示。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "d44b62fb82127132531648b67f6751b4b0e9a4dbe729771027cad1b7e0c2abfd",
+      "cropPdfPoints": [
+        316,
+        67,
+        555,
+        147
+      ],
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "curve",
+        "bar"
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-bdae0b55c3b123-f6",
+    "title": "MeshFlow: Efficient Artistic Mesh Generation via MeshVAE and Flow-based Diffusion Transformer",
+    "authors": [
+      "Weiyu Li",
+      "Antoine Toisoul",
+      "Tom Monnier",
+      "Roman Shapovalov",
+      "Rakesh Ranjan",
+      "Ping Tan",
+      "Andrea Vedaldi"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Li_MeshFlow_Efficient_Artistic_Mesh_Generation_via_MeshVAE_and_Flow-based_Diffusion_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Li_MeshFlow_Efficient_Artistic_Mesh_Generation_via_MeshVAE_and_Flow-based_Diffusion_CVPR_2026_paper.pdf",
+    "figure": "Figure 6",
+    "page": 6,
+    "image": "supplement/images/mk-cvpr2026-bdae0b55c3b123-f6.jpg",
+    "w": 936,
+    "h": 363,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "9e691b4233eb15a74b53640221a96d73b6d876ef852246222e539c7f4f4c2550",
+      "description": "并排展示盆栽、柱状物、落地灯和室内结构等重建网格，呈现细杆、叶片和开口等局部几何。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "a06d1276bef0baf0d0737f970e99b44c12e3d28a4a9d12364793ed1c1f7aa30a",
+      "cropPdfPoints": [
+        56,
+        251,
+        296,
+        349
+      ],
+      "dimensions": [
+        "3d"
+      ],
+      "forms": [
+        "mesh"
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-bdae0b55c3b123-f7",
+    "title": "MeshFlow: Efficient Artistic Mesh Generation via MeshVAE and Flow-based Diffusion Transformer",
+    "authors": [
+      "Weiyu Li",
+      "Antoine Toisoul",
+      "Tom Monnier",
+      "Roman Shapovalov",
+      "Rakesh Ranjan",
+      "Ping Tan",
+      "Andrea Vedaldi"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Li_MeshFlow_Efficient_Artistic_Mesh_Generation_via_MeshVAE_and_Flow-based_Diffusion_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Li_MeshFlow_Efficient_Artistic_Mesh_Generation_via_MeshVAE_and_Flow-based_Diffusion_CVPR_2026_paper.pdf",
+    "figure": "Figure 7",
+    "page": 7,
+    "image": "supplement/images/mk-cvpr2026-bdae0b55c3b123-f7.jpg",
+    "w": 1786,
+    "h": 1544,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "114da1f5000be6e9adc015b3c50484f41bfe53d2c24d0a1ef199f9fed8e04a2e",
+      "description": "左列给出输入点云，右侧按方法并列展示由相同点云生成的三维网格，多行展示不同物体。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "a06d1276bef0baf0d0737f970e99b44c12e3d28a4a9d12364793ed1c1f7aa30a",
+      "cropPdfPoints": [
+        56,
+        67,
+        555,
+        464
+      ],
+      "dimensions": [
+        "3d"
+      ],
+      "forms": [
+        "pointcloud",
+        "mesh"
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-b2b39616961232-f1",
+    "title": "MHopReg: Efficient Hierarchical Multi-Hop Graph Search for Point Cloud Registration",
+    "authors": [
+      "Yue Wu",
+      "Feng Xiao",
+      "Yongzhe Yuan",
+      "Hao Li",
+      "Kaiyuan Feng",
+      "Maoguo Gong",
+      "Qiguang Miao",
+      "Wenping Ma"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Wu_MHopReg_Efficient_Hierarchical_Multi-Hop_Graph_Search_for_Point_Cloud_Registration_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Wu_MHopReg_Efficient_Hierarchical_Multi-Hop_Graph_Search_for_Point_Cloud_Registration_CVPR_2026_paper.pdf",
+    "figure": "Figure 1",
+    "page": 1,
+    "image": "supplement/images/mk-cvpr2026-b2b39616961232-f1.jpg",
+    "w": 959,
+    "h": 430,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "main",
+      "sha256": "1d357bb62db71fe051ec32b7178ef2994d78190dec0d80dce1d245078bcdf500",
+      "description": "上半部用点云和邻接图解释多跳搜索，下半部三组并列对应点示意逐级筛除错误匹配。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "316f3b2ddbdd3de4cff064aa34efc5bccce8b0ceb581eac306c335f851a0349e",
+      "cropPdfPoints": [
+        315,
+        250,
+        555,
+        373
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-b2b39616961232-f3",
+    "title": "MHopReg: Efficient Hierarchical Multi-Hop Graph Search for Point Cloud Registration",
+    "authors": [
+      "Yue Wu",
+      "Feng Xiao",
+      "Yongzhe Yuan",
+      "Hao Li",
+      "Kaiyuan Feng",
+      "Maoguo Gong",
+      "Qiguang Miao",
+      "Wenping Ma"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Wu_MHopReg_Efficient_Hierarchical_Multi-Hop_Graph_Search_for_Point_Cloud_Registration_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Wu_MHopReg_Efficient_Hierarchical_Multi-Hop_Graph_Search_for_Point_Cloud_Registration_CVPR_2026_paper.pdf",
+    "figure": "Figure 3",
+    "page": 7,
+    "image": "supplement/images/mk-cvpr2026-b2b39616961232-f3.jpg",
+    "w": 1878,
+    "h": 424,
+    "pattern": "conceptual",
+    "supplement": {
+      "category": "mechanism",
+      "sha256": "8557bf0cdde41789a2c8102fa86dfee0f1bbd4e2555ef4a5270993f08305435c",
+      "description": "沿水平方向排列同一对点云，逐步叠加种子、邻居和对应连线，展示多跳搜索如何剔除误匹配。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "316f3b2ddbdd3de4cff064aa34efc5bccce8b0ceb581eac306c335f851a0349e",
+      "cropPdfPoints": [
+        56,
+        67,
+        555,
+        184
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-b2b39616961232-f4",
+    "title": "MHopReg: Efficient Hierarchical Multi-Hop Graph Search for Point Cloud Registration",
+    "authors": [
+      "Yue Wu",
+      "Feng Xiao",
+      "Yongzhe Yuan",
+      "Hao Li",
+      "Kaiyuan Feng",
+      "Maoguo Gong",
+      "Qiguang Miao",
+      "Wenping Ma"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Wu_MHopReg_Efficient_Hierarchical_Multi-Hop_Graph_Search_for_Point_Cloud_Registration_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Wu_MHopReg_Efficient_Hierarchical_Multi-Hop_Graph_Search_for_Point_Cloud_Registration_CVPR_2026_paper.pdf",
+    "figure": "Figure 4",
+    "page": 7,
+    "image": "supplement/images/mk-cvpr2026-b2b39616961232-f4.jpg",
+    "w": 957,
+    "h": 447,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "4535c2dc36edcebfc200d6c9cc4f1b8d622c6912490778b841b1d7de781549d0",
+      "description": "两个低重叠样例分别对照不同种子选择策略，以三维点云上的彩色连线与重叠框观察匹配位置。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "316f3b2ddbdd3de4cff064aa34efc5bccce8b0ceb581eac306c335f851a0349e",
+      "cropPdfPoints": [
+        316,
+        211,
+        555,
+        334
+      ],
+      "dimensions": [
+        "3d"
+      ],
+      "forms": [
+        "pointcloud"
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-b2b39616961232-f5",
+    "title": "MHopReg: Efficient Hierarchical Multi-Hop Graph Search for Point Cloud Registration",
+    "authors": [
+      "Yue Wu",
+      "Feng Xiao",
+      "Yongzhe Yuan",
+      "Hao Li",
+      "Kaiyuan Feng",
+      "Maoguo Gong",
+      "Qiguang Miao",
+      "Wenping Ma"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Wu_MHopReg_Efficient_Hierarchical_Multi-Hop_Graph_Search_for_Point_Cloud_Registration_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Wu_MHopReg_Efficient_Hierarchical_Multi-Hop_Graph_Search_for_Point_Cloud_Registration_CVPR_2026_paper.pdf",
+    "figure": "Figure 5",
+    "page": 8,
+    "image": "supplement/images/mk-cvpr2026-b2b39616961232-f5.jpg",
+    "w": 941,
+    "h": 468,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "818dcad9181f1e5aab79ee6c4b9666fa317702e65b41d07efd370eb81edd8c93",
+      "description": "KITTI 的扩展性试验用分组柱标出配准召回率，再用折线和第二纵轴展示耗时随对应数量变化。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "316f3b2ddbdd3de4cff064aa34efc5bccce8b0ceb581eac306c335f851a0349e",
+      "cropPdfPoints": [
+        316,
+        258,
+        555,
+        390
+      ],
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "bar",
+        "curve"
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-0b890ab136e5f4-f1",
+    "title": "One Patch to Caption Them All: A Unified Zero-Shot Captioning Framework",
+    "authors": [
+      "Lorenzo Bianchi",
+      "Giacomo Pacini",
+      "Fabio Carrara",
+      "Nicola Messina",
+      "Giuseppe Amato",
+      "Fabrizio Falchi"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Bianchi_One_Patch_to_Caption_Them_All_A_Unified_Zero-Shot_Captioning_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Bianchi_One_Patch_to_Caption_Them_All_A_Unified_Zero-Shot_Captioning_CVPR_2026_paper.pdf",
+    "figure": "Figure 1",
+    "page": 3,
+    "image": "supplement/images/mk-cvpr2026-0b890ab136e5f4-f1.jpg",
+    "w": 1992,
+    "h": 1128,
+    "pattern": "framework",
+    "supplement": {
+      "category": "main",
+      "sha256": "617d667625a83cd59a3a84c4f08b09505880f29aa5709940a0e6017eef7dc3b0",
+      "description": "上半部连接局部图像特征、区域聚合与文本解码，下半部将同一场景展开为五种不同粒度的配文任务。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "e855d785ce244a1285817b91a9c6ae9bcf4c712c1090f6b3922084cd5ac0bbab",
+      "cropPdfPoints": [
+        56,
+        63,
+        556,
+        358
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-4cad7250d20c06-f1",
+    "title": "One-Shot Flow, Any-Time Frame: A Bidirectional Warping Framework for Event-Based Video Frame Interpolation",
+    "authors": [
+      "Linghui Fu",
+      "Yuhan Liu",
+      "Hao Chen",
+      "Zhen Yang",
+      "Yongjian Deng"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Fu_One-Shot_Flow_Any-Time_Frame_A_Bidirectional_Warping_Framework_for_Event-Based_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Fu_One-Shot_Flow_Any-Time_Frame_A_Bidirectional_Warping_Framework_for_Event-Based_CVPR_2026_paper.pdf",
+    "figure": "Figure 1",
+    "page": 1,
+    "image": "supplement/images/mk-cvpr2026-4cad7250d20c06-f1.jpg",
+    "w": 960,
+    "h": 517,
+    "pattern": "comparison",
+    "supplement": {
+      "category": "main",
+      "sha256": "69d067fdb2fa2137d35e326cb20f8b73744cb077bae5b95e6917526dab10ae6e",
+      "description": "共享的帧与事件序列横置于上方，下接三个并列面板，分别对比前向、后向与双向光流插帧。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "aeb298b9ceff3180a66ef39413b7ac07b710118b1e56b56200c205282967af79",
+      "cropPdfPoints": [
+        315,
+        280,
+        555,
+        428
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-6d2a37dd3eb960-f3",
+    "title": "RAYNOVA: Scale-Temporal Autoregressive World Modeling in Ray Space",
+    "authors": [
+      "Yichen Xie",
+      "Chensheng Peng",
+      "Mazen Abdelfattah",
+      "Yihan Hu",
+      "Jiezhi Yang",
+      "Eric Higgins",
+      "Ryan Brigden",
+      "Masayoshi Tomizuka",
+      "Wei Zhan"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Xie_RAYNOVA_Scale-Temporal_Autoregressive_World_Modeling_in_Ray_Space_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Xie_RAYNOVA_Scale-Temporal_Autoregressive_World_Modeling_in_Ray_Space_CVPR_2026_paper.pdf",
+    "figure": "Figure 3",
+    "page": 4,
+    "image": "supplement/images/mk-cvpr2026-6d2a37dd3eb960-f3.jpg",
+    "w": 848,
+    "h": 505,
+    "pattern": "conceptual",
+    "supplement": {
+      "category": "mechanism",
+      "sha256": "98a67931c9ab1702aa6c841e39d028dfd33c16d9405d1b7528129c60e06ea5f2",
+      "description": "多视角画面与示意车辆分层排布，用连线画出时间和尺度两个方向的条件依赖。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "b92313478dc6b765118d1280e7487fa6d79f133e243d06ce70992a83ca1db271",
+      "cropPdfPoints": [
+        56,
+        241,
+        296,
+        375
+      ]
+    }
+  },
+  {
+    "id": "mk-cvpr2026-e05666753a0317-f1",
+    "title": "SGDrive: Scene-to-Goal Hierarchical World Cognition for Autonomous Driving",
+    "authors": [
+      "Jingyu Li",
+      "Junjie Wu",
+      "Dongnan Hu",
+      "Xiangkai Huang",
+      "Bin Sun",
+      "Zhihui Hao",
+      "Xianpeng Lang",
+      "Xiatian Zhu",
+      "Li Zhang"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Li_SGDrive_Scene-to-Goal_Hierarchical_World_Cognition_for_Autonomous_Driving_CVPR_2026_paper.html",
+    "pdf_source": "https://openaccess.thecvf.com/content/CVPR2026/papers/Li_SGDrive_Scene-to-Goal_Hierarchical_World_Cognition_for_Autonomous_Driving_CVPR_2026_paper.pdf",
+    "figure": "Figure 1",
+    "page": 1,
+    "image": "supplement/images/mk-cvpr2026-e05666753a0317-f1.jpg",
+    "w": 912,
+    "h": 464,
+    "pattern": "architecture",
+    "supplement": {
+      "category": "main",
+      "sha256": "28a471c8fb71f7142cef3632726608273a2a72a8ee173effefbbc3f37b8646ce",
+      "description": "前两条简图对照直接输出文字与先生成动作嵌入的驾驶路径，第三条在视觉语言模型与动作模块之间明确插入目标推理。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://openaccess.thecvf.com/CVPR2026?day=all",
+      "pdfSha256": "d14367f349474320ad5afa6b1e80fca61d48e480df53bbcb932dd96e4fb3a587",
+      "cropPdfPoints": [
+        315,
+        250,
+        555,
+        383
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-003e565799e26b-f2",
+    "title": "ASTGI: Adaptive Spatio-Temporal Graph Interactions for Irregular Multivariate Time Series Forecasting",
+    "authors": [
+      "Xvyuan Liu",
+      "Xiangfei Qiu",
+      "Hanyin Cheng",
+      "Xingjian Wu",
+      "Guo",
+      "Bin Yang",
+      "Jilin Hu"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/28d38c036365420f61ce03300418e44a-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/28d38c036365420f61ce03300418e44a-Paper-Conference.pdf",
+    "figure": "Figure 2",
+    "page": 2,
+    "image": "supplement/images/mk-iclr2026-003e565799e26b-f2.jpg",
+    "w": 1819,
+    "h": 356,
+    "pattern": "conceptual",
+    "supplement": {
+      "category": "mechanism",
+      "sha256": "63dd9b47f7eb55f1d7a8f61f49a2327d9180785deb29f7d426edb0c39a545bca",
+      "description": "同一组不规则观测分别按时间、固定邻接关系和自适应关系连边，解释图交互机制的差异。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10009033",
+      "pdfSha256": "667410d88eaabd1b0c8309e94c299dcf843dddc84f3e33608cc269225860ffb8",
+      "cropPdfPoints": [
+        102,
+        233,
+        510,
+        323
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-003e565799e26b-f3",
+    "title": "ASTGI: Adaptive Spatio-Temporal Graph Interactions for Irregular Multivariate Time Series Forecasting",
+    "authors": [
+      "Xvyuan Liu",
+      "Xiangfei Qiu",
+      "Hanyin Cheng",
+      "Xingjian Wu",
+      "Guo",
+      "Bin Yang",
+      "Jilin Hu"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/28d38c036365420f61ce03300418e44a-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/28d38c036365420f61ce03300418e44a-Paper-Conference.pdf",
+    "figure": "Figure 3",
+    "page": 5,
+    "image": "supplement/images/mk-iclr2026-003e565799e26b-f3.jpg",
+    "w": 1816,
+    "h": 1254,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "algorithm",
+      "sha256": "2e439fc47837bd26b28997924a95d88842bc76008bd66684807f513fe244d049",
+      "description": "从原始时空点到邻域自适应图构造与传播，再到目标演化和预测，四个区域展示 ASTGI 的推理流程。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10009033",
+      "pdfSha256": "667410d88eaabd1b0c8309e94c299dcf843dddc84f3e33608cc269225860ffb8",
+      "cropPdfPoints": [
+        102,
+        75,
+        510,
+        358
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-edd7fb7288c43d-f1",
+    "title": "CFO: Learning Continuous-Time PDE Dynamics via Flow-Matched Neural Operators",
+    "authors": [
+      "Xianglong Hou",
+      "Xinquan Huang",
+      "Paris Perdikaris"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/8bfbf4ec87e1e331f0b1adc483b53b6b-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/8bfbf4ec87e1e331f0b1adc483b53b6b-Paper-Conference.pdf",
+    "figure": "Figure 1",
+    "page": 4,
+    "image": "supplement/images/mk-iclr2026-edd7fb7288c43d-f1.jpg",
+    "w": 1827,
+    "h": 446,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "main",
+      "sha256": "6de7bce223abadfaed39362dd3d10d27021afcd5a04e038d24905155edc32b0d",
+      "description": "训练侧在样条路径上匹配速度场，推断侧通过连续时间积分生成未来场。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10010304",
+      "pdfSha256": "a9c3a414f7315d3c0225047263ca728f72ce195d1435b3b3807cd8e056bbfb6f",
+      "cropPdfPoints": [
+        103,
+        76,
+        509,
+        181
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-edd7fb7288c43d-f4",
+    "title": "CFO: Learning Continuous-Time PDE Dynamics via Flow-Matched Neural Operators",
+    "authors": [
+      "Xianglong Hou",
+      "Xinquan Huang",
+      "Paris Perdikaris"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/8bfbf4ec87e1e331f0b1adc483b53b6b-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/8bfbf4ec87e1e331f0b1adc483b53b6b-Paper-Conference.pdf",
+    "figure": "Figure 4",
+    "page": 8,
+    "image": "supplement/images/mk-iclr2026-edd7fb7288c43d-f4.jpg",
+    "w": 1789,
+    "h": 384,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "4dabde2dbab42980c2b389a8ac356da7fa8125b778ef1814b02f787bdf7ed977",
+      "description": "在 Burgers 方程最差测试样本上并列对照四个时刻的真实剖面与连续流算子重建结果。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10010304",
+      "pdfSha256": "a9c3a414f7315d3c0225047263ca728f72ce195d1435b3b3807cd8e056bbfb6f",
+      "cropPdfPoints": [
+        102,
+        226,
+        510,
+        318
+      ],
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "curve"
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-479c608c98a7e2-f1",
+    "title": "DGNet: Discrete Green Networks for Data-Efficient Learning of Spatiotemporal PDEs",
+    "authors": [
+      "Yingjie Tan",
+      "Quanming Yao",
+      "Yaqing Wang"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/2cd03773631495b05c5e9e3a728df07c-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/2cd03773631495b05c5e9e3a728df07c-Paper-Conference.pdf",
+    "figure": "Figure 1",
+    "page": 5,
+    "image": "supplement/images/mk-iclr2026-479c608c98a7e2-f1.jpg",
+    "w": 1799,
+    "h": 689,
+    "pattern": "framework",
+    "supplement": {
+      "category": "main",
+      "sha256": "0669d08b910c00ff2d354718fdc0058ba6365fd83bdb78e9b459f74fe362e73f",
+      "description": "DGNet 将物理离散算子与神经校正合并，并用源响应叠加得到下一时刻的场。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10010689",
+      "pdfSha256": "a42c3a60c9027e2ae9c0e2cfe382c97356b20109fef2b98353f516b04b659dea",
+      "cropPdfPoints": [
+        103,
+        78,
+        509,
+        252
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-479c608c98a7e2-f3",
+    "title": "DGNet: Discrete Green Networks for Data-Efficient Learning of Spatiotemporal PDEs",
+    "authors": [
+      "Yingjie Tan",
+      "Quanming Yao",
+      "Yaqing Wang"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/2cd03773631495b05c5e9e3a728df07c-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/2cd03773631495b05c5e9e3a728df07c-Paper-Conference.pdf",
+    "figure": "Figure 3",
+    "page": 9,
+    "image": "supplement/images/mk-iclr2026-479c608c98a7e2-f3.jpg",
+    "w": 1823,
+    "h": 813,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "6e120246c9558332e00616bd4c7373de1e6d75bede2c7b5ec5cfefef94ee8011",
+      "description": "逐列对照真值与六种模型，逐行展示 Allen–Cahn、FitzHugh–Nagumo 等方程的二维预测场。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10010689",
+      "pdfSha256": "a42c3a60c9027e2ae9c0e2cfe382c97356b20109fef2b98353f516b04b659dea",
+      "cropPdfPoints": [
+        104,
+        72,
+        508,
+        262
+      ],
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "heatmap",
+        "field"
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-479c608c98a7e2-f5",
+    "title": "DGNet: Discrete Green Networks for Data-Efficient Learning of Spatiotemporal PDEs",
+    "authors": [
+      "Yingjie Tan",
+      "Quanming Yao",
+      "Yaqing Wang"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/2cd03773631495b05c5e9e3a728df07c-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/2cd03773631495b05c5e9e3a728df07c-Paper-Conference.pdf",
+    "figure": "Figure 5",
+    "page": 10,
+    "image": "supplement/images/mk-iclr2026-479c608c98a7e2-f5.jpg",
+    "w": 2000,
+    "h": 265,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "c3e90bfe37446cf5d32a17d92eac736069ace2fceab140ff82f1043f6757e95b",
+      "description": "对未见激光热源，横向并列参考温度场和六种模型的预测，可按相同视角比较高温区的位置与扩散范围。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10010689",
+      "pdfSha256": "a42c3a60c9027e2ae9c0e2cfe382c97356b20109fef2b98353f516b04b659dea",
+      "cropPdfPoints": [
+        106,
+        199,
+        506,
+        252
+      ],
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "field",
+        "qualitative"
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-479c608c98a7e2-f6",
+    "title": "DGNet: Discrete Green Networks for Data-Efficient Learning of Spatiotemporal PDEs",
+    "authors": [
+      "Yingjie Tan",
+      "Quanming Yao",
+      "Yaqing Wang"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/2cd03773631495b05c5e9e3a728df07c-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/2cd03773631495b05c5e9e3a728df07c-Paper-Conference.pdf",
+    "figure": "Figure 6",
+    "page": 10,
+    "image": "supplement/images/mk-iclr2026-479c608c98a7e2-f6.jpg",
+    "w": 1765,
+    "h": 489,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "5b1a2a4a314f330b55fa870723d139b6ec81c56210a6e919c26c8eff7c6b70b5",
+      "description": "并列柱状图比较复杂障碍域案例中的消融变体，分别展示预测误差指标及其变化幅度。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10010689",
+      "pdfSha256": "a42c3a60c9027e2ae9c0e2cfe382c97356b20109fef2b98353f516b04b659dea",
+      "cropPdfPoints": [
+        103,
+        423,
+        510,
+        549
+      ],
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "bar"
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-479c608c98a7e2-f8",
+    "title": "DGNet: Discrete Green Networks for Data-Efficient Learning of Spatiotemporal PDEs",
+    "authors": [
+      "Yingjie Tan",
+      "Quanming Yao",
+      "Yaqing Wang"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/2cd03773631495b05c5e9e3a728df07c-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/2cd03773631495b05c5e9e3a728df07c-Paper-Conference.pdf",
+    "figure": "Figure 8",
+    "page": 16,
+    "image": "supplement/images/mk-iclr2026-479c608c98a7e2-f8.jpg",
+    "w": 1770,
+    "h": 522,
+    "pattern": "conceptual",
+    "supplement": {
+      "category": "mechanism",
+      "sha256": "635665fc62eb9f3818f8142309c24ceeaf4f5ee2e4c151ad51a81f383ea0dd06",
+      "description": "并列显示物理先验、神经修正和最终离散算子矩阵，展示局部修正如何叠加到结构先验上。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10010689",
+      "pdfSha256": "a42c3a60c9027e2ae9c0e2cfe382c97356b20109fef2b98353f516b04b659dea",
+      "cropPdfPoints": [
+        105,
+        349,
+        490,
+        473
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-d302fe7bb05952-f1",
+    "title": "DRIFT-Net: A Spectral-Coupled Neural Operator for PDEs Learning",
+    "authors": [
+      "jiayi li",
+      "Flora Salim"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/c951d202164800b0c45f4e7fbf91cae2-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/c951d202164800b0c45f4e7fbf91cae2-Paper-Conference.pdf",
+    "figure": "Figure 1",
+    "page": 4,
+    "image": "supplement/images/mk-iclr2026-d302fe7bb05952-f1.jpg",
+    "w": 1829,
+    "h": 828,
+    "pattern": "architecture",
+    "supplement": {
+      "category": "main",
+      "sha256": "a793afe9d3e99ab8b74c04daa514d20a4be1c88941f85c5caa12f4d52aba6271",
+      "description": "并排展开 U-Net 编解码路径、特征块和频谱学习分支，展示不同频段如何参与更新。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10007240",
+      "pdfSha256": "868fbd6e0db2336881254b7eb1c6d950a0fca4f1ceaddb2912cb552d596e3a0e",
+      "cropPdfPoints": [
+        103,
+        76,
+        509,
+        264
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-d302fe7bb05952-f2",
+    "title": "DRIFT-Net: A Spectral-Coupled Neural Operator for PDEs Learning",
+    "authors": [
+      "jiayi li",
+      "Flora Salim"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/c951d202164800b0c45f4e7fbf91cae2-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/c951d202164800b0c45f4e7fbf91cae2-Paper-Conference.pdf",
+    "figure": "Figure 2",
+    "page": 8,
+    "image": "supplement/images/mk-iclr2026-d302fe7bb05952-f2.jpg",
+    "w": 1794,
+    "h": 316,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "2e9a79279ec2704e37be9edfa7714608e42bb7389840bbd815ea3d92f8a0f895",
+      "description": "对照湍流和平滑 Kolmogorov 测试集，用随预测步数变化的误差曲线比较长期滚动行为。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10007240",
+      "pdfSha256": "868fbd6e0db2336881254b7eb1c6d950a0fca4f1ceaddb2912cb552d596e3a0e",
+      "cropPdfPoints": [
+        103,
+        75,
+        510,
+        158
+      ],
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "curve"
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-2bf48884179ca7-f1",
+    "title": "Generalized Spherical Neural Operators: Green’s Function Formulation",
+    "authors": [
+      "Hao Tang",
+      "Hao Chen",
+      "Chao Li"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/13079a5dd5c994a7e5f0cc691e0338e8-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/13079a5dd5c994a7e5f0cc691e0338e8-Paper-Conference.pdf",
+    "figure": "Figure 1",
+    "page": 2,
+    "image": "supplement/images/mk-iclr2026-2bf48884179ca7-f1.jpg",
+    "w": 1789,
+    "h": 679,
+    "pattern": "framework",
+    "supplement": {
+      "category": "main",
+      "sha256": "df3a1beccac7c1e637a8b70205ba9f933163ce8f74c49c8cadb183363e5b6301",
+      "description": "用球面场示例对照谱域和空间域方法，并在同一格林函数框架中表示输入到输出的映射。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10008942",
+      "pdfSha256": "b40007af40f8ecf674e8dee87ccd2dea36f687cad75da38e0771365d639aa56a",
+      "cropPdfPoints": [
+        103,
+        76,
+        509,
+        232
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-2bf48884179ca7-f2",
+    "title": "Generalized Spherical Neural Operators: Green’s Function Formulation",
+    "authors": [
+      "Hao Tang",
+      "Hao Chen",
+      "Chao Li"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/13079a5dd5c994a7e5f0cc691e0338e8-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/13079a5dd5c994a7e5f0cc691e0338e8-Paper-Conference.pdf",
+    "figure": "Figure 2",
+    "page": 5,
+    "image": "supplement/images/mk-iclr2026-2bf48884179ca7-f2.jpg",
+    "w": 1803,
+    "h": 654,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "algorithm",
+      "sha256": "7c394f3375b8f29441bebfea1d73e8dcfe092c4762625ba63c772b3e9d7249dc",
+      "description": "左侧画出球面神经算子的残差变换，右侧展开 SHNet 根据阶数和输入学习谱核的支路。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10008942",
+      "pdfSha256": "b40007af40f8ecf674e8dee87ccd2dea36f687cad75da38e0771365d639aa56a",
+      "cropPdfPoints": [
+        103,
+        76,
+        510,
+        229
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-2bf48884179ca7-f3",
+    "title": "Generalized Spherical Neural Operators: Green’s Function Formulation",
+    "authors": [
+      "Hao Tang",
+      "Hao Chen",
+      "Chao Li"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/13079a5dd5c994a7e5f0cc691e0338e8-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/13079a5dd5c994a7e5f0cc691e0338e8-Paper-Conference.pdf",
+    "figure": "Figure 3",
+    "page": 8,
+    "image": "supplement/images/mk-iclr2026-2bf48884179ca7-f3.jpg",
+    "w": 1782,
+    "h": 499,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "fe5b05bfb04c2ed3b3182ab53a5b826002faeca7d5c210de57eb4e51bc4209a6",
+      "description": "对照多个方法在两个预测时刻的位势高度场、局部放大区与相对真值的绝对残差。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10008942",
+      "pdfSha256": "b40007af40f8ecf674e8dee87ccd2dea36f687cad75da38e0771365d639aa56a",
+      "cropPdfPoints": [
+        101,
+        72,
+        507,
+        196
+      ],
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "field",
+        "heatmap"
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-2bf48884179ca7-f5",
+    "title": "Generalized Spherical Neural Operators: Green’s Function Formulation",
+    "authors": [
+      "Hao Tang",
+      "Hao Chen",
+      "Chao Li"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/13079a5dd5c994a7e5f0cc691e0338e8-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/13079a5dd5c994a7e5f0cc691e0338e8-Paper-Conference.pdf",
+    "figure": "Figure 5",
+    "page": 10,
+    "image": "supplement/images/mk-iclr2026-2bf48884179ca7-f5.jpg",
+    "w": 1830,
+    "h": 334,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "98b7b41a657ade39775dc7c304ab575ab43ef19d4109ab574ae8d9a92ecef0ec",
+      "description": "对比相同扣带回位置的扩散 MRI 纤维取向分布；每列同时呈现切片选区与对应位置的立体取向图形。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10008942",
+      "pdfSha256": "b40007af40f8ecf674e8dee87ccd2dea36f687cad75da38e0771365d639aa56a",
+      "cropPdfPoints": [
+        104,
+        74,
+        507,
+        159
+      ],
+      "dimensions": [
+        "2d",
+        "3d"
+      ],
+      "forms": [
+        "field",
+        "surface",
+        "qualitative"
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-193e1f692a9650-f1",
+    "title": "Operator Learning with Domain Decomposition for Geometry Generalization in PDE Solving",
+    "authors": [
+      "Jianing Huang",
+      "Kaixuan Zhang",
+      "Youjia Wu",
+      "Ze Cheng"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/710445227fa8c1b6a9ceada902dd4741-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/710445227fa8c1b6a9ceada902dd4741-Paper-Conference.pdf",
+    "figure": "Figure 1",
+    "page": 4,
+    "image": "supplement/images/mk-iclr2026-193e1f692a9650-f1.jpg",
+    "w": 1786,
+    "h": 1018,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "main",
+      "sha256": "9ee60bd044c652a85c115eef3cc4df0f07ee007d21c06b02d720883cd3d67e83",
+      "description": "上排展示训练时的子域学习；下排展示在新几何域上的切分、局部求解与迭代拼接。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10010246",
+      "pdfSha256": "295ef6f71a58c4a72070da2cb8ce60d2d9d3fcb63c511647883654abc60ee526",
+      "cropPdfPoints": [
+        103,
+        77,
+        509,
+        309
+      ]
+    }
+  },
+  {
+    "id": "mk-iclr2026-03e05f378588e4-f1",
+    "title": "OrthoSolver: A Neural Proper Orthogonal Decomposition Solver For PDEs",
+    "authors": [
+      "Ying Pang",
+      "Jingyuan Wang",
+      "Jiahao Ji",
+      "Fanhao Mu"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/4515d3012ee9a54cd008aed29f0fc7fa-Abstract-Conference.html",
+    "pdf_source": "https://proceedings.iclr.cc/paper_files/paper/2026/file/4515d3012ee9a54cd008aed29f0fc7fa-Paper-Conference.pdf",
+    "figure": "Figure 1",
+    "page": 5,
+    "image": "supplement/images/mk-iclr2026-03e05f378588e4-f1.jpg",
+    "w": 1762,
+    "h": 1012,
+    "pattern": "architecture",
+    "supplement": {
+      "category": "main",
+      "sha256": "bb11e75cc565c839717d3908148b99cb45eedb8ccd846fcb13110edf046d6893",
+      "description": "将输入分解为可学习的全局基及系数，分别经基函数和系数分支后重构预测场。",
+      "pdfVersion": "proceedings",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10011119",
+      "pdfSha256": "10b6ce39b958cf97dab58d52d6bbb3e96636f7044677d4590a5ef5b5e6e0fb53",
+      "cropPdfPoints": [
+        102,
+        77,
+        510,
+        311
+      ]
+    }
+  },
+  {
+    "id": "mk-icml2026-c37a5453e6b628-f1",
+    "title": "CINOC: Cardinality-Invariant Neural Operator Policies for Scalable PDE Control",
+    "authors": [
+      "Pietro Zanotta",
+      "Dibakar Sarkar",
+      "Honghui Zheng",
+      "Somdatta Goswami",
+      "Jan Drgona"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/63397",
+    "pdf_source": "https://arxiv.org/pdf/2605.25867v1",
+    "figure": "Figure 1",
+    "page": 1,
+    "image": "supplement/images/mk-icml2026-c37a5453e6b628-f1.jpg",
+    "w": 794,
+    "h": 429,
+    "pattern": "architecture",
+    "supplement": {
+      "category": "main",
+      "sha256": "5f7dcd1c9206a6697a70aa175fc609058ceff4f20be25e4ac0016928901b37bc",
+      "description": "从场观测提取算子表示，向数量可变化的执行器发出控制动作，并展示示例物理场。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/63397",
+      "pdfSha256": "c1cdb2ea575bf2e26f03355cb63118033275bf97e42350fcce1621b434332cc7",
+      "cropPdfPoints": [
+        304.0,
+        186.0,
+        546.0,
+        320.0
+      ],
+      "pdfVersionDate": "25 May 2026",
+      "manuscriptAuthors": [
+        "Pietro Zanotta",
+        "Dibakar Roy Sarkar",
+        "Honghui Zheng",
+        "Somdatta Goswami",
+        "Ján Drgoňa"
+      ],
+      "sourceEventId": 63397
+    }
+  },
+  {
+    "id": "mk-icml2026-c37a5453e6b628-f3",
+    "title": "CINOC: Cardinality-Invariant Neural Operator Policies for Scalable PDE Control",
+    "authors": [
+      "Pietro Zanotta",
+      "Dibakar Sarkar",
+      "Honghui Zheng",
+      "Somdatta Goswami",
+      "Jan Drgona"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/63397",
+    "pdf_source": "https://arxiv.org/pdf/2605.25867v1",
+    "figure": "Figure 3",
+    "page": 7,
+    "image": "supplement/images/mk-icml2026-c37a5453e6b628-f3.jpg",
+    "w": 795,
+    "h": 384,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "ff5a0cee04e40f2ad1559127cd7fc285735e7ec70bb0de930e96ff4818ed87b9",
+      "description": "同一套执行器布局下，对比打开或关闭控制时二维 Kuramoto–Sivashinsky 场的演化快照。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/63397",
+      "pdfSha256": "c1cdb2ea575bf2e26f03355cb63118033275bf97e42350fcce1621b434332cc7",
+      "cropPdfPoints": [
+        52.0,
+        66.0,
+        292.0,
+        184.0
+      ],
+      "pdfVersionDate": "25 May 2026",
+      "manuscriptAuthors": [
+        "Pietro Zanotta",
+        "Dibakar Roy Sarkar",
+        "Honghui Zheng",
+        "Somdatta Goswami",
+        "Ján Drgoňa"
+      ],
+      "sourceEventId": 63397,
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "field",
+        "heatmap"
+      ]
+    }
+  },
+  {
+    "id": "mk-icml2026-48bd6a1db75ee9-f1",
+    "title": "EqGINO: Equivariant Geometry-Informed Fourier Neural Operators for 3D PDEs",
+    "authors": [
+      "Sungwon Kim",
+      "Juho Song",
+      "Seungmin Shin",
+      "Guimok Cho",
+      "Sangkook Kim",
+      "Chanyoung Park"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/66401",
+    "pdf_source": "https://arxiv.org/pdf/2606.03260v1",
+    "figure": "Figure 1",
+    "page": 4,
+    "image": "supplement/images/mk-icml2026-48bd6a1db75ee9-f1.jpg",
+    "w": 1534,
+    "h": 565,
+    "pattern": "architecture",
+    "supplement": {
+      "category": "main",
+      "sha256": "b6c433219bc5717fe2db8c44632335671e98904bd131212b42b7ef41b04c2da0",
+      "description": "编码器将不规则几何点映射到规则网格，经等变算子块更新，再解码回物理几何。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/66401",
+      "pdfSha256": "946e3b24183ed39244458347c56989f7435c92d181d648563ac8a6e48efaaf1a",
+      "cropPdfPoints": [
+        60.0,
+        64.0,
+        532.0,
+        242.0
+      ],
+      "pdfVersionDate": "2 Jun 2026",
+      "manuscriptAuthors": [
+        "Sungwon Kim",
+        "Juho Song",
+        "Seungmin Shin",
+        "Guimok Cho",
+        "Sangkook Kim",
+        "Chanyoung Park"
+      ],
+      "sourceEventId": 66401
+    }
+  },
+  {
+    "id": "mk-icml2026-48bd6a1db75ee9-f6",
+    "title": "EqGINO: Equivariant Geometry-Informed Fourier Neural Operators for 3D PDEs",
+    "authors": [
+      "Sungwon Kim",
+      "Juho Song",
+      "Seungmin Shin",
+      "Guimok Cho",
+      "Sangkook Kim",
+      "Chanyoung Park"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/66401",
+    "pdf_source": "https://arxiv.org/pdf/2606.03260v1",
+    "figure": "Figure 6",
+    "page": 8,
+    "image": "supplement/images/mk-icml2026-48bd6a1db75ee9-f6.jpg",
+    "w": 754,
+    "h": 520,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "cbd5b385b19607b63dcbf023bcde6af29d93552ce123cba4f232e7ea5cbf973c",
+      "description": "将标准姿态和旋转 180 度的车体上下对齐，以表面压力着色比较参考场、GINO 与 EqGINO。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/66401",
+      "pdfSha256": "946e3b24183ed39244458347c56989f7435c92d181d648563ac8a6e48efaaf1a",
+      "cropPdfPoints": [
+        314.0,
+        58.0,
+        534.0,
+        220.0
+      ],
+      "pdfVersionDate": "2 Jun 2026",
+      "manuscriptAuthors": [
+        "Sungwon Kim",
+        "Juho Song",
+        "Seungmin Shin",
+        "Guimok Cho",
+        "Sangkook Kim",
+        "Chanyoung Park"
+      ],
+      "sourceEventId": 66401,
+      "dimensions": [
+        "3d"
+      ],
+      "forms": [
+        "surface",
+        "field"
+      ]
+    }
+  },
+  {
+    "id": "mk-icml2026-62e31e6c4d134f-f1",
+    "title": "LieStoNet: Learning Lie Symmetries from Spatiotemporal Data for Stochastic Dynamical Systems",
+    "authors": [
+      "Shida Liu",
+      "Abhishek Gupta",
+      "Sumit Sinha",
+      "L Mahadevan"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/62662",
+    "pdf_source": "https://arxiv.org/pdf/2608.01582v1",
+    "figure": "Figure 1",
+    "page": 5,
+    "image": "supplement/images/mk-icml2026-62e31e6c4d134f-f1.jpg",
+    "w": 1336,
+    "h": 738,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "main",
+      "sha256": "e181ee55e6c8e0afe806ea560a9242bccefaa647a2eb0784757d7fb7bce9e3bb",
+      "description": "用模块和连接线串起随机动力系统数据、生成元网络训练、闭合约束与推断。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/62662",
+      "pdfSha256": "f8f0136cd35c129aa0117639d368868ab10a2c25d5a55b53f7d96ad70fdb697f",
+      "cropPdfPoints": [
+        94.0,
+        64.0,
+        504.0,
+        288.0
+      ],
+      "pdfVersionDate": "3 Aug 2026",
+      "manuscriptAuthors": [
+        "Shida Liu",
+        "Abhishek Gupta",
+        "Sumit Sinha",
+        "L. Mahadevan"
+      ],
+      "sourceEventId": 62662
+    }
+  },
+  {
+    "id": "mk-icml2026-62e31e6c4d134f-f2",
+    "title": "LieStoNet: Learning Lie Symmetries from Spatiotemporal Data for Stochastic Dynamical Systems",
+    "authors": [
+      "Shida Liu",
+      "Abhishek Gupta",
+      "Sumit Sinha",
+      "L Mahadevan"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/62662",
+    "pdf_source": "https://arxiv.org/pdf/2608.01582v1",
+    "figure": "Figure 2",
+    "page": 6,
+    "image": "supplement/images/mk-icml2026-62e31e6c4d134f-f2.jpg",
+    "w": 1628,
+    "h": 319,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "33f7340567c6399c9b51dba92ac1f7347dc71a7c64b1e3928363e0d1f6b4f047",
+      "description": "四个例子分别画出闭合损失随生成元数量变化的曲线，各颜色代表独立训练。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/62662",
+      "pdfSha256": "f8f0136cd35c129aa0117639d368868ab10a2c25d5a55b53f7d96ad70fdb697f",
+      "cropPdfPoints": [
+        52.0,
+        214.0,
+        550.0,
+        320.0
+      ],
+      "pdfVersionDate": "3 Aug 2026",
+      "manuscriptAuthors": [
+        "Shida Liu",
+        "Abhishek Gupta",
+        "Sumit Sinha",
+        "L. Mahadevan"
+      ],
+      "sourceEventId": 62662,
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "curve"
+      ]
+    }
+  },
+  {
+    "id": "mk-icml2026-7c97f1a598a93b-f1",
+    "title": "PGD-NO: A Neural Operator with Precomputed Geometry Decomposition for 3D Million-Scale Physics Simulations",
+    "authors": [
+      "Weiheng Zhong",
+      "Jing Bi",
+      "Victor Oancea",
+      "Hadi Meidani"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/62386",
+    "pdf_source": "https://arxiv.org/pdf/2607.08025v1",
+    "figure": "Figure 1",
+    "page": 2,
+    "image": "supplement/images/mk-icml2026-7c97f1a598a93b-f1.jpg",
+    "w": 1552,
+    "h": 506,
+    "pattern": "comparison",
+    "supplement": {
+      "category": "main",
+      "sha256": "2143e3e45180ad5955cd8575350206b21772f546ae1f9d12c044d9aaddf087fe",
+      "description": "对照网格映射、物理 token 与预分解几何的编码方式，并列展示显存随规模的变化。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/62386",
+      "pdfSha256": "7760aa06aab96e15c4c16fcbab55b2e806c897b108c8d27d3159ba1ac142bcf5",
+      "cropPdfPoints": [
+        60.0,
+        66.0,
+        538.0,
+        222.0
+      ],
+      "pdfVersionDate": "9 Jul 2026",
+      "manuscriptAuthors": [
+        "Weiheng Zhong",
+        "Jing Bi",
+        "Victor Oancea",
+        "Hadi Meidani"
+      ],
+      "sourceEventId": 62386
+    }
+  },
+  {
+    "id": "mk-icml2026-7c97f1a598a93b-f2",
+    "title": "PGD-NO: A Neural Operator with Precomputed Geometry Decomposition for 3D Million-Scale Physics Simulations",
+    "authors": [
+      "Weiheng Zhong",
+      "Jing Bi",
+      "Victor Oancea",
+      "Hadi Meidani"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/62386",
+    "pdf_source": "https://arxiv.org/pdf/2607.08025v1",
+    "figure": "Figure 2",
+    "page": 5,
+    "image": "supplement/images/mk-icml2026-7c97f1a598a93b-f2.jpg",
+    "w": 1414,
+    "h": 937,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "algorithm",
+      "sha256": "54302c8a60e9cc0b65ee2df2ae3a108fadfcf0a22066c954cb8847855dd49588",
+      "description": "模型总览与三种注意力层的几何 token 交换方式，上下分栏并用颜色区分节点类别。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/62386",
+      "pdfSha256": "7760aa06aab96e15c4c16fcbab55b2e806c897b108c8d27d3159ba1ac142bcf5",
+      "cropPdfPoints": [
+        86.0,
+        62.0,
+        512.0,
+        348.0
+      ],
+      "pdfVersionDate": "9 Jul 2026",
+      "manuscriptAuthors": [
+        "Weiheng Zhong",
+        "Jing Bi",
+        "Victor Oancea",
+        "Hadi Meidani"
+      ],
+      "sourceEventId": 62386
+    }
+  },
+  {
+    "id": "mk-icml2026-7c97f1a598a93b-f4",
+    "title": "PGD-NO: A Neural Operator with Precomputed Geometry Decomposition for 3D Million-Scale Physics Simulations",
+    "authors": [
+      "Weiheng Zhong",
+      "Jing Bi",
+      "Victor Oancea",
+      "Hadi Meidani"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/62386",
+    "pdf_source": "https://arxiv.org/pdf/2607.08025v1",
+    "figure": "Figure 4",
+    "page": 8,
+    "image": "supplement/images/mk-icml2026-7c97f1a598a93b-f4.jpg",
+    "w": 1523,
+    "h": 737,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "edcd75e60f9e706d444b376d4d619e355aba456e43a3ac2bfde783159096365f",
+      "description": "对比两种算子在支架、飞机与汽车上的三维表面误差，并列展示散热器和 CFD-VOL 的直接物理场。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/62386",
+      "pdfSha256": "7760aa06aab96e15c4c16fcbab55b2e806c897b108c8d27d3159ba1ac142bcf5",
+      "cropPdfPoints": [
+        56.0,
+        62.0,
+        530.0,
+        284.0
+      ],
+      "pdfVersionDate": "9 Jul 2026",
+      "manuscriptAuthors": [
+        "Weiheng Zhong",
+        "Jing Bi",
+        "Victor Oancea",
+        "Hadi Meidani"
+      ],
+      "sourceEventId": 62386,
+      "dimensions": [
+        "2d",
+        "3d"
+      ],
+      "forms": [
+        "surface",
+        "field",
+        "heatmap"
+      ]
+    }
+  },
+  {
+    "id": "mk-icml2026-7c97f1a598a93b-f5",
+    "title": "PGD-NO: A Neural Operator with Precomputed Geometry Decomposition for 3D Million-Scale Physics Simulations",
+    "authors": [
+      "Weiheng Zhong",
+      "Jing Bi",
+      "Victor Oancea",
+      "Hadi Meidani"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/62386",
+    "pdf_source": "https://arxiv.org/pdf/2607.08025v1",
+    "figure": "Figure 5",
+    "page": 9,
+    "image": "supplement/images/mk-icml2026-7c97f1a598a93b-f5.jpg",
+    "w": 1375,
+    "h": 686,
+    "pattern": "conceptual",
+    "supplement": {
+      "category": "mechanism",
+      "sha256": "037da0f8b0522a9980484cbdf71982a250176fad4e908b2ad114c2c47a6e4df6",
+      "description": "在相同汽车表面几何上逐层展示节点重要性，观察不同注意力头聚焦的区域。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/62386",
+      "pdfSha256": "7760aa06aab96e15c4c16fcbab55b2e806c897b108c8d27d3159ba1ac142bcf5",
+      "cropPdfPoints": [
+        70.0,
+        62.0,
+        522.0,
+        282.0
+      ],
+      "pdfVersionDate": "9 Jul 2026",
+      "manuscriptAuthors": [
+        "Weiheng Zhong",
+        "Jing Bi",
+        "Victor Oancea",
+        "Hadi Meidani"
+      ],
+      "sourceEventId": 62386
+    }
+  },
+  {
+    "id": "mk-icml2026-7c97f1a598a93b-f6",
+    "title": "PGD-NO: A Neural Operator with Precomputed Geometry Decomposition for 3D Million-Scale Physics Simulations",
+    "authors": [
+      "Weiheng Zhong",
+      "Jing Bi",
+      "Victor Oancea",
+      "Hadi Meidani"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/62386",
+    "pdf_source": "https://arxiv.org/pdf/2607.08025v1",
+    "figure": "Figure 6",
+    "page": 15,
+    "image": "supplement/images/mk-icml2026-7c97f1a598a93b-f6.jpg",
+    "w": 764,
+    "h": 725,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "69acfdd6775d89c6fbdbc51b14e504708c56ee328c13e3f9cc5fdffbbbc2f7d9",
+      "description": "在多个散热器样本上以三维透视和分区着色展示预计算几何 token 的提取结果。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/62386",
+      "pdfSha256": "7760aa06aab96e15c4c16fcbab55b2e806c897b108c8d27d3159ba1ac142bcf5",
+      "cropPdfPoints": [
+        174.0,
+        118.0,
+        418.0,
+        348.0
+      ],
+      "pdfVersionDate": "9 Jul 2026",
+      "manuscriptAuthors": [
+        "Weiheng Zhong",
+        "Jing Bi",
+        "Victor Oancea",
+        "Hadi Meidani"
+      ],
+      "sourceEventId": 62386,
+      "dimensions": [
+        "3d"
+      ],
+      "forms": [
+        "surface",
+        "qualitative"
+      ]
+    }
+  },
+  {
+    "id": "mk-icml2026-7c97f1a598a93b-f9",
+    "title": "PGD-NO: A Neural Operator with Precomputed Geometry Decomposition for 3D Million-Scale Physics Simulations",
+    "authors": [
+      "Weiheng Zhong",
+      "Jing Bi",
+      "Victor Oancea",
+      "Hadi Meidani"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/62386",
+    "pdf_source": "https://arxiv.org/pdf/2607.08025v1",
+    "figure": "Figure 9",
+    "page": 17,
+    "image": "supplement/images/mk-icml2026-7c97f1a598a93b-f9.jpg",
+    "w": 803,
+    "h": 1717,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "225df0dd1408e146d4a8dc54642db3ff2c522917922ef52de977dedfa5e82d44",
+      "description": "从前后两个视角显示不同 DrivAerNet++ 汽车样本的三维表面区域，颜色对应算法提取的几何 token。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/62386",
+      "pdfSha256": "7760aa06aab96e15c4c16fcbab55b2e806c897b108c8d27d3159ba1ac142bcf5",
+      "cropPdfPoints": [
+        170.0,
+        70.0,
+        420.0,
+        598.0
+      ],
+      "pdfVersionDate": "9 Jul 2026",
+      "manuscriptAuthors": [
+        "Weiheng Zhong",
+        "Jing Bi",
+        "Victor Oancea",
+        "Hadi Meidani"
+      ],
+      "sourceEventId": 62386,
+      "dimensions": [
+        "3d"
+      ],
+      "forms": [
+        "surface",
+        "qualitative"
+      ]
+    }
+  },
+  {
+    "id": "mk-icml2026-2cad52d058f356-f2",
+    "title": "PnP-Corrector: A Universal Correction Framework for Coupled Spatiotemporal Forecasting",
+    "authors": [
+      "Hao Wu",
+      "Fan Xu",
+      "Yuxu Lu",
+      "Penghao Zhao",
+      "Fan Zhang",
+      "Hao Jia",
+      "Yuxuan Liang",
+      "Ruijian Gou",
+      "Qingsong Wen",
+      "Xian Wu",
+      "Xiaomeng Huang",
+      "Yuan Gao"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/64931",
+    "pdf_source": "https://arxiv.org/pdf/2605.08935v3",
+    "figure": "Figure 2",
+    "page": 3,
+    "image": "supplement/images/mk-icml2026-2cad52d058f356-f2.jpg",
+    "w": 1637,
+    "h": 369,
+    "pattern": "conceptual",
+    "supplement": {
+      "category": "mechanism",
+      "sha256": "df038bc87bca0ca08aaf4e420ff51e8b596b2689e2db09a1de82fbcf84cf4c41",
+      "description": "用三条并行路径解释耦合预测中的误差循环和即插即用校正如何打断循环。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/64931",
+      "pdfSha256": "3cc3bd37cac4d6d9594d97d2253da92781d2c9766be724a50a5426e55ecebe9d",
+      "cropPdfPoints": [
+        50.0,
+        60.0,
+        544.0,
+        180.0
+      ],
+      "pdfVersionDate": "2 Jun 2026",
+      "manuscriptAuthors": [
+        "Hao Wu",
+        "Fan Xu",
+        "Yuxu Lu",
+        "Penghao Zhao",
+        "Fan Zhang",
+        "Hao Jia",
+        "Yuxuan Liang",
+        "Ruijian Gou",
+        "Qingsong Wen",
+        "Xian Wu",
+        "Xiaomeng Huang",
+        "Yuan Gao"
+      ],
+      "sourceEventId": 64931
+    }
+  },
+  {
+    "id": "mk-icml2026-d1b090cf4ac421-f1",
+    "title": "Test-time Generalization for Physics through Neural Operator Splitting",
+    "authors": [
+      "Louis Serrano",
+      "Jiequn Han",
+      "Edouard Oyallon",
+      "Shirley Ho",
+      "Rudy Morel"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/62469",
+    "pdf_source": "https://arxiv.org/pdf/2602.00884v2",
+    "figure": "Figure 1",
+    "page": 3,
+    "image": "supplement/images/mk-icml2026-d1b090cf4ac421-f1.jpg",
+    "w": 1472,
+    "h": 561,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "main",
+      "sha256": "74900960a45a8bfe7dc328d24378fe1da4549b32f6d9ed8fd79a10fd2e8f0971",
+      "description": "上图将多任务算子预训练与分布外测试因子分开，下图展示测试时重组与外推。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/62469",
+      "pdfSha256": "bc7b1a5d7f2829fff2438d172cdf22add13292aebbe44b76e349451f1d689d27",
+      "cropPdfPoints": [
+        62.0,
+        68.0,
+        516.0,
+        246.0
+      ],
+      "pdfVersionDate": "10 Aug 2026",
+      "manuscriptAuthors": [
+        "Louis Serrano",
+        "Jiequn Han",
+        "Edouard Oyallon",
+        "Shirley Ho",
+        "Rudy Morel"
+      ],
+      "sourceEventId": 62469
+    }
+  },
+  {
+    "id": "mk-icml2026-d1b090cf4ac421-f2",
+    "title": "Test-time Generalization for Physics through Neural Operator Splitting",
+    "authors": [
+      "Louis Serrano",
+      "Jiequn Han",
+      "Edouard Oyallon",
+      "Shirley Ho",
+      "Rudy Morel"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/62469",
+    "pdf_source": "https://arxiv.org/pdf/2602.00884v2",
+    "figure": "Figure 2",
+    "page": 5,
+    "image": "supplement/images/mk-icml2026-d1b090cf4ac421-f2.jpg",
+    "w": 730,
+    "h": 524,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "46908dc92752bc40b26d90a346f91dafe9e3d72a7260d480a7b2024a01716395",
+      "description": "Gray–Scott 反应扩散算例中并列比较估计的动态分量和对应的二维浓度场。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/62469",
+      "pdfSha256": "bc7b1a5d7f2829fff2438d172cdf22add13292aebbe44b76e349451f1d689d27",
+      "cropPdfPoints": [
+        306.0,
+        262.0,
+        540.0,
+        430.0
+      ],
+      "pdfVersionDate": "10 Aug 2026",
+      "manuscriptAuthors": [
+        "Louis Serrano",
+        "Jiequn Han",
+        "Edouard Oyallon",
+        "Shirley Ho",
+        "Rudy Morel"
+      ],
+      "sourceEventId": 62469,
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "field",
+        "heatmap"
+      ]
+    }
+  },
+  {
+    "id": "mk-neurips2026-3f4159560b9eb6-f1",
+    "title": "CoupledFlow: One-Step Neural Operators for Coupled Multi-Physics PDEs",
+    "authors": [
+      "Trong Khiem Tran",
+      "Long M Bui",
+      "Phi Le Nguyen",
+      "Mrinal K Sen",
+      "Sanjay Srinivasan",
+      "Nghia Hoang",
+      "Jana Doppa"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/loc/sydney/poster/155294",
+    "pdf_source": "https://arxiv.org/pdf/2611.10945v1",
+    "figure": "Figure 1",
+    "page": 4,
+    "image": "supplement/images/mk-neurips2026-3f4159560b9eb6-f1.jpg",
+    "w": 1328,
+    "h": 564,
+    "pattern": "architecture",
+    "supplement": {
+      "category": "main",
+      "sha256": "0b4465c756ab6e2bb6df874470fde278364453266e13a5f685b71dbda78fcf4f",
+      "description": "以结构提议、结构筛选与单步推断三栏展示耦合物理过程之间的依赖建模。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://neurips.cc/virtual/2026/loc/sydney/poster/155294",
+      "pdfSha256": "c6b5eb286bfe4d5b653cdac3f67b1517a84ba4e513caa9dcf2e03b9a90604bde",
+      "cropPdfPoints": [
+        108.0,
+        70.0,
+        504.0,
+        244.0
+      ],
+      "pdfVersionDate": "7 Nov 2026",
+      "manuscriptAuthors": [
+        "Trong Khiem Tran",
+        "Minh Long Bui",
+        "Phi Le Nguyen",
+        "Mrinal Sen",
+        "Sanjay Srinivasan",
+        "Trong Nghia Hoang",
+        "Jana Doppa"
+      ],
+      "sourceEventId": 155294
+    }
+  },
+  {
+    "id": "mk-neurips2026-17e179b50113a0-f1",
+    "title": "DIAGNO: Diagonal Spherical Neural Operators for Heterogeneous Earth Dynamics Modeling",
+    "authors": [
+      "Herui Li",
+      "Bin Lu",
+      "Haonan Qi",
+      "Lei Zhou",
+      "Luoyi Fu",
+      "Xinbing Wang",
+      "Meng Jin"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/loc/sydney/poster/154008",
+    "pdf_source": "https://arxiv.org/pdf/2611.16356v1",
+    "figure": "Figure 1",
+    "page": 2,
+    "image": "supplement/images/mk-neurips2026-17e179b50113a0-f1.jpg",
+    "w": 497,
+    "h": 320,
+    "pattern": "comparison",
+    "supplement": {
+      "category": "main",
+      "sha256": "944526ee700d543f0adeffcbc5f14453f698aed3351004075335da59a966981a",
+      "description": "在球谐谱三角索引上并置逐元素变换与对角线方向的信息交换，用箭头显示差别。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://neurips.cc/virtual/2026/loc/sydney/poster/154008",
+      "pdfSha256": "765fa8f2b9a1250009b6c8b35af7f7e6aa7fc8a6af754331e8e15623da0d05e8",
+      "cropPdfPoints": [
+        342.0,
+        182.0,
+        506.0,
+        278.0
+      ],
+      "pdfVersionDate": "12 Nov 2026",
+      "manuscriptAuthors": [
+        "Herui Li",
+        "Bin Lu",
+        "Haonan Qi",
+        "Lei Zhou",
+        "Luoyi Fu",
+        "Xinbing Wang",
+        "Meng Jin"
+      ],
+      "sourceEventId": 154008
+    }
+  },
+  {
+    "id": "mk-neurips2026-17e179b50113a0-f3",
+    "title": "DIAGNO: Diagonal Spherical Neural Operators for Heterogeneous Earth Dynamics Modeling",
+    "authors": [
+      "Herui Li",
+      "Bin Lu",
+      "Haonan Qi",
+      "Lei Zhou",
+      "Luoyi Fu",
+      "Xinbing Wang",
+      "Meng Jin"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/loc/sydney/poster/154008",
+    "pdf_source": "https://arxiv.org/pdf/2611.16356v1",
+    "figure": "Figure 3",
+    "page": 5,
+    "image": "supplement/images/mk-neurips2026-17e179b50113a0-f3.jpg",
+    "w": 1335,
+    "h": 338,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "algorithm",
+      "sha256": "0bfd559ae92169ec51133d9d04863c0f81075daeb6acdffca3044f6d45e16300",
+      "description": "从三角谱系数排列到对角链的带内和带间信息交换，展示球谐神经算子的计算结构。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://neurips.cc/virtual/2026/loc/sydney/poster/154008",
+      "pdfSha256": "765fa8f2b9a1250009b6c8b35af7f7e6aa7fc8a6af754331e8e15623da0d05e8",
+      "cropPdfPoints": [
+        102.0,
+        66.0,
+        512.0,
+        168.0
+      ],
+      "pdfVersionDate": "12 Nov 2026",
+      "manuscriptAuthors": [
+        "Herui Li",
+        "Bin Lu",
+        "Haonan Qi",
+        "Lei Zhou",
+        "Luoyi Fu",
+        "Xinbing Wang",
+        "Meng Jin"
+      ],
+      "sourceEventId": 154008
+    }
+  },
+  {
+    "id": "mk-neurips2026-17e179b50113a0-f4",
+    "title": "DIAGNO: Diagonal Spherical Neural Operators for Heterogeneous Earth Dynamics Modeling",
+    "authors": [
+      "Herui Li",
+      "Bin Lu",
+      "Haonan Qi",
+      "Lei Zhou",
+      "Luoyi Fu",
+      "Xinbing Wang",
+      "Meng Jin"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/loc/sydney/poster/154008",
+    "pdf_source": "https://arxiv.org/pdf/2611.16356v1",
+    "figure": "Figure 4",
+    "page": 7,
+    "image": "supplement/images/mk-neurips2026-17e179b50113a0-f4.jpg",
+    "w": 1287,
+    "h": 334,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "88074b11522314e8f8363f22013f71b4d7e7942cb176cb3e05db25ea055cfe9e",
+      "description": "按海洋表面变量分栏，比较多种模型的异常相关系数随预报时长的变化。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://neurips.cc/virtual/2026/loc/sydney/poster/154008",
+      "pdfSha256": "765fa8f2b9a1250009b6c8b35af7f7e6aa7fc8a6af754331e8e15623da0d05e8",
+      "cropPdfPoints": [
+        102.0,
+        606.0,
+        500.0,
+        710.0
+      ],
+      "pdfVersionDate": "12 Nov 2026",
+      "manuscriptAuthors": [
+        "Herui Li",
+        "Bin Lu",
+        "Haonan Qi",
+        "Lei Zhou",
+        "Luoyi Fu",
+        "Xinbing Wang",
+        "Meng Jin"
+      ],
+      "sourceEventId": 154008,
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "curve"
+      ]
+    }
+  },
+  {
+    "id": "mk-neurips2026-e434c6c4303b44-f2",
+    "title": "SplineFlow: Flow Matching for Dynamical Systems with B-Spline Interpolants",
+    "authors": [
+      "Santanu Rathod",
+      "Pietro Lió",
+      "Xiao Zhang"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/loc/sydney/poster/152305",
+    "pdf_source": "https://arxiv.org/pdf/2601.23072v3",
+    "figure": "Figure 2",
+    "page": 9,
+    "image": "supplement/images/mk-neurips2026-e434c6c4303b44-f2.jpg",
+    "w": 1324,
+    "h": 402,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "26c97dd6c9e366c154efb927b5c35a7cfd2d344f102f7f1129d5cc8bfd6a2a9e",
+      "description": "两个三维相空间坐标系比较 Lorenz 轨迹，右侧用二维曲线对照采样不规则度与样条次数消融。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://neurips.cc/virtual/2026/loc/sydney/poster/152305",
+      "pdfSha256": "6ccf74ef3dfcbdb42baac09366d3e82ceab78730def0b53f0fae66eb67696972",
+      "cropPdfPoints": [
+        106.0,
+        64.0,
+        500.0,
+        188.0
+      ],
+      "pdfVersionDate": "26 Oct 2026",
+      "manuscriptAuthors": [
+        "Santanu Subhash Rathod",
+        "Pietro Liò",
+        "Xiao Zhang"
+      ],
+      "sourceEventId": 152305,
+      "dimensions": [
+        "2d",
+        "3d"
+      ],
+      "forms": [
+        "curve"
+      ]
+    }
+  },
+  {
+    "id": "mk-neurips2026-66297748f10711-f1",
+    "title": "StreamPhy: Streaming Inference of High-Dimensional Physical Dynamics via  State Space Models",
+    "authors": [
+      "Panqi Chen",
+      "Yifan Sun",
+      "Shikai Fang",
+      "Xiao Fu",
+      "Lei Cheng"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/loc/sydney/poster/149743",
+    "pdf_source": "https://arxiv.org/pdf/2605.07384v4",
+    "figure": "Figure 1",
+    "page": 2,
+    "image": "supplement/images/mk-neurips2026-66297748f10711-f1.jpg",
+    "w": 1263,
+    "h": 455,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "main",
+      "sha256": "06860c64b0567a4e4698e8922c5fe70f7e856f317bb66c5e9ba1ee7f5d523ca4",
+      "description": "沿时间轴展示连续状态演化、间歇观测注入与全场恢复，区分稀疏观测和稠密状态。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://neurips.cc/virtual/2026/loc/sydney/poster/149743",
+      "pdfSha256": "443327fa769575d97c6fae894eb8f7c6bf83fbf5d72e1925b632899c37ed8e8f",
+      "cropPdfPoints": [
+        110.0,
+        76.0,
+        496.0,
+        230.0
+      ],
+      "pdfVersionDate": "18 Nov 2026",
+      "manuscriptAuthors": [
+        "Panqi Chen",
+        "Yifan Sun",
+        "Shikai Fang",
+        "Xiao Fu",
+        "Lei Cheng"
+      ],
+      "sourceEventId": 149743
+    }
+  },
+  {
+    "id": "mk-neurips2026-66297748f10711-f3",
+    "title": "StreamPhy: Streaming Inference of High-Dimensional Physical Dynamics via  State Space Models",
+    "authors": [
+      "Panqi Chen",
+      "Yifan Sun",
+      "Shikai Fang",
+      "Xiao Fu",
+      "Lei Cheng"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/loc/sydney/poster/149743",
+    "pdf_source": "https://arxiv.org/pdf/2605.07384v4",
+    "figure": "Figure 3",
+    "page": 6,
+    "image": "supplement/images/mk-neurips2026-66297748f10711-f3.jpg",
+    "w": 2034,
+    "h": 510,
+    "pattern": "comparison",
+    "supplement": {
+      "category": "mechanism",
+      "sha256": "c0710f990d44023a4c86cd97e90a3b70fe3d348b92984cf029776de2ae37625c",
+      "description": "三维坐标索引在两种函数表示中分别编码。左图用 Tucker 核张量组合各轴特征，右图用逐特征缩放、偏移与多层感知机读出场值，解释两种场重建方式的差别。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://neurips.cc/virtual/2026/loc/sydney/poster/149743",
+      "pdfSha256": "443327fa769575d97c6fae894eb8f7c6bf83fbf5d72e1925b632899c37ed8e8f",
+      "cropPdfPoints": [
+        130,
+        70,
+        469,
+        155
+      ],
+      "pdfVersionDate": "18 Nov 2026",
+      "manuscriptAuthors": [
+        "Panqi Chen",
+        "Yifan Sun",
+        "Shikai Fang",
+        "Xiao Fu",
+        "Lei Cheng"
+      ],
+      "sourceEventId": 149743
+    }
+  },
+  {
+    "id": "mk-neurips2026-66297748f10711-f4",
+    "title": "StreamPhy: Streaming Inference of High-Dimensional Physical Dynamics via  State Space Models",
+    "authors": [
+      "Panqi Chen",
+      "Yifan Sun",
+      "Shikai Fang",
+      "Xiao Fu",
+      "Lei Cheng"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/loc/sydney/poster/149743",
+    "pdf_source": "https://arxiv.org/pdf/2605.07384v4",
+    "figure": "Figure 4",
+    "page": 7,
+    "image": "supplement/images/mk-neurips2026-66297748f10711-f4.jpg",
+    "w": 1329,
+    "h": 856,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "31822bb709c7200b592baeca74908f66f9cd473428c14e656f0dffa227f90fd5",
+      "description": "固定稀疏均匀采样条件，按方法和时刻排列湍流场重建快照。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://neurips.cc/virtual/2026/loc/sydney/poster/149743",
+      "pdfSha256": "443327fa769575d97c6fae894eb8f7c6bf83fbf5d72e1925b632899c37ed8e8f",
+      "cropPdfPoints": [
+        104.0,
+        414.0,
+        500.0,
+        672.0
+      ],
+      "pdfVersionDate": "18 Nov 2026",
+      "manuscriptAuthors": [
+        "Panqi Chen",
+        "Yifan Sun",
+        "Shikai Fang",
+        "Xiao Fu",
+        "Lei Cheng"
+      ],
+      "sourceEventId": 149743,
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "field",
+        "heatmap"
+      ]
+    }
+  },
+  {
+    "id": "mk-neurips2026-66297748f10711-f5",
+    "title": "StreamPhy: Streaming Inference of High-Dimensional Physical Dynamics via  State Space Models",
+    "authors": [
+      "Panqi Chen",
+      "Yifan Sun",
+      "Shikai Fang",
+      "Xiao Fu",
+      "Lei Cheng"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/loc/sydney/poster/149743",
+    "pdf_source": "https://arxiv.org/pdf/2605.07384v4",
+    "figure": "Figure 5",
+    "page": 9,
+    "image": "supplement/images/mk-neurips2026-66297748f10711-f5.jpg",
+    "w": 1248,
+    "h": 770,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "ae58abb83a2d0e5da56bdbf47681ce232bfaa4d51e0d31f3305dec401bdbb442",
+      "description": "条带式稀疏观测下的活性物质动力学，沿时间比较观测、重建及参考二维场。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://neurips.cc/virtual/2026/loc/sydney/poster/149743",
+      "pdfSha256": "443327fa769575d97c6fae894eb8f7c6bf83fbf5d72e1925b632899c37ed8e8f",
+      "cropPdfPoints": [
+        114.0,
+        68.0,
+        498.0,
+        308.0
+      ],
+      "pdfVersionDate": "18 Nov 2026",
+      "manuscriptAuthors": [
+        "Panqi Chen",
+        "Yifan Sun",
+        "Shikai Fang",
+        "Xiao Fu",
+        "Lei Cheng"
+      ],
+      "sourceEventId": 149743,
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "field",
+        "heatmap"
+      ]
+    }
+  },
+  {
+    "id": "mk-neurips2026-fd8aab0a1b2013-f1",
+    "title": "Wavelet Flow Matching for Multi-Scale Physics Emulation",
+    "authors": [
+      "Gabriele Accarino",
+      "Juan Nathaniel",
+      "Carla Roesch",
+      "Pierre Gentine",
+      "Sara Shamekh",
+      "Duncan Watson-Parris",
+      "Viviana Acquaviva"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/loc/paris/poster/150773",
+    "pdf_source": "https://arxiv.org/pdf/2605.16573v2",
+    "figure": "Figure 1",
+    "page": 2,
+    "image": "supplement/images/mk-neurips2026-fd8aab0a1b2013-f1.jpg",
+    "w": 1325,
+    "h": 523,
+    "pattern": "architecture",
+    "supplement": {
+      "category": "main",
+      "sha256": "dfb8e9056f475986d2f7908e79538b4ef3ed6af326f3e90732ed9e0e57e2b942",
+      "description": "用多分辨率小波分支组织条件流匹配，把不同尺度的物理场表示连接到推理路径。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://neurips.cc/virtual/2026/loc/paris/poster/150773",
+      "pdfSha256": "326ac92e3c3a5ae157c207611e70fc405c4f08f43c8071f8156d641cd39b1d7d",
+      "cropPdfPoints": [
+        106.0,
+        68.0,
+        506.0,
+        230.0
+      ],
+      "pdfVersionDate": "13 Nov 2026",
+      "manuscriptAuthors": [
+        "Gabriele Accarino",
+        "Juan Nathaniel",
+        "Carla Roesch",
+        "Pierre Gentine",
+        "Sara Shamekh",
+        "Duncan Watson-Parris",
+        "Viviana Acquaviva"
+      ],
+      "sourceEventId": 150773
+    }
+  },
+  {
+    "id": "mk-neurips2026-fd8aab0a1b2013-f2",
+    "title": "Wavelet Flow Matching for Multi-Scale Physics Emulation",
+    "authors": [
+      "Gabriele Accarino",
+      "Juan Nathaniel",
+      "Carla Roesch",
+      "Pierre Gentine",
+      "Sara Shamekh",
+      "Duncan Watson-Parris",
+      "Viviana Acquaviva"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/loc/paris/poster/150773",
+    "pdf_source": "https://arxiv.org/pdf/2605.16573v2",
+    "figure": "Figure 2",
+    "page": 7,
+    "image": "supplement/images/mk-neurips2026-fd8aab0a1b2013-f2.jpg",
+    "w": 1329,
+    "h": 1216,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "3ca5dca872772448b19a486715004adb54153710d3a5c69cb1958fa5c5fd44db",
+      "description": "跨多个预测时距对照瑞利–贝纳德对流与二维湍流辐射层的空间场快照。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://neurips.cc/virtual/2026/loc/paris/poster/150773",
+      "pdfSha256": "326ac92e3c3a5ae157c207611e70fc405c4f08f43c8071f8156d641cd39b1d7d",
+      "cropPdfPoints": [
+        102.0,
+        64.0,
+        508.0,
+        432.0
+      ],
+      "pdfVersionDate": "13 Nov 2026",
+      "manuscriptAuthors": [
+        "Gabriele Accarino",
+        "Juan Nathaniel",
+        "Carla Roesch",
+        "Pierre Gentine",
+        "Sara Shamekh",
+        "Duncan Watson-Parris",
+        "Viviana Acquaviva"
+      ],
+      "sourceEventId": 150773,
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "field",
+        "heatmap"
+      ]
+    }
+  },
+  {
+    "id": "mk-neurips2026-5e7f3c7cd69492-f1",
+    "title": "ZNO: Stable Rational Neural Operators in the Z-Domain for Discrete-Time Dynamics",
+    "authors": [
+      "Xianli Zhu",
+      "Jia Yin"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/loc/sydney/poster/155054",
+    "pdf_source": "https://arxiv.org/pdf/2605.02356v2",
+    "figure": "Figure 1",
+    "page": 2,
+    "image": "supplement/images/mk-neurips2026-5e7f3c7cd69492-f1.jpg",
+    "w": 1319,
+    "h": 433,
+    "pattern": "comparison",
+    "supplement": {
+      "category": "main",
+      "sha256": "e73e3cfc090d7a30cfa37a45a9ef400dd07ceefaec4f2d7490e3929a08c4c9f5",
+      "description": "在三个复平面中并置傅里叶、拉普拉斯及 Z 域算子的谱表示与极点位置。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://neurips.cc/virtual/2026/loc/sydney/poster/155054",
+      "pdfSha256": "8862529aefa2c234eae65c0b55c968164600c3aa8d0a65ec1895d1ab80654098",
+      "cropPdfPoints": [
+        104.0,
+        288.0,
+        508.0,
+        432.0
+      ],
+      "pdfVersionDate": "6 May 2026",
+      "manuscriptAuthors": [
+        "Xianli Zhu",
+        "Jia Yin"
+      ],
+      "sourceEventId": 155054
+    }
+  },
+  {
+    "id": "mk-neurips2026-5e7f3c7cd69492-f2",
+    "title": "ZNO: Stable Rational Neural Operators in the Z-Domain for Discrete-Time Dynamics",
+    "authors": [
+      "Xianli Zhu",
+      "Jia Yin"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/loc/sydney/poster/155054",
+    "pdf_source": "https://arxiv.org/pdf/2605.02356v2",
+    "figure": "Figure 2",
+    "page": 4,
+    "image": "supplement/images/mk-neurips2026-5e7f3c7cd69492-f2.jpg",
+    "w": 1272,
+    "h": 631,
+    "pattern": "pipeline",
+    "supplement": {
+      "category": "algorithm",
+      "sha256": "ab27da0df661860d240dd734d9077e510bd9c60f1bf73d73f545846316b0f3be",
+      "description": "上层是因果时间序列网络，下层放大单个 Z 域算子层的双线性映射与有理传递结构。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://neurips.cc/virtual/2026/loc/sydney/poster/155054",
+      "pdfSha256": "8862529aefa2c234eae65c0b55c968164600c3aa8d0a65ec1895d1ab80654098",
+      "cropPdfPoints": [
+        108.0,
+        380.0,
+        502.0,
+        574.0
+      ],
+      "pdfVersionDate": "6 May 2026",
+      "manuscriptAuthors": [
+        "Xianli Zhu",
+        "Jia Yin"
+      ],
+      "sourceEventId": 155054
+    }
+  },
+  {
+    "id": "mk-neurips2026-5e7f3c7cd69492-f3",
+    "title": "ZNO: Stable Rational Neural Operators in the Z-Domain for Discrete-Time Dynamics",
+    "authors": [
+      "Xianli Zhu",
+      "Jia Yin"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/loc/sydney/poster/155054",
+    "pdf_source": "https://arxiv.org/pdf/2605.02356v2",
+    "figure": "Figure 3",
+    "page": 6,
+    "image": "supplement/images/mk-neurips2026-5e7f3c7cd69492-f3.jpg",
+    "w": 1317,
+    "h": 491,
+    "pattern": "results",
+    "supplement": {
+      "category": "result",
+      "sha256": "eb0636551828177f08463bc8837ecf2e27d4129837804788fd99ee131ca10a84",
+      "description": "两个离散系统基准按任务排列测试误差柱，并显示多次随机试验的误差棒。",
+      "pdfVersion": "author-public",
+      "sourceUrl": "https://neurips.cc/virtual/2026/loc/sydney/poster/155054",
+      "pdfSha256": "8862529aefa2c234eae65c0b55c968164600c3aa8d0a65ec1895d1ab80654098",
+      "cropPdfPoints": [
+        102.0,
+        454.0,
+        508.0,
+        608.0
+      ],
+      "pdfVersionDate": "6 May 2026",
+      "manuscriptAuthors": [
+        "Xianli Zhu",
+        "Jia Yin"
+      ],
+      "sourceEventId": 155054,
+      "dimensions": [
+        "2d"
+      ],
+      "forms": [
+        "bar"
+      ]
+    }
+  },
+  {
+    "id": "mk-neurips2026-db6ed8395ee401-f1",
+    "title": "Coarse-to-Fine 3D MRI Reconstruction via Resolution-Agnostic Neural Operators",
+    "authors": [
+      "Jiayun (Peter) Wang",
+      "Ram Daftari",
+      "Weijie Gan",
+      "Valentin Duruisseaux",
+      "Ruibo Wang",
+      "Armeet Jatyani",
+      "Boris Bonev",
+      "Animashree Anandkumar"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/151950",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-db6ed8395ee401-f1.jpg",
+    "w": 1494,
+    "h": 1097,
+    "pattern": "comparison",
+    "figureUrl": "https://arxiv.org/html/2611.14979v1#S0.F1",
+    "supplement": {
+      "category": "main",
+      "description": "同页上排并列三种重建结构，中排放分辨率与训练开销，下排统一排列原始切片、重建及误差图，便于从结构读到证据。",
+      "sha256": "7a7d7b58238899fed308119c37c3847d734a62cc159c0e74112cef3e61eb4a11",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/151950",
+      "imageSource": "https://arxiv.org/html/2611.14979v1/teaser.png",
+      "sourceVersion": "2611.14979v1",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-0f67f5bb5a8eaf-f1",
+    "title": "Anchor3DGS: Feed-Forward 3D Gaussian Splatting with Compact Anchor-Based Representation",
+    "authors": [
+      "Sheng Ye",
+      "Jiangke Lin",
+      "Fudong Wang",
+      "Yi Yuan",
+      "ZhenHui Dong",
+      "Yong-jin Liu"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/152132",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-0f67f5bb5a8eaf-f1.jpg",
+    "w": 1272,
+    "h": 366,
+    "pattern": "comparison",
+    "figureUrl": "https://arxiv.org/html/2610.21634v1#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "左起放置未标定输入视角，同一场景沿横向并列两种三维表示及渲染输出，表头直接给出图像质量读数。",
+      "sha256": "fec448f0228b9d924a8241c3ace031a985d5c853673163c609bff1d6c19a2c00",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/152132",
+      "imageSource": "https://arxiv.org/html/2610.21634v1/teaser.png",
+      "sourceVersion": "2610.21634v1",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-80b0ac2ef67b44-f1",
+    "title": "Interpreting Neural Combinatorial Optimization via Evolving Programmatic Bottlenecks",
+    "authors": [
+      "Haocheng Duan",
+      "Yuxin Guo",
+      "Jieyi Bi",
+      "Anqi Xie",
+      "Sirui Li",
+      "Yining Ma",
+      "Cathy Wu"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/155074",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-80b0ac2ef67b44-f1.jpg",
+    "w": 818,
+    "h": 646,
+    "pattern": "framework",
+    "figureUrl": "https://arxiv.org/html/2606.19741v2#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "黑框区分黑箱模型和可解释程序，前向动作与反向修订分别走实线和虚线，底部图例解释符号。",
+      "sha256": "73fd5b737c261da60b70dac56aa723910737175c67f5dc907597905e93a11940",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/155074",
+      "imageSource": "https://arxiv.org/html/2606.19741v2/images/cbm_epb.png",
+      "sourceVersion": "2606.19741v2",
+      "arxivLicense": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-652691ddbfbbc4-f1",
+    "title": "Simulation-Informed Diffusion for Decentralized Multi-robot Motion Planning",
+    "authors": [
+      "JINHAO LIANG",
+      "Sven Koenig",
+      "Ferdinando Fioretto"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/150165",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-652691ddbfbbc4-f1.jpg",
+    "w": 2028,
+    "h": 489,
+    "pattern": "pipeline",
+    "figureUrl": "https://arxiv.org/html/2605.27697v2#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "横向五格保持场景朝向一致，用轨迹的颜色及通信连线表现局部观测、邻居预测、规划和必要通信。",
+      "sha256": "86dac7f58570b5c6832db5e598f61288485aeef9e6987ac1be8aed96005c8c88",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/150165",
+      "imageSource": "https://arxiv.org/html/2605.27697v2/overview.png",
+      "sourceVersion": "2605.27697v2",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-0cf353ecc9745d-f1",
+    "title": "Pinpoint: Grounded Worldwide Image Geolocation via Cross-Source Retrieval and Reranking",
+    "authors": [
+      "Nika Chuzhoy",
+      "Brian Hu",
+      "Amit A Arora",
+      "Jae Ro",
+      "Sarthak Sahu"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/152393",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-0cf353ecc9745d-f1.jpg",
+    "w": 2300,
+    "h": 794,
+    "pattern": "pipeline",
+    "figureUrl": "https://arxiv.org/html/2606.04133v1#S3.F1",
+    "supplement": {
+      "category": "main",
+      "description": "四个相连的窄栏依次展开图像编码、候选地点检索、重排与地理定位，终点直接呈现地图标记。",
+      "sha256": "14756b7fe28007f451af50055f5f96ff06cc6b48869a2c0e3fc5091ff99de5b5",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/152393",
+      "imageSource": "https://arxiv.org/html/2606.04133v1/figs/figma_full_inference_pipeline4.png",
+      "sourceVersion": "2606.04133v1",
+      "arxivLicense": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-fa0874813064ee-f1",
+    "title": "DeformGen: Dynamics-Based Topology Augmentation for Deformable Manipulation Policy Learning",
+    "authors": [
+      "Zili Lin",
+      "Wenyao Zhang",
+      "Yuyang Zhang",
+      "Zekun Qi",
+      "Junyan Lin",
+      "Hanxin Zhu",
+      "Jiaolong Yang",
+      "Zhibo Chen",
+      "Yao Mu",
+      "Xiaokang Yang",
+      "Xin Jin",
+      "Wenjun Zeng"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/149334",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-fa0874813064ee-f1.jpg",
+    "w": 2043,
+    "h": 1288,
+    "pattern": "framework",
+    "figureUrl": "https://arxiv.org/html/2606.25939v2#S0.F1",
+    "supplement": {
+      "category": "main",
+      "description": "上半部左右并列变形对象的状态与轨迹问题，下半部用连续场景帧对应展示数据增广和策略评估。",
+      "sha256": "8ee1e1cf90a0091b056a2dbb9d4c4fd44e10c811efdeeeadcc13b9fd911fd1e6",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/149334",
+      "imageSource": "https://arxiv.org/html/2606.25939v2/teaser.png",
+      "sourceVersion": "2606.25939v2",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-b427a1f65f3190-f1",
+    "title": "InfCoiL: Coordinated Planner-Controller Learning for Closed-Loop Physics-Based Human-Object Interaction",
+    "authors": [
+      "Yude Zou",
+      "Yifei Yao",
+      "Yiwei Hao",
+      "Hanqing Wang",
+      "Xing Gao"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/152598",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-b427a1f65f3190-f1.jpg",
+    "w": 2037,
+    "h": 1043,
+    "pattern": "framework",
+    "figureUrl": "https://arxiv.org/html/2611.11517v1#S2.F1",
+    "supplement": {
+      "category": "main",
+      "description": "上排把规划、控制、物理引擎和实际表现串成闭环，下排展开两条训练更新路径，以同色箭头衔接总览与细节。",
+      "sha256": "522f0af05486f79c4e6b5719c162f93989b083d032f466dc46e8c70ffcf5ac41",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/152598",
+      "imageSource": "https://arxiv.org/html/2611.11517v1/md4_cropped.png",
+      "sourceVersion": "2611.11517v1",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-4e65800e3e12b5-f1",
+    "title": "CaC: Advancing Video Reward Models via Hierarchical Spatiotemporal Concentrating",
+    "authors": [
+      "Jiyuan Wang",
+      "Huan Ouyang",
+      "Jiuzhou Lin",
+      "Chunyu Lin",
+      "Dewen Fan",
+      "Boheng Zhang",
+      "Haonan fan",
+      "Fei Zuo",
+      "Jia Sun",
+      "Huaiqing Wang",
+      "Honglie Wang",
+      "Yiyang Fan",
+      "Zhenlong Yuan",
+      "Zijun Li",
+      "Yongrui Heng",
+      "Guosheng Lin",
+      "Fan Yang",
+      "Tingting Gao"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/153622",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-4e65800e3e12b5-f1.jpg",
+    "w": 682,
+    "h": 270,
+    "pattern": "conceptual",
+    "figureUrl": "https://arxiv.org/html/2605.11723v4#S0.F1",
+    "supplement": {
+      "category": "main",
+      "description": "两条胶片式时间轴对准同一动作，局部放大框与正误标记显示短暂异常如何影响整段视频的打分。",
+      "sha256": "7b7a287f831425f899eb6ac2620ccfa63f992675989cd87d14271b52493cd573",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/153622",
+      "imageSource": "https://arxiv.org/html/2605.11723v4/title2.png",
+      "sourceVersion": "2605.11723v4",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-af2e42977da6c7-f1",
+    "title": "ReorgGS: Equivalent Distribution Reorganization for 3D Gaussian Splatting",
+    "authors": [
+      "Luchao Wang",
+      "Kaimin Liao",
+      "Hua Wang",
+      "Qian Ren",
+      "Zhi Chen",
+      "Yaohua Tang"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/151643",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-af2e42977da6c7-f1.jpg",
+    "w": 2300,
+    "h": 919,
+    "pattern": "comparison",
+    "figureUrl": "https://arxiv.org/html/2605.08739v1#S0.F1",
+    "supplement": {
+      "category": "main",
+      "description": "左右放相同视角的外观图，中间展开后训练前后的高斯点分布，两行对齐形成直接对照。",
+      "sha256": "11a7d773b6e3642d4c6bf16b359b8109a5d4779d8f57e6e74abbbe581b300c29",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/151643",
+      "imageSource": "https://arxiv.org/html/2605.08739v1/fig1-teaser.jpg",
+      "sourceVersion": "2605.08739v1",
+      "arxivLicense": "http://creativecommons.org/licenses/by-nc-sa/4.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-53c655e9d4b472-f1",
+    "title": "SIGMA: Semantic-Difference Instruction-Grounding Mask Annotator for Text-Driven Image Manipulation Localization",
+    "authors": [
+      "Peiyu Zhuang",
+      "Jianquan Yang",
+      "Haodong Li",
+      "Zhuoying Cai",
+      "Ruitao Xie",
+      "Jishen Zeng",
+      "Baoying Chen",
+      "Jiwu Huang",
+      "XIAOCHUN CAO"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/151764",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-53c655e9d4b472-f1.jpg",
+    "w": 899,
+    "h": 522,
+    "pattern": "conceptual",
+    "figureUrl": "https://arxiv.org/html/2605.27924v2#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "左栏给出原图、编辑指令及输出，右侧分层对照像素差分与模型推断，底部保留两类失效条件。",
+      "sha256": "d65e21ac8e953bb5f20a586cb72171becde1e3283bf71d796454312c82606fef",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/151764",
+      "imageSource": "https://arxiv.org/html/2605.27924v2/motivation.png",
+      "sourceVersion": "2605.27924v2",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-09c7015ebfb278-f1",
+    "title": "Smooth Piecewise Cutting for Neural Operator to Handle Discontinuities and Sharp Transitions",
+    "authors": [
+      "Ha Dang",
+      "Sebastian Schmidt",
+      "Jürgen W Hesser"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/152423",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-09c7015ebfb278-f1.jpg",
+    "w": 2300,
+    "h": 928,
+    "pattern": "pipeline",
+    "figureUrl": "https://arxiv.org/html/2605.19823v3#S4.F1",
+    "supplement": {
+      "category": "main",
+      "description": "先在散点曲线上标出间断，再用上下两个网络计算图展示分段算子训练及接入切分网络后的预测。",
+      "sha256": "81346748ab683dc801a43727cf6c5bc5fbf4e449145be0dcc934ceb52f3addd2",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/152423",
+      "imageSource": "https://arxiv.org/html/2605.19823v3/Figures/overview_method.png",
+      "sourceVersion": "2605.19823v3",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-bf544c493df766-f1",
+    "title": "Unified Loss-Aware Density Control for 3D Gaussian Splatting",
+    "authors": [
+      "Tae-Young Kim",
+      "Jiwoo Chung",
+      "Jae-Pil Heo"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/150948",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-bf544c493df766-f1.jpg",
+    "w": 2038,
+    "h": 997,
+    "pattern": "comparison",
+    "figureUrl": "https://arxiv.org/html/2611.02044v2#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "以相同视角的原图和局部放大块检验三种密度操作，下方表格与上方图像共用操作名。",
+      "sha256": "7cd968e77b065b648d755abce81ef91f7734fba48ea41cee4ef7858a2842e297",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/150948",
+      "imageSource": "https://arxiv.org/html/2611.02044v2/intro.png",
+      "sourceVersion": "2611.02044v2",
+      "arxivLicense": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-37d7b9065779ab-f1",
+    "title": "RoboAlign-R1: Distilled Multimodal Reward Alignment for Robot Video World Models",
+    "authors": [
+      "Hao Wu",
+      "Yuqi Li",
+      "Yuan Gao",
+      "Fan Xu",
+      "Fan Zhang",
+      "Kun Wang",
+      "Penghao Zhao",
+      "Qiufeng Wang",
+      "Yizhou Zhao",
+      "Weiyan Wang",
+      "YingLi Tian",
+      "Xian Wu",
+      "Xiaomeng Huang"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/150692",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-37d7b9065779ab-f1.jpg",
+    "w": 2300,
+    "h": 1130,
+    "pattern": "framework",
+    "figureUrl": "https://arxiv.org/html/2605.03821v2#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "上排并列基准、样本和标注构建，下排把视频奖励蒸馏与策略学习串接，使数据流与模型更新可分别追踪。",
+      "sha256": "f9912ceb59587f9e8cf44341e134c0f2d10177067cce0f42fe9a73ac1d23bb64",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/150692",
+      "imageSource": "https://arxiv.org/html/2605.03821v2/Figures/Figure1.png",
+      "sourceVersion": "2605.03821v2",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-3c4b81c60c117d-f1",
+    "title": "Read, Parse, Describe: Unified Document Parsing with Visual Element Description Generation",
+    "authors": [
+      "Yuheng Chen",
+      "Yufan Chen",
+      "Zhuojun Cai",
+      "Ruiping Liu",
+      "Junwei Zheng",
+      "Jiale Wei",
+      "Di Wen",
+      "Weijia Fan",
+      "Kunyu Peng",
+      "Jiaming Zhang",
+      "Rainer Stiefelhagen"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/151079",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-3c4b81c60c117d-f1.jpg",
+    "w": 1787,
+    "h": 664,
+    "pattern": "architecture",
+    "figureUrl": "https://arxiv.org/html/2610.20335v2#S5.F1",
+    "supplement": {
+      "category": "main",
+      "description": "上层横线画视觉编码器到解码器的主路，下层用网格对齐、空间引导和跨层连接明确标出适配器的插入点。",
+      "sha256": "88777c6e341db477ccea69a629a784c214f336e412e906125d5e981ec1b7aee5",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/151079",
+      "imageSource": "https://arxiv.org/html/2610.20335v2/Backbone.png",
+      "sourceVersion": "2610.20335v2",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-5e66709ce30af8-f1",
+    "title": "NOFE – Neural Operator Function Embedding",
+    "authors": [
+      "Lars Uebbing",
+      "Harald Lykke Joakimsen",
+      "Siyan Chen",
+      "Georgios Leontidis",
+      "Kristoffer Wickstrøm",
+      "Michael Kampffmeyer",
+      "Sébastien Lefèvre",
+      "Arnt B Salberg",
+      "Robert Jenssen"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/149024",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-5e66709ce30af8-f1.jpg",
+    "w": 1092,
+    "h": 836,
+    "pattern": "conceptual",
+    "figureUrl": "https://arxiv.org/html/2605.11970v3#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "以四个对象区分函数、采样点图、定义域与低维函数嵌入，箭头越过图形层级表达算子映射。",
+      "sha256": "9d6a55caa864751f4a52489b3f190889cb403324e68e7d71ea6f7ef40d0c530b",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/149024",
+      "imageSource": "https://arxiv.org/html/2605.11970v3/figures/tikz/NOFE-scheme.png",
+      "sourceVersion": "2605.11970v3",
+      "arxivLicense": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-e410c004b95c60-f1",
+    "title": "Hyperbolic Graph Neural Networks Under the Microscope: The Role of Geometry–Task Alignment",
+    "authors": [
+      "Dionisia Naddeo",
+      "Jonas Linkerhägner",
+      "Nicola Toschi",
+      "Geri Skenderi",
+      "Veronica Lachi"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/150947",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-e410c004b95c60-f1.jpg",
+    "w": 822,
+    "h": 549,
+    "pattern": "conceptual",
+    "figureUrl": "https://arxiv.org/html/2602.01828v3#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "表头并列平面与弯曲几何，两行以相同小图及投影坐标轴对照不同任务下的几何匹配。",
+      "sha256": "1d295d08db63fad8eade156978ad700831d2ff61572b87cf03c1b4aa1bfabd04",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/150947",
+      "imageSource": "https://arxiv.org/html/2602.01828v3/intro.png",
+      "sourceVersion": "2602.01828v3",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-e102956e06d473-f1",
+    "title": "DynaFLIP: Rethinking Robotics Perception via Tri-Modal-Dynamics Guided Representation",
+    "authors": [
+      "Jusuk Lee",
+      "Seungjae Lee",
+      "Jonghun Shin",
+      "Hoseong Jung",
+      "Sungha Kim",
+      "Daesol Cho",
+      "H. Jin Kim",
+      "Jia-Bin Huang",
+      "Furong Huang"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/151075",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-e102956e06d473-f1.jpg",
+    "w": 1472,
+    "h": 640,
+    "pattern": "comparison",
+    "figureUrl": "https://arxiv.org/html/2605.30350v2#S0.F1",
+    "supplement": {
+      "category": "main",
+      "description": "左半组合三种视觉输入及对应热区，右半以同色指标雷达图区分仿真和真实场景的下游表现。",
+      "sha256": "ab7fc7708e11163e9c5765b83a529d694afe7ef56c16eb9e0f1ae3457c7290ef",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/151075",
+      "imageSource": "https://arxiv.org/html/2605.30350v2/thumbnail.png",
+      "sourceVersion": "2605.30350v2",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-neurips2026-fdb226baa6582a-f1",
+    "title": "Latent Abstraction for Retrieval-Augmented Generation",
+    "authors": [
+      "Ha Lan Nguyen",
+      "Minh-Anh Nguyen",
+      "Dung Le"
+    ],
+    "venue": "neurips",
+    "year": 2026,
+    "paper": "https://neurips.cc/virtual/2026/poster/155353",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-neurips2026-fdb226baa6582a-f1.jpg",
+    "w": 2038,
+    "h": 1101,
+    "pattern": "comparison",
+    "figureUrl": "https://arxiv.org/html/2604.17866v4#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "问题、数据库与答案占据固定位置，左右并排传统逐跳检索和潜在抽象路径，彩色小块标出隐状态。",
+      "sha256": "11848875d5914c71591c7405d37c18e96ce029365e95b94bfbbdb424d36aa3e7",
+      "sourceUrl": "https://neurips.cc/virtual/2026/poster/155353",
+      "imageSource": "https://arxiv.org/html/2604.17866v4/Example.png",
+      "sourceVersion": "2604.17866v4",
+      "arxivLicense": "http://creativecommons.org/licenses/by-nc-nd/4.0/"
+    }
+  },
+  {
+    "id": "mk-aaai2026-c126c982b63b64-f1",
+    "title": "OccamVTS: Distilling Vision Models to 1% Parameters for Time Series Forecasting",
+    "authors": [
+      "Sisuo Lyu",
+      "Siru Zhong",
+      "Weilin Ruan",
+      "Qingxiang Liu",
+      "Qingsong Wen",
+      "Hui Xiong",
+      "Yuxuan Liang"
+    ],
+    "venue": "aaai",
+    "year": 2026,
+    "paper": "https://ojs.aaai.org/index.php/AAAI/article/view/39601",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-aaai2026-c126c982b63b64-f1.jpg",
+    "w": 1248,
+    "h": 893,
+    "pattern": "conceptual",
+    "figureUrl": "https://arxiv.org/html/2508.01727v2#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "在共同嵌入坐标中以颜色区分图像和时间序列数据集，并从具体点引线到示例缩图。",
+      "sha256": "1a3d7ba5aa8a284e83adff0af98e8827fcd17d86b5cea2a9e18c006126d992af",
+      "sourceUrl": "https://doi.org/10.1609/aaai.v40i29.39601",
+      "imageSource": "https://arxiv.org/html/2508.01727v2/dataset-722.png",
+      "sourceVersion": "2508.01727v2",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-aaai2026-f13a6a3a9a43b9-f1",
+    "title": "Towards Non-Stationary Time Series Forecasting with Temporal Stabilization and Frequency Differencing",
+    "authors": [
+      "Junkai Lu",
+      "Peng Chen",
+      "Chenjuan Guo",
+      "Yang Shu",
+      "Meng Wang",
+      "Bin Yang"
+    ],
+    "venue": "aaai",
+    "year": 2026,
+    "paper": "https://ojs.aaai.org/index.php/AAAI/article/view/39585",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-aaai2026-f13a6a3a9a43b9-f1.jpg",
+    "w": 2041,
+    "h": 1682,
+    "pattern": "conceptual",
+    "figureUrl": "https://arxiv.org/html/2511.08229v6#Sx1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "整体时间曲线先标出四个片段，相同配色沿用到局部频谱与下方分布，便于定位非平稳性的来源。",
+      "sha256": "5b6b46766b39547a9e6b3ced575ed580a331194011cee1eeb66ea99c5bbc8d1d",
+      "sourceUrl": "https://doi.org/10.1609/aaai.v40i29.39585",
+      "imageSource": "https://arxiv.org/html/2511.08229v6/intro.png",
+      "sourceVersion": "2511.08229v6",
+      "arxivLicense": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/"
+    }
+  },
+  {
+    "id": "mk-aaai2026-faab5bef799300-f1",
+    "title": "APT: Affine Prototype-Timestamp for Time Series Forecasting Under Distribution Shift",
+    "authors": [
+      "Yujie Li",
+      "Zezhi Shao",
+      "Chengqing Yu",
+      "Yisong Fu",
+      "Tao Sun",
+      "Yongjun Xu",
+      "Fei Wang"
+    ],
+    "venue": "aaai",
+    "year": 2026,
+    "paper": "https://ojs.aaai.org/index.php/AAAI/article/view/38542",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-aaai2026-faab5bef799300-f1.jpg",
+    "w": 1051,
+    "h": 547,
+    "pattern": "conceptual",
+    "figureUrl": "https://arxiv.org/html/2511.12945v1#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "三个相接的背景区间承载同一时间轴，缺测位置、训练片段和分布变化分别由短虚线、边界和箭头标识。",
+      "sha256": "1b292f8a6cf52b4dd821fd692886c11e4e3e75b74f6c2351c5ace59c22928363",
+      "sourceUrl": "https://doi.org/10.1609/aaai.v40i18.38542",
+      "imageSource": "https://arxiv.org/html/2511.12945v1/fig/apt1v2.png",
+      "sourceVersion": "2511.12945v1",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-aaai2026-966d25e2bbaea3-f1",
+    "title": "TSGDiff: Rethinking Synthetic Time Series Generation from a Pure Graph Perspective",
+    "authors": [
+      "Lifeng Shen",
+      "Xuyang Li",
+      "Lele Long"
+    ],
+    "venue": "aaai",
+    "year": 2026,
+    "paper": "https://ojs.aaai.org/index.php/AAAI/article/view/39723",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-aaai2026-966d25e2bbaea3-f1.jpg",
+    "w": 2300,
+    "h": 1174,
+    "pattern": "architecture",
+    "figureUrl": "https://arxiv.org/html/2511.12174v1#S2.F1",
+    "supplement": {
+      "category": "main",
+      "description": "横向展示图边与频率特征、图编码与解码以及潜空间扩散，两端时间曲线标出输入和合成结果。",
+      "sha256": "d3c0cff91f083842f80c4edbe1ca7b74aa39759f8058e0ebb7c33abf6143b492",
+      "sourceUrl": "https://doi.org/10.1609/aaai.v40i30.39723",
+      "imageSource": "https://arxiv.org/html/2511.12174v1/model_office.png",
+      "sourceVersion": "2511.12174v1",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-acl2026-8400c701172dbf-f1",
+    "title": "AgentGL: Towards Agentic Graph Learning with LLMs via Reinforcement Learning",
+    "authors": [
+      "Yuanfu Sun",
+      "Kang Li",
+      "Dongzhe Fan",
+      "Jiajin Liu",
+      "Qiaoyu Tan"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.1161/",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-acl2026-8400c701172dbf-f1.jpg",
+    "w": 2030,
+    "h": 720,
+    "pattern": "framework",
+    "figureUrl": "https://arxiv.org/html/2604.05846v2#S3.F1",
+    "supplement": {
+      "category": "main",
+      "description": "顶部并列图搜索基本操作，下面以对齐的两条训练流程展示奖励、采样与策略更新。",
+      "sha256": "7258a55619d846f128f90e599f09bc21bce130b69275c1941dc525c34b3591e9",
+      "sourceUrl": "https://aclanthology.org/2026.acl-long.1161/",
+      "imageSource": "https://arxiv.org/html/2604.05846v2/agentgl.png",
+      "sourceVersion": "2604.05846v2",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-acl2026-02e737d8f41489-f1",
+    "title": "Rethinking Reasoning-Intensive Retrieval: Evaluating and Advancing Retrievers in Agentic Search Systems",
+    "authors": [
+      "Yilun Zhao",
+      "Jinbiao Wei",
+      "Tingyu Song",
+      "Siyue Zhang",
+      "Chen Zhao",
+      "Arman Cohan"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.1705/",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-acl2026-02e737d8f41489-f1.jpg",
+    "w": 807,
+    "h": 385,
+    "pattern": "framework",
+    "figureUrl": "https://arxiv.org/html/2605.04018v1#S0.F1",
+    "supplement": {
+      "category": "main",
+      "description": "左侧按基准构建和评估协议分层，右侧把训练题生成、检索与段落合成串联，图标对应数据产物。",
+      "sha256": "292269c4632144b6cd50f63e410ac12afe0896f59de312c48b4ac49b409c90fc",
+      "sourceUrl": "https://aclanthology.org/2026.acl-long.1705/",
+      "imageSource": "https://arxiv.org/html/2605.04018v1/figure1.png",
+      "sourceVersion": "2605.04018v1",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-acl2026-6c74924210c9b4-f1",
+    "title": "Afri-MCQA: Multimodal Cultural Question Answering for African Languages",
+    "authors": [
+      "Atnafu Lambebo Tonja",
+      "Srija Anand",
+      "Emilio Villa-Cueva",
+      "Israel Abebe Azime",
+      "Jesujoba Oluwadara Alabi",
+      "Muhidin A. Mohamed",
+      "Debela Desalegn Yadeta",
+      "Negasi Haile Abadi",
+      "Abigail Oppong",
+      "Nnaemeka Casmir Obiefuna",
+      "Idris Abdulmumin",
+      "Naome A Etori",
+      "Eric Peter Wairagala",
+      "Kanda Patrick Tshinu",
+      "Imanigirimbabazi Emmanuel",
+      "Gabofetswe Malema",
+      "Alham Fikri Aji",
+      "David Ifeoluwa Adelani",
+      "Thamar Solorio"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.1869/",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-acl2026-6c74924210c9b4-f1.jpg",
+    "w": 2300,
+    "h": 1010,
+    "pattern": "teaser",
+    "figureUrl": "https://arxiv.org/html/2601.05699v2#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "中间地图连接两个国家的本地语言问答卡片，地理位置、实景图和双语选项形成可对照的案例。",
+      "sha256": "ce9b89e990a8029d6cc2e01d06c8a04dc726b4a87a1e27e6a778de972b6df278",
+      "sourceUrl": "https://aclanthology.org/2026.acl-long.1869/",
+      "imageSource": "https://arxiv.org/html/2601.05699v2/images/final/main_image.png",
+      "sourceVersion": "2601.05699v2",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-acl2026-e5001da664cda5-f1",
+    "title": "TimeSAF: Towards LLM-Guided Semantic Asynchronous Fusion for Time Series Forecasting",
+    "authors": [
+      "Fan Zhang",
+      "Shiming Fan",
+      "Hua Wang"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.1208/",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-acl2026-e5001da664cda5-f1.jpg",
+    "w": 786,
+    "h": 281,
+    "pattern": "comparison",
+    "figureUrl": "https://arxiv.org/html/2604.12648v1#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "相同输入沿三列进入不同预测流程，最右侧用统一颜色的环形对照补充各方法的实测表现。",
+      "sha256": "cef1860f326b3cd4baea815989081678e971008dcfe14ecc5e97ba430abf3cf3",
+      "sourceUrl": "https://aclanthology.org/2026.acl-long.1208/",
+      "imageSource": "https://arxiv.org/html/2604.12648v1/fig111111.png",
+      "sourceVersion": "2604.12648v1",
+      "arxivLicense": "http://creativecommons.org/licenses/by-nc-nd/4.0/"
+    }
+  },
+  {
+    "id": "mk-acl2026-fa2500d6d5e74b-f1",
+    "title": "From Nodes to Narratives: Explaining Graph Neural Networks with LLMs and Graph Context",
+    "authors": [
+      "Peyman Baghershahi",
+      "Gregoire Fournier",
+      "Pranav Nyati",
+      "Sourav Medya"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.1944/",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-acl2026-fa2500d6d5e74b-f1.jpg",
+    "w": 877,
+    "h": 451,
+    "pattern": "framework",
+    "figureUrl": "https://arxiv.org/html/2508.07117v3#S3.F1",
+    "supplement": {
+      "category": "main",
+      "description": "虚线框分隔投影器训练与解释生成，图节点表示、文本提示和最终解释子图用实线箭头衔接。",
+      "sha256": "72882d909de19fb9ab1762cba0598589a7b6bf801165218730c025ffde93d6ac",
+      "sourceUrl": "https://aclanthology.org/2026.acl-long.1944/",
+      "imageSource": "https://arxiv.org/html/2508.07117v3/pipeline_final.png",
+      "sourceVersion": "2508.07117v3",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-acl2026-ed0d9694fee51d-f1",
+    "title": "Cultivating Forensic Reasoning for Generalizable Multimodal Manipulation Detection",
+    "authors": [
+      "Yuchen Zhang",
+      "Yaxiong Wang",
+      "Kecheng Han",
+      "Yujiao Wu",
+      "Lianwei Wu",
+      "Li Zhu",
+      "Zhedong Zheng"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.1316/",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-acl2026-ed0d9694fee51d-f1.jpg",
+    "w": 1776,
+    "h": 1490,
+    "pattern": "comparison",
+    "figureUrl": "https://arxiv.org/html/2603.01993v2#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "左右分栏对比仅用分类结果的监督与强调推理过程的优化，下方以一致的案例布局展示泛化差异。",
+      "sha256": "6908f9b08738e8224a28b054cdc170e3844d50a86672c9f290de2e38c34cb13b",
+      "sourceUrl": "https://aclanthology.org/2026.acl-long.1316/",
+      "imageSource": "https://arxiv.org/html/2603.01993v2/motivation_best.png",
+      "sourceVersion": "2603.01993v2",
+      "arxivLicense": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/"
+    }
+  },
+  {
+    "id": "mk-acl2026-c8461419d4c4ae-f1",
+    "title": "Guaranteeing Knowledge Integration with Joint Decoding for Retrieval-Augmented Generation",
+    "authors": [
+      "Zhengyi Zhao",
+      "Shubo Zhang",
+      "Zezhong Wang",
+      "Yuxi Zhang",
+      "Huimin Wang",
+      "Yutian Zhao",
+      "Yefeng Zheng",
+      "Binyang Li",
+      "Kam-Fai Wong",
+      "Xian Wu"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.192/",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-acl2026-c8461419d4c4ae-f1.jpg",
+    "w": 2027,
+    "h": 1140,
+    "pattern": "framework",
+    "figureUrl": "https://arxiv.org/html/2604.08046v2#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "上半图把推理与检索证据拆成两条支路，下半图对齐分段重排和逐词联合解码，彩色词块保持前后对应。",
+      "sha256": "8acb6e0693747dedc7618f601f0db9c84ad8a34b46f5a3eecef29468af2e3a7d",
+      "sourceUrl": "https://aclanthology.org/2026.acl-long.192/",
+      "imageSource": "https://arxiv.org/html/2604.08046v2/overview.png",
+      "sourceVersion": "2604.08046v2",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-acl2026-ad3cc9df416d30-f1",
+    "title": "More Than Meets the Eye: Measuring the Semiotic Gap in Vision-Language Models via Semantic Anchorage",
+    "authors": [
+      "Wei He"
+    ],
+    "venue": "acl",
+    "year": 2026,
+    "paper": "https://aclanthology.org/2026.acl-long.717/",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-acl2026-ad3cc9df416d30-f1.jpg",
+    "w": 1696,
+    "h": 964,
+    "pattern": "conceptual",
+    "figureUrl": "https://arxiv.org/html/2604.17354v1#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "同一句习语置于中央，上下分列字面义和惯用义，横向顺次放照片、抽象图标，分开展示两种变化。",
+      "sha256": "205976550c2516a0aa781bc799da218b561cd6226cd3bb0130444b794e48d959",
+      "sourceUrl": "https://aclanthology.org/2026.acl-long.717/",
+      "imageSource": "https://arxiv.org/html/2604.17354v1/images/overview_new.png",
+      "sourceVersion": "2604.17354v1",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-cvpr2026-b33101c9bfe659-f1",
+    "title": "InterAgent: Physics-based Multi-agent Command Execution via Diffusion on Interaction Graphs",
+    "authors": [
+      "Bin Li",
+      "Ruichi Zhang",
+      "Han Liang",
+      "Jingyan Zhang",
+      "Juze Zhang",
+      "Xin Chen",
+      "Lan Xu",
+      "Jingyi Yu",
+      "Jingya Wang"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Li_InterAgent_Physics-based_Multi-agent_Command_Execution_via_Diffusion_on_Interaction_Graphs_CVPR_2026_paper.html",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-cvpr2026-b33101c9bfe659-f1.jpg",
+    "w": 867,
+    "h": 685,
+    "pattern": "teaser",
+    "figureUrl": "https://arxiv.org/html/2512.07410v2#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "将多组人物动作沿同一棋盘平面展开，每组直接标注文本指令，让读者逐一比对命令与多人交互结果。",
+      "sha256": "9666f5d96413eca00590e7e01eea24f6741f1e9ae5860c1a2de88e60530c6f38",
+      "sourceUrl": "https://openaccess.thecvf.com/content/CVPR2026/html/Li_InterAgent_Physics-based_Multi-agent_Command_Execution_via_Diffusion_on_Interaction_Graphs_CVPR_2026_paper.html",
+      "imageSource": "https://arxiv.org/html/2512.07410v2/teaser_v13.png",
+      "sourceVersion": "2512.07410v2",
+      "arxivLicense": "http://creativecommons.org/licenses/by-nc-sa/4.0/"
+    }
+  },
+  {
+    "id": "mk-cvpr2026-fcf513338a1a8c-f1",
+    "title": "Rethinking Intermediate Representation for VLM-based Robot Manipulation",
+    "authors": [
+      "Weiliang Tang",
+      "Jialin Gao",
+      "Jia-Hui Pan",
+      "Gang Wang",
+      "Li Erran Li",
+      "Yun-Hui Liu",
+      "Mingyu Ding",
+      "Pheng-Ann Heng",
+      "Chi-Wing Fu"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Tang_Rethinking_Intermediate_Representation_for_VLM-based_Robot_Manipulation_CVPR_2026_paper.html",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-cvpr2026-fcf513338a1a8c-f1.jpg",
+    "w": 2043,
+    "h": 1001,
+    "pattern": "comparison",
+    "figureUrl": "https://arxiv.org/html/2511.19315v1#S0.F1",
+    "supplement": {
+      "category": "main",
+      "description": "相同输入与任务在三列使用不同动作表述，下方符号对照表示语言兼容性与动作泛化。",
+      "sha256": "3ed4d3f5fd1365a77ead3a817384efcf4e57d063fdee592191a4c0d0788a5260",
+      "sourceUrl": "https://openaccess.thecvf.com/content/CVPR2026/html/Tang_Rethinking_Intermediate_Representation_for_VLM-based_Robot_Manipulation_CVPR_2026_paper.html",
+      "imageSource": "https://arxiv.org/html/2511.19315v1/teaserv3.png",
+      "sourceVersion": "2511.19315v1",
+      "arxivLicense": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/"
+    }
+  },
+  {
+    "id": "mk-cvpr2026-1d2890e388bf62-f1",
+    "title": "STiTch: Semantic Transition and Transportation in Collaboration for Training-Free Zero-Shot Composed Image Retrieval",
+    "authors": [
+      "Miaoge Li",
+      "Dongsheng Wang",
+      "Zening Sun",
+      "Jinsen Zhang",
+      "Wenhan Luo",
+      "Jingcai Guo"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Li_STiTch_Semantic_Transition_and_Transportation_in_Collaboration_for_Training-Free_Zero-Shot_CVPR_2026_paper.html",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-cvpr2026-1d2890e388bf62-f1.jpg",
+    "w": 1501,
+    "h": 438,
+    "pattern": "conceptual",
+    "figureUrl": "https://arxiv.org/html/2605.21261v1#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "左端将参考图和修改要求送入模型，中部高亮描述中的偏差，右端并列图像与检索表示的关系。",
+      "sha256": "98a37b6e638398096e4f30404a6604b2bbe4f012921bc709b3e7ab11204ef43a",
+      "sourceUrl": "https://openaccess.thecvf.com/content/CVPR2026/html/Li_STiTch_Semantic_Transition_and_Transportation_in_Collaboration_for_Training-Free_Zero-Shot_CVPR_2026_paper.html",
+      "imageSource": "https://arxiv.org/html/2605.21261v1/motivation_v8.png",
+      "sourceVersion": "2605.21261v1",
+      "arxivLicense": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/"
+    }
+  },
+  {
+    "id": "mk-cvpr2026-8a2ecdc78e962e-f1",
+    "title": "NESTOR: A Nested MOE-based Neural Operator for Large-Scale PDE Pre-Training",
+    "authors": [
+      "Dengdi Sun",
+      "Xiaoya Zhou",
+      "Xiao Wang",
+      "Hao Si",
+      "Wanli Lyu",
+      "Jin Tang",
+      "Bin Luo"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Sun_NESTOR_A_Nested_MOE-based_Neural_Operator_for_Large-Scale_PDE_Pre-Training_CVPR_2026_paper.html",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-cvpr2026-8a2ecdc78e962e-f1.jpg",
+    "w": 1394,
+    "h": 630,
+    "pattern": "architecture",
+    "figureUrl": "https://arxiv.org/html/2602.22059v1#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "左右对照单网络与嵌套混合专家结构；流场热图、图像级专家和词元级专家在不同层级呈现。",
+      "sha256": "dffbf96913cd8b2bf364ff1e44ab365c00e51ce461b992be1d7945d19a958952",
+      "sourceUrl": "https://openaccess.thecvf.com/content/CVPR2026/html/Sun_NESTOR_A_Nested_MOE-based_Neural_Operator_for_Large-Scale_PDE_Pre-Training_CVPR_2026_paper.html",
+      "imageSource": "https://arxiv.org/html/2602.22059v1/challenge.png",
+      "sourceVersion": "2602.22059v1",
+      "arxivLicense": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/"
+    }
+  },
+  {
+    "id": "mk-cvpr2026-ade64c2718894e-f1",
+    "title": "CIGPose: Causal Intervention Graph Neural Network for Whole-Body Pose Estimation",
+    "authors": [
+      "Bohao Li",
+      "Zhicheng Cao",
+      "Huixian Li",
+      "Yangming Guo"
+    ],
+    "venue": "cvpr",
+    "year": 2026,
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Li_CIGPose_Causal_Intervention_Graph_Neural_Network_for_Whole-Body_Pose_Estimation_CVPR_2026_paper.html",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-cvpr2026-ade64c2718894e-f1.jpg",
+    "w": 1076,
+    "h": 1600,
+    "pattern": "comparison",
+    "figureUrl": "https://arxiv.org/html/2603.09418v2#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "上排把性能与计算开销绘在同一散点图，下排以相同裁切的人体实例对齐两种姿态估计结果。",
+      "sha256": "1c730d6cd849ed67443ecb5c15ad599f1861df032a2da9ef42826aa1a3683e8c",
+      "sourceUrl": "https://openaccess.thecvf.com/content/CVPR2026/html/Li_CIGPose_Causal_Intervention_Graph_Neural_Network_for_Whole-Body_Pose_Estimation_CVPR_2026_paper.html",
+      "imageSource": "https://arxiv.org/html/2603.09418v2/result_contrast.png",
+      "sourceVersion": "2603.09418v2",
+      "arxivLicense": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/"
+    }
+  },
+  {
+    "id": "mk-icml2026-04f8f2d5abc675-f1",
+    "title": "LithoDreamer: A Physics-Informed World Model for Multi-Stage Computational Lithography",
+    "authors": [
+      "Yuqi Jiang",
+      "Yumeng Liu",
+      "Zimu Li",
+      "Jinyuan Deng",
+      "Qian Jin",
+      "Yucheng Cui",
+      "YU LI",
+      "Xunzhao Yin",
+      "Qi Sun",
+      "Cheng Zhuo"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/63279",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-icml2026-04f8f2d5abc675-f1.jpg",
+    "w": 1128,
+    "h": 782,
+    "pattern": "framework",
+    "figureUrl": "https://arxiv.org/html/2606.26713v1#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "三条平行流程分别画出光刻仿真、制造实物与模型，利用对齐的位置把版图、掩模及最终图像逐阶段对应。",
+      "sha256": "2b8f0d88580432d97b4b27816a5fafe77fa52dff891c4dcd2827958e9bb017ef",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/63279",
+      "imageSource": "https://arxiv.org/html/2606.26713v1/compare2.png",
+      "sourceVersion": "2606.26713v1",
+      "arxivLicense": "http://creativecommons.org/licenses/by-nc-nd/4.0/"
+    }
+  },
+  {
+    "id": "mk-icml2026-dda0bc0ead79c7-f1",
+    "title": "TimeLAVA: Learning-Agnostic Valuation for Time Series Data",
+    "authors": [
+      "Wenqin Liu",
+      "Weizhi Quan",
+      "Aoqi Zuo",
+      "Erdun Gao",
+      "Vu Nguyen",
+      "Dino Sejdinovic",
+      "Howard Bondell",
+      "Mingming Gong"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/62497",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-icml2026-dda0bc0ead79c7-f1.jpg",
+    "w": 1950,
+    "h": 485,
+    "pattern": "pipeline",
+    "figureUrl": "https://arxiv.org/html/2606.18729v3#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "多个紧邻的小框沿横向串接时间序列分段、特征变换、代价矩阵、求解与片段估值，各步保留中间表示示例。",
+      "sha256": "03b3b6817812532d9e55f99f91f82f8745fb5d33144dd4adbc2a80911ddb1137",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/62497",
+      "imageSource": "https://arxiv.org/html/2606.18729v3/Workflow.png",
+      "sourceVersion": "2606.18729v3",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-icml2026-99cac6b9027833-f1",
+    "title": "Decompose and Recompose: Reasoning New Skills from Existing Abilities for Cross-Task Robotic Manipulation",
+    "authors": [
+      "Xitie Zhang",
+      "Aming WU",
+      "Yahong Han"
+    ],
+    "venue": "icml",
+    "year": 2026,
+    "paper": "https://icml.cc/virtual/2026/poster/63250",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-icml2026-99cac6b9027833-f1.jpg",
+    "w": 1553,
+    "h": 601,
+    "pattern": "framework",
+    "figureUrl": "https://arxiv.org/html/2605.01448v1#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "左栏用已见和未见任务说明迁移设定，右栏以环形技能图连接场景分解、重组与新任务输出。",
+      "sha256": "174571debbb5ffe19778c56244d9324fd46f5f459594f8e2c4d78e76b98a589b",
+      "sourceUrl": "https://icml.cc/virtual/2026/poster/63250",
+      "imageSource": "https://arxiv.org/html/2605.01448v1/head.png",
+      "sourceVersion": "2605.01448v1",
+      "arxivLicense": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/"
+    }
+  },
+  {
+    "id": "mk-iclr2026-73c8ad468cfc83-f1",
+    "title": "UrbanGraph: Physics-Informed Spatio-Temporal Dynamic Heterogeneous Graphs for Urban Microclimate Prediction",
+    "authors": [
+      "Weilin Xin",
+      "Chenyu Huang",
+      "Peilin Li",
+      "Jing Zhong",
+      "Jiawei Yao"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://iclr.cc/virtual/2026/poster/10008471",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-iclr2026-73c8ad468cfc83-f1.jpg",
+    "w": 2300,
+    "h": 737,
+    "pattern": "framework",
+    "figureUrl": "https://arxiv.org/html/2510.00457v2#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "左半将静态城市栅格和天气条件变换为图输入，右半在相同空间底图上并列相邻时刻的动态图结构。",
+      "sha256": "51306d66e09329de70cd1cd0b6759395ff22a199ac13486d350e24a28815450f",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10008471",
+      "imageSource": "https://arxiv.org/html/2510.00457v2/Intro_final.png",
+      "sourceVersion": "2510.00457v2",
+      "arxivLicense": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/"
+    }
+  },
+  {
+    "id": "mk-iclr2026-1232b30feb4d27-f1",
+    "title": "Numerion: A Multi-Hypercomplex Model for Time Series Forecasting",
+    "authors": [
+      "Hanzhong Cao",
+      "WenBo Yan",
+      "Ying Tan"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://iclr.cc/virtual/2026/poster/10011709",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-iclr2026-1232b30feb4d27-f1.jpg",
+    "w": 1380,
+    "h": 530,
+    "pattern": "conceptual",
+    "figureUrl": "https://arxiv.org/html/2510.03251v1#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "左侧以时间轴与立体坐标说明实数、复数及四元数表示，右侧用多数据集雷达图集中展示结果。",
+      "sha256": "6319254d3412dc700e283368bfb51a56e7b0bdd802ed544e418f0fa77f5a9ed1",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10011709",
+      "imageSource": "https://arxiv.org/html/2510.03251v1/motivation.png",
+      "sourceVersion": "2510.03251v1",
+      "arxivLicense": "http://creativecommons.org/publicdomain/zero/1.0/"
+    }
+  },
+  {
+    "id": "mk-iclr2026-406e95a319e44e-f1",
+    "title": "Relational Graph Transformer",
+    "authors": [
+      "Vijay Prakash Dwivedi",
+      "Sri Jaladi",
+      "Yangyi Shen",
+      "Federico Lopez",
+      "Charilaos Kanatsoulis",
+      "Rishi Puri",
+      "Matthias Fey",
+      "Jure Leskovec"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://iclr.cc/virtual/2026/poster/10011718",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-iclr2026-406e95a319e44e-f1.jpg",
+    "w": 1107,
+    "h": 236,
+    "pattern": "pipeline",
+    "figureUrl": "https://arxiv.org/html/2505.10960v2#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "从关系实体图到局部词元序列、注意力网络和预测头的四段横向流程，保留节点颜色以标识实体角色。",
+      "sha256": "4384f17b91e9ce804a84ef9a8e270e3f4ff3ed27adf50401562f8152b4ea9d7e",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10011718",
+      "imageSource": "https://arxiv.org/html/2505.10960v2/model.png",
+      "sourceVersion": "2505.10960v2",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-iclr2026-3935c98ffd4840-f1",
+    "title": "Reasoning or Retrieval? A Study of Answer Attribution on Large Reasoning Models",
+    "authors": [
+      "Yuhui Wang",
+      "Changjiang Li",
+      "Guangke Chen",
+      "Jiacheng Liang",
+      "Ting Wang"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://iclr.cc/virtual/2026/poster/10010758",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-iclr2026-3935c98ffd4840-f1.jpg",
+    "w": 2042,
+    "h": 730,
+    "pattern": "conceptual",
+    "figureUrl": "https://arxiv.org/html/2509.24156v2#S1.F1",
+    "supplement": {
+      "category": "main",
+      "description": "从同一问题分出显式推理与记忆检索两条候选作答路径，汇入答案后并列给出两种解释与示例。",
+      "sha256": "8fd3a0c51cbd0de8cd20b7a6156d9c85d0bcf6b91e5750c50e3fe213c68e7914",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10010758",
+      "imageSource": "https://arxiv.org/html/2509.24156v2/frameworkv2.png",
+      "sourceVersion": "2509.24156v2",
+      "arxivLicense": "http://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  {
+    "id": "mk-iclr2026-790cf16d76d570-f1",
+    "title": "ReconViaGen: Towards Accurate Multi-view 3D Object Reconstruction via Generation",
+    "authors": [
+      "Jiahao Chang",
+      "Chongjie Ye",
+      "Yushuang Wu",
+      "Yuantao Chen",
+      "Yidan Zhang",
+      "Zhongjin Luo",
+      "Chenghong Li",
+      "Yihao Zhi",
+      "Xiaoguang Han"
+    ],
+    "venue": "iclr",
+    "year": 2026,
+    "paper": "https://iclr.cc/virtual/2026/poster/10006497",
+    "figure": "Figure 1",
+    "image": "supplement/images/mk-iclr2026-790cf16d76d570-f1.jpg",
+    "w": 2300,
+    "h": 725,
+    "pattern": "comparison",
+    "figureUrl": "https://arxiv.org/html/2510.23306v1#S0.F1",
+    "supplement": {
+      "category": "main",
+      "description": "以一致的多视角输入和实物视角排列生成、重建与融合结果，用颜色和局部标记指出完整性及视图一致性差异。",
+      "sha256": "498bb5a41df1748ca8008eb8b80fab67a0ee68a18bd1d490ef73f8e087f067eb",
+      "sourceUrl": "https://iclr.cc/virtual/2026/poster/10006497",
+      "imageSource": "https://arxiv.org/html/2510.23306v1/images/teaser.png",
+      "sourceVersion": "2510.23306v1",
+      "arxivLicense": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/"
+    }
+  }
+]

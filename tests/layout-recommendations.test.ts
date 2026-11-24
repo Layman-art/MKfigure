@@ -3,6 +3,7 @@ import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import type { PaperFigure } from '../src/shared/types';
 import { LayoutRecommender } from '../src/main/layout-recommendations';
+import { PaperGallery } from '../src/main/paper-gallery';
 
 const resources = path.resolve('resources');
 const engine = new LayoutRecommender(path.join(resources, 'layout-index'));
@@ -34,5 +35,11 @@ describe('offline layout recommendations', () => {
     expect(rows.every(r => subset.some(f => f.id === r.figure.id))).toBe(true);
     const fromPattern = await engine.recommend(figures.filter(f => f.pattern === 'results'), '结果图');
     expect(fromPattern.every(r => r.reason.includes('图库标注为结果图'))).toBe(true);
+  });
+  it('recommends individually numbered results from their visual form in Chinese', async () => {
+    const rows = await new PaperGallery(path.join(resources, 'paper-gallery')).list();
+    const list = await engine.recommend(rows, '三维点云算例结果图');
+    expect(list.some(({figure}) => figure.supplement?.category === 'result' &&
+      figure.supplement.dimensions?.includes('3d') && figure.supplement.forms?.includes('pointcloud'))).toBe(true);
   });
 });

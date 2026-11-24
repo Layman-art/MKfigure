@@ -1,7 +1,7 @@
 {
   "name": "mk-figure-studio",
   "productName": "MK Figure",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "科研图生成与可编辑 PPT/SVG 工作台",
   "author": "MK Figure",
   "license": "MIT",
@@ -28,6 +28,7 @@
     "jszip": "^3.10.1",
     "lucide-react": "^0.577.0",
     "pdf-parse": "1.1.1",
+    "pdfjs-dist": "6.5.438",
     "pngjs": "7.0.0",
     "pptxgenjs": "4.0.1",
     "react": "^19.2.0",
@@ -59,6 +60,7 @@
     "appId": "art.mkfigure.studio",
     "productName": "MK Figure",
     "asar": true,
+    "compression": "maximum",
     "npmRebuild": false,
     "directories": {
       "output": "release",
@@ -66,14 +68,26 @@
     },
     "files": [
       "dist/**/*",
+      "!dist/main/*.map",
+      "!dist/renderer/assets/*.woff",
       "package.json",
-      "!node_modules/**/{test,tests,example,examples}/**"
+      "!node_modules/**/{test,tests,example,examples}/**",
+      "!node_modules/**/*.map",
+      "!node_modules/{lucide-react,react,react-dom}/**",
+      "!node_modules/pdf-parse/lib/pdf.js/{v1.9.426,v1.10.88,v2.0.550}/**",
+      "!node_modules/pdf-parse/lib/pdf.js/v1.10.100/build/*.map",
+      "!node_modules/pdfjs-dist/{types,legacy,image_decoders,web}/**",
+      "!node_modules/pdfjs-dist/build/*.map",
+      "!node_modules/pdfjs-dist/build/pdf.mjs",
+      "!node_modules/pdfjs-dist/build/pdf.worker.mjs",
+      "!node_modules/pdfjs-dist/build/pdf.renderer.mjs",
+      "!node_modules/@napi-rs/canvas*/**"
     ],
     "extraResources": [
       {
         "from": "resources/paper-gallery",
         "to": "paper-gallery",
-        "filter": ["**/*", "!images/**"]
+        "filter": ["**/*", "!images/**", "!journals/images/**", "!supplement/images/**"]
       },
       {
         "from": "resources/layout-index",

@@ -33,7 +33,7 @@
   <br><sub>一个工作台，六张独立画布。截图为 0.6.0 参考素材载入演示。</sub>
 </p>
 
-> **Windows 最新版 v1.0.0** 支持内容图与风格图分别输入、按任务推荐论文版式，以及锁定选区的局部改图。当前 macOS 安装包为 v0.4.1。[Windows 安装包与发行说明](https://github.com/Layman-art/MKfigure/releases/tag/v1.0.0)
+> **Windows 2.0** 的论文图库支持跨期刊查找算例、机理与算法。可按图号回到原文，也可选取最多三张图作为新图的版式参考。[Windows 发行页](https://github.com/Layman-art/MKfigure/releases) · [图库指南与论文实例](docs/gallery-2.0.md)
 
 ## 为什么用 MK Figure？
 
@@ -72,7 +72,7 @@
 - 文件夹侧栏保存并继续创作；素材库统一管理参考图与个人图标。
 - 可记住多个文件夹，重启恢复上次活动目录；“从侧栏移除”只移除入口，本地文件保留，重新打开即可继续。
 - 内置 3 张参考图与 10 个 SVG 图标，可导入自己的素材。
-- 侧栏「顶会主图库」收录 3,449 条论文主图记录，可按会议、年份、奖项和图型筛选。公开安装包随附本地索引，原图首次查看时从整理方下载并按 SHA-256 校验。「下载全部图片」可保存完整离线图库。图片权利归论文作者和出版方。[原图库与使用政策](https://github.com/qwdwqfwq/topconf-paper-figure-gallery/blob/main/IMAGES_POLICY.md)
+- 打开「论文图库」可浏览 **3,525 张会议主图**（其中 818 张来自 2026 年）、**56 张会议正文图**和 **5,391 张期刊正文图**。例如，先选「期刊算例与方法图」，再选「算例结果图」和「二维与三维混合」对应的维度，可对照同一图号中的曲面、剖面或误差统计。详情提供作者、论文链接及已收录的图号、图位或 PDF 页码。[图级来源与交接](docs/gallery-2.0.md) · [原图库图片政策](https://github.com/qwdwqfwq/topconf-paper-figure-gallery/blob/main/IMAGES_POLICY.md)
 - 在「内容与风格」中，最多选择 4 张资料图提供科学内容。按绘图任务推荐论文，最多选 3 张版式参考并调整面板草图。六窗可以共用文件夹版式，单个作品也可以覆盖。
 - 修改已有视觉稿时可框选区域或输入像素坐标。软件只发送选区里的图像内容，在本机将结果写回选区。检测到可见变化后另存新版本，框外像素直接沿用原图。
 - 展示任务耗时、模型、推理强度及模型回传的 Token 用量；Token 不是账户余额或费用。
@@ -126,15 +126,15 @@ Codex 可协助下载、安装与检查；系统权限确认、安装向导或�
 
 ### 手动安装与开始创作
 
-1. Windows 用户关闭 MK Figure，运行 [v1.0.0 安装包](https://github.com/Layman-art/MKfigure/releases/tag/v1.0.0)，升级可沿用原安装目录。macOS 用户可安装 [v0.4.1](https://github.com/Layman-art/MKfigure/releases/tag/v0.4.1)。
+1. Windows 用户关闭 MK Figure，运行 [Windows 2.0 安装包](https://github.com/Layman-art/MKfigure/releases)，升级可沿用原安装目录。macOS 用户可安装 [v0.4.1](https://github.com/Layman-art/MKfigure/releases/tag/v0.4.1)。
 2. 打开 **模型与连接**，登录 Codex 或检测已有登录，选择账户支持的模型与推理强度。
 3. 点击“打开文件夹”选择创作目录，再输入主题、粘贴资料或上传已有图片，选择参考风格；无需先让 AI 改写提示词。
 4. 生成或复刻后核对文字、公式和箭头，按需精修，再导出需要的格式。
 
 | 使用方式 | 入口 |
 | --- | --- |
-| Windows x64 | [v1.0.0 安装包](https://github.com/Layman-art/MKfigure/releases/tag/v1.0.0) · [用户指南](docs/user-guide.md) |
-| macOS 13+（Apple Silicon、Intel） | [v0.4.1 历史安装包](https://github.com/Layman-art/MKfigure/releases/tag/v0.4.1) · [v0.4.1 安装指南](安装与使用.md) |
+| Windows x64 | [Windows 2.0 安装包](https://github.com/Layman-art/MKfigure/releases) · [用户指南](docs/user-guide.md) |
+| macOS 13+（Apple Silicon、Intel） | [v0.4.1 历史安装包](https://github.com/Layman-art/MKfigure/releases/tag/v0.4.1) · [安装指南](安装与使用.md) |
 | 在 Codex 对话中使用流程 | [mk-figure-skill](mk-figure-skill/)：将目录安装到本机 Codex skills 目录，已有同名版本先备份。 |
 | 单独使用矢量素材 | [10 个 SVG 图标](icon-pack/) |
 | 从源码运行 | [本地开发](#本地开发) · [工作区使用指南](docs/user-guide.md#管理作品) |
@@ -177,7 +177,7 @@ node scripts/prepare-library-assets.mjs
 npm run dev
 ```
 
-公开构建使用仓库随附的检索索引。应用可按需缓存论文原图，也可从图库中下载约 317 MiB 的全部图片以便离线使用。开发者可用 Git 和 Python 3.9+ 执行 `npm run gallery:sync`，逐文件校验并补齐固定版本的原图。
+公开安装包内置检索索引，原图按需缓存。需要离线使用时，在图库点击「缓存顶会主图」或安装与本版本配套的开放图包，并检查「本机离线可用」计数。其余正文图可逐张从记录指定的公开图源读取。配置了完整本地图像库的工作站可断网浏览全部已安装图。开发者可用 `npm run gallery:sync` 校验和补齐固定上游的主图。[安装步骤](安装与使用.md) · [数据与容量说明](docs/gallery-2.0.md)
 
 检查与打包：
 
