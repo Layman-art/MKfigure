@@ -2,7 +2,7 @@ import { createPortal } from 'react-dom';
 import PaperGallery from './PaperGallery';
 import { useEffect, useId, useRef, useState } from 'react';
 import type { FigureLayoutPlan, LayoutRecommendation, PaperCitation, WorkspaceApi } from '../../shared/types';
-import { citationFromFigure, paperFigureName } from '../../shared/gallery-taxonomy';
+import { citationFromFigure, journalVenues, paperFigureName } from '../../shared/gallery-taxonomy';
 import { errorText } from '../display';
 import { figureImage, patternNames } from '../paper-gallery';
 import '../layout-planner.css';
@@ -65,6 +65,24 @@ interface Props {
   onChange: (plan: FigureLayoutPlan | undefined) => void; disabled?: boolean;
 }
 
+function isRetiredJournalId(id:string) {
+  const venue=/^mk-j-([a-z]+)-/.exec(id)?.[1];
+  return !!venue && !Object.hasOwn(journalVenues,venue);
+}
+
+function SelectedPreview({api,id}:{api:WorkspaceApi;id:string}) {
+  const [preview,setPreview]=useState<string>();
+  const retired=isRetiredJournalId(id);
+  useEffect(()=>{
+    if (!retired) return;
+    let active=true;
+    api.savedLayoutFigure(id,'preview').then(url=>{if(active)setPreview(url);}).catch(()=>{});
+    return ()=>{active=false;};
+  },[api,id,retired]);
+  const src=retired ? preview : figureImage(id,true);
+  return src ? <img src={src} alt="" onError={e=>{e.currentTarget.hidden=true;}}/> : null;
+}
+
 export default function LayoutPlanner({ api, initialQuery, value, onChange, disabled = false }: Props) {
   const [customQuery, setCustomQuery] = useState<string>();
   const query = (customQuery ?? initialQuery).slice(0, 4000);
@@ -118,7 +136,7 @@ export default function LayoutPlanner({ api, initialQuery, value, onChange, disa
     catch (e) { if (token === sequence.current) setError(errorText(e)); }
     finally { if (token === sequence.current) setBusy(undefined); }
   }
-  const openSource = (id: string) => { void api.openPaperFigureLink(id, 'paper').catch(e => setError(errorText(e))); };
+  const openSource = (id: string) => { void (isRetiredJournalId(id) ? api.savedLayoutFigure(id, 'paper') : api.openPaperFigureLink(id, 'paper')).catch(e => setError(errorText(e))); };
   return <details className="mk-layout-planner" open={expanded} onToggle={e => setExpanded(e.currentTarget.open)}>
     <summary>参考图与版式 <small>{value ? value.panels.length + ' 个面板 · ' + selected.length + ' 张参考' : '可选'}</small></summary>
     <div className="mk-layout-body">
@@ -135,7 +153,7 @@ export default function LayoutPlanner({ api, initialQuery, value, onChange, disa
       </article>)}</div></>}
       {value && <>
         <div className="mk-layout-planhead"><strong>版式草图</strong><button type="button" className="mk-layout-link" disabled={locked} onClick={() => { onChange(undefined); setError(''); }}>清空版式</button></div>
-        {selected.length > 0 && <ul className="mk-layout-picked">{selected.map(id => <li key={id}><img src={figureImage(id,true)} alt="" onError={e=>{e.currentTarget.hidden=true;}}/><button type="button" className="mk-layout-link" onClick={() => openSource(id)}>{known.has(id) ? paperFigureName(known.get(id)!) : id} ↗</button>
+        {selected.length > 0 && <ul className="mk-layout-picked">{selected.map(id => <li key={id}><SelectedPreview api={api} id={id}/><button type="button" className="mk-layout-link" onClick={() => openSource(id)}>{known.has(id) ? paperFigureName(known.get(id)!) : id} ↗</button>
           <button type="button" aria-label={'移除参考图 ' + (known.get(id)?.title || id)} disabled={locked} onClick={() => onChange({ ...value, referenceIds: selected.filter(key => key !== id), citations: value.citations?.filter(c => c.id !== id) })}>移除</button></li>)}</ul>}
         <label>面板排列<select value={value.arrangement} disabled={locked} onChange={e => onChange({ ...value, arrangement: e.target.value as Arrangement })}>{Object.entries(names).map(([id,name]) => <option key={id} value={id}>{name}</option>)}</select></label>
         <LayoutSketch arrangement={value.arrangement} panels={value.panels}/>

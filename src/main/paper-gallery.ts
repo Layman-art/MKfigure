@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { gunzipSync } from 'node:zlib';
 import type { PaperFigure } from '../shared/types';
 import { formNames, journalVenues, studyCategories } from '../shared/gallery-taxonomy';
 import type { GalleryImageCache } from './gallery-cache';
@@ -10,6 +11,7 @@ export const GALLERY_RIGHTS = 'https://github.com/qwdwqfwq/topconf-paper-figure-
 /** Load the pinned upstream snapshot and MK Figure's individually sourced figure crops. */
 export class PaperGallery {
   private catalog?: Promise<Map<string, PaperFigure>>;
+  private retiredLayouts?: Promise<Map<string, PaperFigure>>;
   constructor(private readonly root: string, private readonly cache?: GalleryImageCache) {}
 
   private async readCatalog() {
@@ -33,7 +35,7 @@ export class PaperGallery {
       for (const row of rows) {
         const custom = rows !== original;
         const journal = rows === journals;
-        if (!journal && retired.has(row.id)) continue;
+        if (journal ? !Object.hasOwn(journalVenues, row.venue) : retired.has(row.id)) continue;
         const extension = journal && row.image.endsWith('.webp') ? '.webp' : '.jpg';
         const expected = custom ? `${journal ? 'journals' : 'supplement'}/images/${row.id}${extension}` : `images/${row.venue}/final/${row.id}.jpg`;
         if (!/^[a-z]+$/.test(row.venue) || !/^[a-z0-9][a-z0-9._-]*$/i.test(row.id) || row.image !== expected ||
@@ -54,6 +56,31 @@ export class PaperGallery {
     const figure = (await this.records()).get(id);
     if (!figure) throw new Error('图库中没有这张图。');
     return figure;
+  }
+  async layoutFigure(id: string, previouslySaved: () => Promise<boolean>) {
+    const active = (await this.records()).get(id);
+    if (active) return active;
+    if (!await previouslySaved()) throw new Error('图库中没有这张图。');
+    this.retiredLayouts ??= fs.readFile(path.join(this.root, 'retired-layout-2.1.0.json.gz')).then(bytes => {
+      const rows: PaperFigure[] = JSON.parse(gunzipSync(bytes).toString('utf8'));
+      return new Map(rows.map(row => {
+        if (!/^mk-j-[a-z]+-[0-9a-f]{14}-f[1-9]\d*$/.test(row.id) || !row.id.startsWith('mk-j-' + row.venue + '-') ||
+            !['.jpg','.webp'].some(ext => row.image === 'journals/images/' + row.id + ext) || !validSupplement(row, true)) {
+          throw new Error('历史版式引用索引无效。');
+        }
+        return [row.id, row];
+      }));
+    }).catch(error => { this.retiredLayouts = undefined; throw error; });
+    const figure = (await this.retiredLayouts).get(id);
+    if (!figure) throw new Error('图库中没有这张图。');
+    return figure;
+  }
+  async layoutReference(id: string, previouslySaved: () => Promise<boolean>) {
+    const figure = await this.layoutFigure(id, previouslySaved);
+    const archived = !(await this.records()).has(id);
+    const bytes = archived && this.cache ? await this.cache.readSavedLayout(figure) :
+      archived ? await fs.readFile(path.join(this.root, figure.image)) : await this.image(id);
+    return {figure, bytes};
   }
   async image(id: string, signal?:AbortSignal) {
     const figure = await this.figure(id);
@@ -81,7 +108,7 @@ function validSupplement(row: PaperFigure, journal: boolean) {
       !info.description || !/^[a-f0-9]{64}$/.test(info.sha256)) return false;
   const pdfPage = !!row.pdf_source && Number.isInteger(row.page) && row.page! >= 1;
   if (journal) {
-    if (info.collection !== 'journal' || info.category === 'main' || !Object.hasOwn(journalVenues, row.venue) ||
+    if (info.collection !== 'journal' || info.category === 'main' ||
         !row.id.startsWith('mk-j-') || !/^10\.\d{4,9}\/\S+$/i.test(row.doi || '') ||
         !Number.isInteger(row.year) || !Array.isArray(row.authors) || !row.authors.length || !row.title || (!pdfPage && !row.figureUrl)) return false;
   } else if (info.collection || (!pdfPage && !(row.figureUrl?.includes('#') && info.imageSource))) return false;

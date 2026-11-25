@@ -59,10 +59,15 @@ async function libraryReference(id:string):Promise<{name:string;dataUrl:string;c
   if(image.isEmpty())throw new Error('无法读取这张论文主图。');
   return {name:paperFigureName(figure),dataUrl:image.toDataURL(),citation:citationFromFigure(figure)};
 }
-async function loadLayoutReferences(ids:string[]) {
+async function savedLayoutIds(paneId:number) {
+  const projectId=registry.project(paneId);
+  const project=projectId ? await store.load(projectId) : undefined;
+  return [...(project?.brief.layoutPlan?.referenceIds||[]), ...folders.savedLayoutIds];
+}
+async function loadLayoutReferences(ids:string[], savedIds:()=>Promise<readonly string[]>) {
+  let saved:Promise<readonly string[]>|undefined;
   return Promise.all(ids.map(async id=>{
-    const figure=await paperGallery.figure(id);
-    const bytes=await paperGallery.image(id);
+    const {figure,bytes}=await paperGallery.layoutReference(id,async()=>(await (saved??=savedIds())).includes(id));
     const mime=sniffImage(bytes);
     if (!mime) throw Error('参考图格式无效。');
     return {name:paperFigureName(figure),citation:citationFromFigure(figure),dataUrl:'data:'+mime+';base64,'+bytes.toString('base64')};
@@ -202,7 +207,7 @@ app.whenReady().then(async()=>{
       return new Response(new Uint8Array(bytes),{headers:{'Content-Type':mime,'X-Content-Type-Options':'nosniff'}});
     }catch{return new Response(null,{status:404});}
   });
-  workflow=new Workflow(store,()=>hub,event=>{const paneId=registry.owner(event.projectId);if(paneId!==undefined&&mainWindow&&!mainWindow.isDestroyed())mainWindow.webContents.send('mk:progress',{paneId,event});},p=>folders.effectiveProject(p),loadLayoutReferences);
+  workflow=new Workflow(store,()=>hub,event=>{const paneId=registry.owner(event.projectId);if(paneId!==undefined&&mainWindow&&!mainWindow.isDestroyed())mainWindow.webContents.send('mk:progress',{paneId,event});},p=>folders.effectiveProject(p),ids=>loadLayoutReferences(ids,async()=>ids));
   handler('galleryCache',async(_paneId:number,action?:'start'|'stop')=>{
     if(action!==undefined&&action!=='start'&&action!=='stop')throw Error('无效的离线图库操作');
     return imageCache.status(await paperGallery.list(),action);
@@ -221,7 +226,7 @@ app.whenReady().then(async()=>{
     if(!config.enabled||!config.vision)throw Error('读取参考图需要启用支持图片理解的 Codex 连接');
     const controller=new AbortController();styleTasks.set(paneId,controller);
     try{
-      const images=await loadLayoutReferences(plan.referenceIds);
+      const images=await loadLayoutReferences(plan.referenceIds,()=>savedLayoutIds(paneId));
       const models=await hub.listModels('codex');
       const model=config.model||(models.find(m=>m.isDefault)||models[0])?.id;
       if(!model)throw Error('请先在模型与连接中选择可用的视觉模型');
@@ -283,6 +288,21 @@ app.whenReady().then(async()=>{
   handler('createProject',async(paneId:number,name:string,route:'full'|'reconstruct')=>{folders.assertSelected();if(!['full','reconstruct'].includes(route))throw new Error('未知项目入口');const previous=registry.project(paneId);if(previous&&(workflow.isRunning(previous)||runTasks.has(previous)||(projectOperations.get(paneId)||0)>0))throw new Error('当前作品正在处理，请完成或停止后再新建');let project=await store.create(name,route);project=await store.mutate(project.id,p=>{p.styleMode='shared';});claimProject(paneId,project.id);folderChanged();return store.hydrate(project);});
   handler('openProject',async(paneId:number,id:string)=>{const project=await store.load(safeId(id));claimProject(paneId,id);return store.hydrate(project);});
   handler('listLibrary',(_paneId:number)=>library.list());
+  handler('savedLayoutFigure',async(paneId:number,id:string,action:'preview'|'paper')=>{
+    if (!(await savedLayoutIds(paneId)).includes(id)) throw Error('此图不在已保存的版式中。');
+    const saved=async()=>true;
+    if (action==='paper') {
+      const row=await paperGallery.layoutFigure(id,saved);
+      if (!row.doi || !/^10\.\d{4,9}\/\S+$/i.test(row.doi)) throw Error('文献 DOI 无效。');
+      await shell.openExternal('https://doi.org/'+row.doi);
+      return;
+    }
+    if (action!=='preview') throw Error('未知的版式引用操作。');
+    const {bytes}=await paperGallery.layoutReference(id,saved);
+    const mime=sniffImage(bytes);
+    if (!mime) throw Error('参考图格式无效。');
+    return 'data:'+mime+';base64,'+bytes.toString('base64');
+  });
   handler('listPaperFigures',()=>paperGallery.list());
   handler('openPaperFigureLink',async(_paneId:number,id:string,kind:'paper'|'pdf'|'figure')=>shell.openExternal(await paperGallery.paperUrl(id,kind)));
   handler('openPaperGallerySource',(_paneId:number,kind:'gallery'|'rights')=>{

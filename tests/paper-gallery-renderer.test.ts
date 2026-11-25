@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { PaperFigure } from '../src/shared/types';
 import { studyFacetCounts, figureImage, galleryShareUrl, initialFilters, makeSearchIndex, queryFigures, readGalleryLink } from '../src/renderer/paper-gallery';
+import { journalVenues } from '../src/shared/gallery-taxonomy';
 import type { GalleryLocation } from '../src/renderer/paper-gallery';
 
 const make = (id: string, values: Partial<PaperFigure>): PaperFigure => ({
@@ -101,5 +102,23 @@ describe('local research figure collections', () => {
     expect(stale?.filters).toMatchObject({ view: 'study', category: 'all', dimension: 'all', form: 'all' });
     expect(readGalleryLink('mkfigure://gallery/?view=study&category=algorithm#f=mk-absent', data)).toMatchObject({ filters: { view: 'study', category: 'algorithm' }, id: null });
     for (const link of ['mkfigure://other/', 'mkfigure://gallery/extra', 'mkfigure://user@gallery/']) expect(readGalleryLink(link, data)).toBeNull();
+  });
+});
+
+describe('journal catalog scope', () => {
+  it('retains the original journals and restores links to TIE and TII', () => {
+    const original = 'tpwrs tsg tste tpwrd tec tnnls tcyb tai apenergy ees renene nature natenergy natcommun natelectron natmachintell natcomputsci natsustain commseng'.split(' ');
+    expect(Object.keys(journalVenues).sort()).toEqual([...original, 'tie', 'tii'].sort());
+    for (const venue of ['tie', 'tii', 'tpwrs']) {
+      const location = readGalleryLink('mkfigure://gallery/?view=journal&v=' + venue, []);
+      expect(location?.filters).toMatchObject({view:'journal', venue});
+    }
+  });
+
+  it('restores compatible filters when an old journal or figure has been withdrawn', () => {
+    for (const venue of ['epsr', 'tac', 'unknown']) {
+      const location = readGalleryLink('mkfigure://gallery/?view=journal&v=' + venue + '&category=algorithm&q=control#f=mk-j-withdrawn', []);
+      expect(location).toMatchObject({filters:{view:'journal', venue:'all', category:'algorithm', q:'control'}, id:null});
+    }
   });
 });

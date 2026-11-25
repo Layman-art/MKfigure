@@ -1,31 +1,8 @@
+import journalLabels from './journal-venues.json';
 import type { PaperCitation, PaperFigure, StudyCategory, StudyDimension, StudyForm } from './types';
 
 export const LOCAL_GALLERY = 'mkfigure://gallery/';
-export const journalVenues: Record<string, [string, string]> = {
-  tpwrs: ['TPWRS', 'IEEE Transactions on Power Systems'], tsg: ['TSG', 'IEEE Transactions on Smart Grid'],
-  tste: ['TSTE', 'IEEE Transactions on Sustainable Energy'], tpwrd: ['TPWRD / TPD', 'IEEE Transactions on Power Delivery'],
-  tec: ['TEC', 'IEEE Transactions on Energy Conversion'], tnnls: ['TNNLS', 'IEEE Transactions on Neural Networks and Learning Systems'],
-  tcyb: ['TCYB', 'IEEE Transactions on Cybernetics'], tai: ['TAI', 'IEEE Transactions on Artificial Intelligence'],
-  apenergy: ['Applied Energy', 'Applied Energy'], ees: ['EES', 'Energy & Environmental Science'], renene: ['Renewable Energy', 'Renewable Energy'],
-  nature: ['Nature', 'Nature'], natenergy: ['Nature Energy', 'Nature Energy'], natcommun: ['Nature Communications', 'Nature Communications'],
-  natelectron: ['Nature Electronics', 'Nature Electronics'], natmachintell: ['Nature Machine Intelligence', 'Nature Machine Intelligence'],
-  natcomputsci: ['Nature Computational Science', 'Nature Computational Science'], natsustain: ['Nature Sustainability', 'Nature Sustainability'],
-  commseng: ['Communications Engineering', 'Communications Engineering'],
-  epsr: ['EPSR', 'Electric Power Systems Research'],
-  ijepes: ['IJEPES', 'International Journal of Electrical Power & Energy Systems'],
-  gtd: ['IET GTD', 'IET Generation, Transmission & Distribution'],
-  segan: ['SEGAN', 'Sustainable Energy, Grids and Networks'],
-  tpel: ['TPEL', 'IEEE Transactions on Power Electronics'],
-  jestpe: ['JESTPE', 'IEEE Journal of Emerging and Selected Topics in Power Electronics'],
-  tie: ['TIE', 'IEEE Transactions on Industrial Electronics'],
-  tii: ['TII', 'IEEE Transactions on Industrial Informatics'],
-  tia: ['TIA', 'IEEE Transactions on Industry Applications'],
-  tac: ['TAC', 'IEEE Transactions on Automatic Control'],
-  tcst: ['TCST', 'IEEE Transactions on Control Systems Technology'],
-  lcsys: ['L-CSS', 'IEEE Control Systems Letters'],
-  automatica: ['Automatica', 'Automatica'],
-  conengprac: ['Control Engineering Practice', 'Control Engineering Practice'],
-};
+export const journalVenues: Readonly<Record<string, readonly string[]>> = journalLabels;
 export const studyCategories: Record<StudyCategory, [string, string]> = {
   result: ['算例结果图', 'Experimental results'], mechanism: ['机理解释图', 'Mechanism explanations'], algorithm: ['算法图', 'Algorithms'],
 };

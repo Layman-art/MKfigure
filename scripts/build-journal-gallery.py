@@ -29,6 +29,7 @@ except ImportError:
     optimize_jpeg = None
 
 ROOT = Path(__file__).resolve().parents[1]
+JOURNAL_VENUES = frozenset(json.loads((ROOT / 'src/shared/journal-venues.json').read_text(encoding='utf8')))
 CARD_PREVIEW_PROFILE = 2
 ENCODING_LOCKS = [threading.Lock() for _ in range(64)]
 OPEN = re.compile(r'^https?://creativecommons\.org/(?:licenses/by/(?:[1-4]\.0|2\.5)|publicdomain/zero/1\.0)/?$', re.I)
@@ -234,6 +235,8 @@ def open_license(row, lic, base):
 
 def one(job):
     src, row, forms, args = job
+    if row.get('journal') not in JOURNAL_VENUES:
+        raise ValueError('journal outside the supported catalog')
     doi, num = key(row)
     if num < 1:
         raise ValueError('figure requires a positive original number')

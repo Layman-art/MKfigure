@@ -76,6 +76,7 @@ export class FolderWorkspace {
     return {selected:this.selected,localProjectCount:(await localStore.list()).length,folder:{id:this.document.id,name:this.currentPath?path.basename(this.currentPath):'本地作品',path:this.currentPath,style:structuredClone(this.document.style),projects:this.selected?await this.store.list():[]},recentFolders:structuredClone(this.recent)};
   }
   assertSelected() { if(!this.selected)throw new Error('请先打开创作文件夹'); }
+  get savedLayoutIds():readonly string[] { return this.selected ? this.document.style.layoutPlan?.referenceIds || [] : []; }
   get isSelected() { return this.selected; }
   private saveEntries(recent:RecentFolder[],selected:boolean,activePath?:string) {
     return atomicJson(path.join(this.store.directory,'recent-folders.json'),{version:1,recentFolders:recent,selected,activePath:activePath??null});

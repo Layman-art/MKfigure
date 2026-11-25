@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+import { gzipSync, gunzipSync } from 'node:zlib';
+import { GalleryImageCache } from '../src/main/gallery-cache';
+import type { PaperFigure } from '../src/shared/types';
 import { PaperGallery } from '../src/main/paper-gallery';
 import { citationFromFigure, studyDimension } from '../src/shared/gallery-taxonomy';
 
@@ -73,6 +78,38 @@ describe('published paper catalog', () => {
     expect(records.some(row=>row.figure==='Figure 1' && row.supplement?.category==='algorithm')).toBe(true);
     expect(new Set(records.filter(row=>row.supplement!.category==='result').map(studyDimension))).toEqual(new Set(['2d','3d','mixed']));
     expect(records.some(row=>row.figureUrl && !row.page)).toBe(true);
+  });
+  it('reads a withdrawn reference only for a saved layout while a stale mixed index and existing cache stay usable', async () => {
+    const historic: PaperFigure[] = JSON.parse(gunzipSync(await readFile(path.join(root, 'retired-layout-2.1.0.json.gz'))).toString());
+    const old = historic[0];
+    const bytes = Buffer.from('fixture for content-addressed reference');
+    old.supplement!.sha256 = createHash('sha256').update(bytes).digest('hex');
+    const folder = await mkdtemp(path.join(tmpdir(),'mk-layout-history-'));
+    try {
+      for (const sub of ['data','supplement','journals','cache']) await mkdir(path.join(folder,sub));
+      const upstream = (await gallery.list()).find(row=>!row.supplement)!;
+      const kept = (await gallery.list()).find(row=>row.venue==='tie')!;
+      for (const [name, value] of Object.entries({
+        'upstream.json':{revision:'a'.repeat(40)}, 'data/image-hashes.json':{}, 'data/figures.json':[upstream],
+        'supplement/figures.json':[], 'journals/figures.json':[kept, old, {...old,venue:'unknown'}]
+      })) await writeFile(path.join(folder,name),JSON.stringify(value));
+      await writeFile(path.join(folder,'retired-layout-2.1.0.json.gz'),gzipSync(JSON.stringify(historic)));
+      const cachedFile = path.join(folder,'cache',old.supplement!.sha256+path.extname(old.image));
+      await writeFile(cachedFile,bytes);
+      const cache = new GalleryImageCache(folder,path.join(folder,'cache'));
+      const mixed = new PaperGallery(folder,cache);
+      const current = await mixed.list();
+      expect(current.map(row=>row.id)).toEqual([upstream.id,kept.id]);
+      await expect(mixed.figure(old.id)).rejects.toThrow('图库中没有');
+      await expect(mixed.thumbnail(old.id)).rejects.toThrow('图库中没有');
+      await expect(mixed.paperUrl(old.id,'paper')).rejects.toThrow('图库中没有');
+      await expect(mixed.layoutReference(old.id,async()=>false)).rejects.toThrow('图库中没有');
+      const reference = await mixed.layoutReference(old.id,async()=>true);
+      expect(reference.bytes).toEqual(bytes);
+      expect(reference.figure.doi).toBe(old.doi);
+      expect(await cache.status(current)).toMatchObject({total:2,available:0});
+      expect(await readFile(cachedFile)).toEqual(bytes);
+    } finally { await rm(folder,{recursive:true,force:true}); }
   });
   it('resolves only records in the installed index', async () => {
     await expect(gallery.figure('missing-record')).rejects.toThrow('图库中没有');

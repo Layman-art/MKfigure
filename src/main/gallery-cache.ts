@@ -94,6 +94,11 @@ export class GalleryImageCache {
     })().catch(error => { this.inventoried=undefined; throw error; });
   }
 
+  // Archived project references use the same verified cache and source policy but are outside catalog statistics.
+  readSavedLayout(row: PaperFigure) {
+    return this.readOrFetch(row, AbortSignal.timeout(75000));
+  }
+
   async read(row: PaperFigure, signal?: AbortSignal): Promise<Buffer> {
     signal?.throwIfAborted();
     let entry=this.pending.get(row.id);

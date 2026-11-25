@@ -91,6 +91,7 @@ export interface WorkspaceApi {
   createProject(name: string, route: 'full' | 'reconstruct'): Promise<Project>;
   deleteProject(projectId: string): Promise<{ deleted: boolean; projects: ProjectSummary[] }>;
   listLibrary(): Promise<LibraryItem[]>;
+  savedLayoutFigure(id:string,action:'preview'|'paper'):Promise<string|undefined>;
   listPaperFigures(): Promise<PaperFigure[]>;
   recommendPaperLayouts(query: string): Promise<LayoutRecommendation[]>;
   analyzePaperLayout(plan: FigureLayoutPlan, task: string): Promise<FigureLayoutPlan>;
