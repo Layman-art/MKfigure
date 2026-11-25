@@ -21,11 +21,19 @@ export class PaperGallery {
       }
     }));
     if (!Array.isArray(original) || !original.length || !Array.isArray(supplement) || !Array.isArray(journals)) throw new Error('论文图库索引缺失，请重新安装图库。');
+    const excluded: string[] = await fs.readFile(path.join(this.root, 'conference-exclusions.json'), 'utf8')
+      .then(data => JSON.parse(data)).catch(error => {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') return [];
+        throw error;
+      });
+    if (!Array.isArray(excluded) || !excluded.every(id => typeof id === 'string')) throw new Error('论文图库筛选清单无效。');
+    const retired = new Set(excluded);
     const records = new Map<string, PaperFigure>();
     for (const rows of [original, supplement, journals]) {
       for (const row of rows) {
         const custom = rows !== original;
         const journal = rows === journals;
+        if (!journal && retired.has(row.id)) continue;
         const extension = journal && row.image.endsWith('.webp') ? '.webp' : '.jpg';
         const expected = custom ? `${journal ? 'journals' : 'supplement'}/images/${row.id}${extension}` : `images/${row.venue}/final/${row.id}.jpg`;
         if (!/^[a-z]+$/.test(row.venue) || !/^[a-z0-9][a-z0-9._-]*$/i.test(row.id) || row.image !== expected ||

@@ -120,7 +120,7 @@ async function decodeCardImages(n) {
     const cardId = await cards().nth(i).getAttribute('data-paper-id');
     const url = new URL(data[0]);
     assert.equal(url.protocol, 'mk-gallery:');
-    assert.equal(url.host, cardId.startsWith('mk-') ? 'thumbnail' : 'figure');
+    assert.ok(cardId.startsWith('mk-') ? ['thumbnail','figure'].includes(url.host) : url.host === 'figure');
     assert.equal(decodeURIComponent(url.pathname.slice(1)), cardId);
     assert.ok(Math.min(data[1], data[2]) > 10, 'decoded local paper figure ' + data[0]);
     result.push(decodeURIComponent(data[0].split('/').at(-1)));
@@ -470,11 +470,11 @@ try {
   await count(main.length);
   assert.deepEqual(await decodeCardImages(5), [...main].sort(defaultOrder).slice(0,5).map(row => row.id));
   await gallery.locator('.pg-top').scrollIntoViewIfNeeded();
-  assert.equal(await gallery.locator('.pg-page').first().evaluate(el => getComputedStyle(el).columnCount), '4');
+  assert.equal(await gallery.locator('.pg-page').first().evaluate(el => getComputedStyle(el).getPropertyValue('--pg-columns').trim()), '4');
   await capture('gallery-1440');
   await size(960);
   await gallery.locator('.pg-top').scrollIntoViewIfNeeded();
-  assert.equal(await gallery.locator('.pg-page').first().evaluate(el => getComputedStyle(el).columnCount), '3');
+  assert.equal(await gallery.locator('.pg-page').first().evaluate(el => getComputedStyle(el).getPropertyValue('--pg-columns').trim()), '3');
   await capture('gallery-960');
   await size(1440);
   original = index.find(f => f.id === selectedId);

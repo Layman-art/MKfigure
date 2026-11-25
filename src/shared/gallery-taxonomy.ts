@@ -11,6 +11,20 @@ export const journalVenues: Record<string, [string, string]> = {
   natelectron: ['Nature Electronics', 'Nature Electronics'], natmachintell: ['Nature Machine Intelligence', 'Nature Machine Intelligence'],
   natcomputsci: ['Nature Computational Science', 'Nature Computational Science'], natsustain: ['Nature Sustainability', 'Nature Sustainability'],
   commseng: ['Communications Engineering', 'Communications Engineering'],
+  epsr: ['EPSR', 'Electric Power Systems Research'],
+  ijepes: ['IJEPES', 'International Journal of Electrical Power & Energy Systems'],
+  gtd: ['IET GTD', 'IET Generation, Transmission & Distribution'],
+  segan: ['SEGAN', 'Sustainable Energy, Grids and Networks'],
+  tpel: ['TPEL', 'IEEE Transactions on Power Electronics'],
+  jestpe: ['JESTPE', 'IEEE Journal of Emerging and Selected Topics in Power Electronics'],
+  tie: ['TIE', 'IEEE Transactions on Industrial Electronics'],
+  tii: ['TII', 'IEEE Transactions on Industrial Informatics'],
+  tia: ['TIA', 'IEEE Transactions on Industry Applications'],
+  tac: ['TAC', 'IEEE Transactions on Automatic Control'],
+  tcst: ['TCST', 'IEEE Transactions on Control Systems Technology'],
+  lcsys: ['L-CSS', 'IEEE Control Systems Letters'],
+  automatica: ['Automatica', 'Automatica'],
+  conengprac: ['Control Engineering Practice', 'Control Engineering Practice'],
 };
 export const studyCategories: Record<StudyCategory, [string, string]> = {
   result: ['算例结果图', 'Experimental results'], mechanism: ['机理解释图', 'Mechanism explanations'], algorithm: ['算法图', 'Algorithms'],
@@ -23,6 +37,10 @@ export const researchTopics: Record<string, [string, string]> = {
   forecast: ['时序与轨迹预测', 'Time series and trajectory forecasts'], resilience: ['供电恢复与可靠性', 'Restoration and reliability'],
   emissions: ['碳排放与脱碳', 'Carbon emissions and decarbonization'], charging: ['电动汽车充电', 'Electric vehicle charging'],
   control: ['控制与变流器', 'Controllers and converters'], graphlearning: ['图神经网络', 'Graph neural networks'],
+  dynamics: ['动态建模与时域仿真', 'Dynamic models and time-domain simulation'],
+  neuraldynamics: ['神经动力学与物理约束学习', 'Neural dynamics and physics-informed learning'],
+  gridtransfer: ['跨工况与拓扑迁移', 'Operating-condition and topology transfer'],
+  identification: ['系统辨识与动态状态估计', 'System identification and dynamic state estimation'],
 };
 export const dimensionNames: Record<StudyDimension | 'mixed', [string, string]> = {
   '2d': ['二维', '2D'], '3d': ['三维', '3D'], mixed: ['二维与三维混合', 'Mixed 2D and 3D'],

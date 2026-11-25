@@ -181,7 +181,7 @@ app.whenReady().then(async()=>{
       const info=row.supplement!;
       if (info.imagePanels?.length || info.imageSource) {
         try {
-          return info.imagePanels?.length ? await readPublicPanels(info.imagePanels,signal) : await readPublicImage(info.imageSource!,signal);
+          return info.imagePanels?.length ? await readPublicPanels(info.imagePanels,signal,info.panelRows) : await readPublicImage(info.imageSource!,signal);
         }
         catch (error) { if (!row.pdf_source || !row.page || !info.cropPdfPoints || signal.aborted) throw error; }
       }

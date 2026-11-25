@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
 import { PaperGallery } from '../src/main/paper-gallery';
 import { citationFromFigure, studyDimension } from '../src/shared/gallery-taxonomy';
 
@@ -8,9 +9,13 @@ const root = fileURLToPath(new URL('../resources/paper-gallery/', import.meta.ur
 const gallery = new PaperGallery(root);
 
 describe('published paper catalog', () => {
-  it('keeps the original IDs and figures complete across all venues', async () => {
+  it('retains every selected upstream ID and suppresses retired figures throughout the catalog', async () => {
     const rows = await gallery.list();
-    expect(rows.filter(row => !row.supplement)).toHaveLength(3449);
+    const pinned = JSON.parse(await readFile(new URL('../resources/paper-gallery/data/figures.json', import.meta.url), 'utf8')) as {id:string}[];
+    const retired = new Set<string>(JSON.parse(await readFile(new URL('../resources/paper-gallery/conference-exclusions.json', import.meta.url), 'utf8')));
+    expect(pinned).toHaveLength(3449);
+    expect(rows.filter(row => !row.supplement).map(row => row.id)).toEqual(pinned.map(row => row.id).filter(id => !retired.has(id)));
+    expect(rows.some(row => retired.has(row.id))).toBe(false);
     expect(new Set(rows.map(row => row.id)).size).toBe(rows.length);
     for (const id of ['acl2023-2023.acl-long.122', 'iclr2024-0684', rows.find(row => row.venue === 'cvpr' && row.id.includes('_'))!.id]) {
       const row = await gallery.figure(id);
@@ -71,5 +76,16 @@ describe('published paper catalog', () => {
   });
   it('resolves only records in the installed index', async () => {
     await expect(gallery.figure('missing-record')).rejects.toThrow('图库中没有');
+  });
+  it('keeps the curated exclusions and opens the adaptive power-flow chart from its vector source', async () => {
+    const records = await gallery.list();
+    const excluded = ['mk-j-tpwrs-2d9fbfcceef9ae-f12', 'mk-j-tpwrs-75594994970eb7-f8'];
+    expect(records.filter(row => excluded.includes(row.id))).toHaveLength(0);
+    for (const id of excluded) await expect(gallery.figure(id)).rejects.toThrow('图库中没有');
+    const chart = await gallery.figure('mk-j-tpwrs-272b012f5d0b3e-f3');
+    expect(chart.w).toBeGreaterThanOrEqual(1300);
+    expect(chart.h).toBeGreaterThanOrEqual(2400);
+    expect(chart.pdf_source).toContain('molzahn.github.io/');
+    expect(chart.supplement?.cropPdfPoints).toHaveLength(4);
   });
 });

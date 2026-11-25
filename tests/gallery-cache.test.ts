@@ -29,6 +29,21 @@ async function fixture(count=6) {
 afterEach(async()=>{await Promise.all(scratch.splice(0).map(p=>rm(p,{recursive:true,force:true})));});
 
 describe('verified public gallery cache',()=>{
+  it('prefers locally available detail over a legacy thumbnail without contacting the publisher',async()=>{
+    const f=await fixture(1),row=f.rows[0],hash=f.hash(row.id);
+    row.image='journals/images/'+row.id+'.webp';
+    row.supplement={category:'algorithm',collection:'journal',description:'Tall flowchart',sha256:hash,archive:{offset:0,length:f.bytes(row.id).length}};
+    const pub=join(f.root,'journals','previews');
+    const old=join(f.cacheDir,'previews');
+    await Promise.all([mkdir(pub,{recursive:true}),mkdir(old,{recursive:true})]);
+    await writeFile(join(pub,row.id+'.webp'),'public card');
+    await writeFile(join(old,hash+'.webp'),'legacy 172px preview');
+    const request=vi.fn<typeof fetch>(), cache=new GalleryImageCache(f.root,f.cacheDir,request);
+    expect(await cache.thumbnail(row)).toEqual(Buffer.from('public card'));
+    await writeFile(join(f.cacheDir,hash+'.webp'),f.bytes(row.id));
+    expect(await cache.thumbnail(row)).toEqual(f.bytes(row.id));
+    expect(request).not.toHaveBeenCalled();
+  });
   it('keeps grid previews offline and caches a selected source rendering under its own digest',async()=>{
     const f=await fixture(1), row=f.rows[0];
     row.image='journals/images/'+row.id+'.webp';
@@ -66,6 +81,23 @@ describe('verified public gallery cache',()=>{
     await expect(cache.installArchive([row],pack)).rejects.toThrow('校验');
     await writeFile(pack,Buffer.concat([prefix,bytes]));
     expect(await cache.installArchive([row],pack)).toBe(1);
+  });
+  it('retrieves the versioned release asset by exact byte range if its download link fails',async()=>{
+    const f=await fixture(1),row=f.rows[0],bytes=f.bytes(row.id);
+    row.image='journals/images/'+row.id+'.webp';
+    row.supplement={category:'mechanism',collection:'journal',description:'Source figure',sha256:f.hash(row.id),archive:{offset:100,length:bytes.length}};
+    await mkdir(join(f.root,'journals'));
+    await writeFile(join(f.root,'journals','coverage.json'),JSON.stringify({archiveVersion:'2.1.0'}));
+    const name='MK-Figure-2.1.0-Open-Figures.zip',end=100+bytes.length-1;
+    const api='https://api.github.com/repos/Layman-art/MKfigure/releases';
+    const request=vi.fn<typeof fetch>()
+      .mockResolvedValueOnce(new Response('',{status:403}))
+      .mockResolvedValueOnce(Response.json({assets:[{name,id:123}]}))
+      .mockResolvedValueOnce(new Response(new Uint8Array(bytes),{status:206,headers:{'content-range':`bytes 100-${end}/900`}}));
+    expect(await new GalleryImageCache(f.root,f.cacheDir,request).read(row)).toEqual(bytes);
+    expect(request.mock.calls.map(([u])=>u)).toEqual([
+      'https://github.com/Layman-art/MKfigure/releases/download/v2.1.0/'+name,api+'/tags/v2.1.0',api+'/assets/123']);
+    expect(request.mock.calls[2][1]?.headers).toEqual({Range:`bytes=100-${end}`,Accept:'application/octet-stream'});
   });
   it('uses the bundled verified crop offline and reports a missing crop without requesting it from upstream',async()=>{
     const f=await fixture(1), row=f.rows[0];

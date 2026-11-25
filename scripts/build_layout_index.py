@@ -23,6 +23,12 @@ def build(source, output):
                      *info.get("dimensions", []), *info.get("forms", [])])
     if len(ids) != len(set(ids)):
         raise ValueError("Duplicate figure IDs across the two collections.")
+    exclusions = output.parent / "paper-gallery" / "conference-exclusions.json"
+    if exclusions.is_file():
+        retired = set(json.loads(exclusions.read_text(encoding="utf-8")))
+        selected = [(figure_id, doc) for figure_id, doc in zip(ids, docs) if figure_id not in retired]
+        ids = [figure_id for figure_id, _ in selected]
+        docs = [doc for _, doc in selected]
     write_index(ids, docs, output / "concepts.json", output / "paper-terms.json.gz")
 
 

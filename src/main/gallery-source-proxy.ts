@@ -1,10 +1,10 @@
 import { app, net, session } from 'electron';
-import { downloadSource, validatePublicSource, waitWithSignal } from './gallery-source-download';
+import { downloadSource, sourceByteLimit, validatePublicSource, waitWithSignal } from './gallery-source-download';
 
 // Explicit repository hosts from the public gallery's reviewed PDF sources.
 // The direct downloader still pins DNS for public repositories outside this set.
 const repositories = new Set(`
-www.osti.gov osti.gov arxiv.org export.arxiv.org research.tue.nl trepo.tuni.fi
+www.osti.gov osti.gov molzahn.github.io mgroup.me.ucsb.edu arxiv.org export.arxiv.org research.tue.nl trepo.tuni.fi
 backend.orbit.dtu.dk zenodo.org ora.ox.ac.uk vbn.aau.dk repositum.tuwien.at
 research.chalmers.se idus.us.es discovery.ucl.ac.uk riuma.uma.es edepot.wur.nl
 eartharxiv.org upcommons.upc.edu access.archive-ouverte.unige.ch hss-opus.ub.ruhr-uni-bochum.de
@@ -19,7 +19,7 @@ uwspace.uwaterloo.ca ir.library.osaka-u.ac.jp pmc-oa-opendata.s3.amazonaws.com
 pure.manchester.ac.uk openaccess.thecvf.com proceedings.iclr.cc aclanthology.org
 purehost.bath.ac.uk repository.tudelft.nl orbi.umons.ac.be eprints.whiterose.ac.uk
 pure.tue.nl centralesupelec.hal.science orbi.uliege.be cora.ucc.ie ktisis.cut.ac.cy
-zaguan.unizar.es cf002.cdn.4science.cloud research.dial.uclouvain.be
+zaguan.unizar.es cf002.cdn.4science.cloud research.dial.uclouvain.be eprints.gla.ac.uk
 `.trim().split(/\s+/));
 
 export function checkProxySource(raw: string, kind: 'pdf'|'image') {
@@ -28,7 +28,7 @@ export function checkProxySource(raw: string, kind: 'pdf'|'image') {
   return url;
 }
 async function proxyRead(start: URL, kind: 'pdf'|'image', signal: AbortSignal, ses: Electron.Session) {
-  const limit = (kind === 'pdf' ? 48 : 16) * 1024 * 1024;
+  const limit = sourceByteLimit(kind);
   let url = start;
   for (let hop = 0; hop <= 4; hop++) {
     signal.throwIfAborted();

@@ -37,7 +37,8 @@ export interface PaperFigure extends PaperCitation {
     dimensions?: StudyDimension[]; forms?: StudyForm[]; sourceUrl?: string;
     pdfVersion?: 'author-public' | 'proceedings' | 'publisher'; publisherPdf?: string;
     collection?: 'journal'; license?: string; imageSource?: string; topics?: string[];
-    imagePanels?: { url: string; label: string }[];
+    imagePanels?: { url: string; label: string; width?: number; height?: number }[];
+    panelRows?: number[];
     pdfSha256?: string; cropPdfPoints?: [number, number, number, number];
     archive?: { offset: number; length: number };
   };

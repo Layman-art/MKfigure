@@ -59,7 +59,7 @@ function getSession() {
   privateSession=ses;return ses;
 }
 type Job={kind:'pdf';page:number;crop:readonly number[]}|{kind:'image';mime:string}
-  |{kind:'panels';panels:{length:number;mime:string;label:string}[]};
+  |{kind:'panels';panels:{length:number;mime:string;label:string;width?:number;height?:number}[];rows:number[]};
 export async function renderSourceBytes(bytes:Buffer,job:Job,signal:AbortSignal) {
   await waitWithSignal(app.whenReady(),signal);
   const token=randomUUID();
@@ -111,24 +111,33 @@ export async function readPublicImage(url:string,signal?:AbortSignal):Promise<Bu
   });
 }
 
-export async function readPublicPanels(panels: readonly {url:string;label:string}[], signal?:AbortSignal) {
-  if (panels.length < 2 || panels.length > 6) throw Error('原图面板数量无效。');
+export function figurePanelRows(count:number, rows?:readonly number[]) {
+  if (!Number.isInteger(count) || count<2 || count>12) throw Error('原图面板的数量与行列布局不匹配。');
+  const sizes=rows ?? Array<number>(count).fill(1);
+  if (!sizes.length || !sizes.every(n=>Number.isInteger(n) && n>=1 && n<=4) ||
+      sizes.reduce((total,n)=>total+n,0)!==count) throw Error('原图面板的数量与行列布局不匹配。');
+  return [...sizes];
+}
+export async function readPublicPanels(panels: readonly {url:string;label:string;width?:number;height?:number}[], signal?:AbortSignal, rows?:readonly number[]) {
+  const sizes=figurePanelRows(panels.length,rows);
   for (const panel of panels) {
     validatePublicSource(panel.url,'image');
+    if ((panel.width!==undefined || panel.height!==undefined) &&
+        ![panel.width,panel.height].every(v=>typeof v==='number'&&Number.isFinite(v)&&v>0&&v<=90000)) throw Error('原图面板尺寸无效。');
     if (typeof panel.label !== 'string' || panel.label.length > 120) throw Error('原图面板标注无效。');
   }
   const timeout=combinedSignal(signal);
   return enqueue(timeout,async()=>{
     const chunks:Buffer[]=[];
-    const parts:{length:number;mime:string;label:string}[]=[];
+    const parts:{length:number;mime:string;label:string;width?:number;height?:number}[]=[];
     let total=0;
     for (const panel of panels) {
       const bytes=await downloadGallerySource(panel.url,'image',timeout);
       total+=bytes.length;
       if (total>32*1024*1024) throw Error('原图面板超过大小限制。');
-      parts.push({length:bytes.length,mime:publicImageMime(bytes),label:panel.label});
+      parts.push({length:bytes.length,mime:publicImageMime(bytes),label:panel.label,width:panel.width,height:panel.height});
       chunks.push(bytes);
     }
-    return renderSourceBytes(Buffer.concat(chunks,total),{kind:'panels',panels:parts},timeout);
+    return renderSourceBytes(Buffer.concat(chunks,total),{kind:'panels',panels:parts,rows:sizes},timeout);
   });
 }

@@ -195,3 +195,77 @@ export function readGalleryLink(raw: string, figures: PaperFigure[]): GalleryLoc
   }
   return { filters: f, favoritesOnly: false, id, ...passthrough };
 }
+
+/** Lay out cards in catalogue order. Appending a batch resumes at the previous column heights. */
+export function observeGalleryMasonry(grid: HTMLElement) {
+  let cards: HTMLElement[] = [];
+  let index = new WeakMap<HTMLElement, number>();
+  let heights = new WeakMap<HTMLElement, number>();
+  let bottoms: number[][] = [];
+  let width = 0;
+  let columns = 0;
+  let gap = 0;
+
+  function place(first: number) {
+    const nextWidth = grid.getBoundingClientRect().width;
+    if (!nextWidth) return;
+    const css = getComputedStyle(grid);
+    const nextColumns = Number(css.getPropertyValue('--pg-columns')) || 1;
+    const nextGap = parseFloat(css.getPropertyValue('--pg-gap')) || 0;
+    if (width !== nextWidth || columns !== nextColumns || gap !== nextGap) {
+      width = nextWidth;
+      columns = nextColumns;
+      gap = nextGap;
+      heights = new WeakMap();
+      bottoms = [Array(columns).fill(0)];
+      first = 0;
+    }
+    const sizes = cards.slice(first).map(card => {
+      const measured = heights.get(card) ?? card.getBoundingClientRect().height;
+      heights.set(card, measured);
+      return measured;
+    });
+    const stride = (width + gap) / columns;
+    let levels = bottoms[first].slice();
+    bottoms.length = first + 1;
+    sizes.forEach((height, offset) => {
+      const col = levels.indexOf(Math.min(...levels));
+      const card = cards[first + offset];
+      const position = 'translate(' + col * stride + 'px, ' + levels[col] + 'px)';
+      if (card.style.transform !== position) card.style.transform = position;
+      levels[col] += height + gap;
+      bottoms.push(levels.slice());
+    });
+    grid.style.height = Math.max(0, Math.max(...levels) - gap) + 'px';
+  }
+
+  const resize = new ResizeObserver(entries => {
+    let first = cards.length;
+    let resizedGrid = false;
+    for (const entry of entries) {
+      if (entry.target === grid) { resizedGrid = true; continue; }
+      const card = entry.target as HTMLElement;
+      const at = index.get(card);
+      const height = entry.borderBoxSize[0]?.blockSize;
+      if (at !== undefined && height !== undefined && heights.get(card) !== height) {
+        heights.set(card, height);
+        first = Math.min(first, at);
+      }
+    }
+    if (first < cards.length || (resizedGrid && grid.getBoundingClientRect().width !== width)) place(first);
+  });
+  function sync() {
+    const next = Array.from(grid.children) as HTMLElement[];
+    let first = 0;
+    while (first < cards.length && first < next.length && cards[first] === next[first]) first++;
+    for (let i = first; i < cards.length; i++) { resize.unobserve(cards[i]); index.delete(cards[i]); }
+    for (let i = first; i < next.length; i++) { resize.observe(next[i], { box: 'border-box' }); index.set(next[i], i); }
+    cards = next;
+    place(first);
+  }
+  resize.observe(grid);
+  const changes = new MutationObserver(sync);
+  changes.observe(grid, { childList: true });
+  sync();
+  return () => { changes.disconnect(); resize.disconnect(); };
+}

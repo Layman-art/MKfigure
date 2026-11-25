@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, ArrowUpRight, BookOpen, Bookmark, Check, ChevronLeft, ChevronRight, Copy, FileText, Languages, Link, Search, X, ZoomIn, ZoomOut } from 'lucide-react';
 import type { PaperFigure, WorkspaceApi } from '../../shared/types';
 import { LOCAL_GALLERY, dimensionNames, formNames, journalVenues, studyCategories, studyDimension } from '../../shared/gallery-taxonomy';
 import { errorText } from '../display';
 import GalleryOffline from './GalleryOffline';
-import { changeGalleryFilter, studyFacetCounts, figureImage, figureTier, galleryPageSize, galleryShareUrl, gallerySource, galleryView, initialFilters, makeSearchIndex, patternNames, queryFigures, readGalleryLink, tierNames, venueNames } from '../paper-gallery';
+import { changeGalleryFilter, studyFacetCounts, figureImage, figureTier, galleryPageSize, galleryShareUrl, gallerySource, galleryView, initialFilters, makeSearchIndex, observeGalleryMasonry, patternNames, queryFigures, readGalleryLink, tierNames, venueNames } from '../paper-gallery';
 import type { GalleryFilters, GalleryLocation } from '../paper-gallery';
 import '../paper-gallery.css';
 
@@ -28,15 +28,16 @@ const patternHelp: Record<string, [string, string]> = {
   comparison: ['并列展示方法、方案或样例的差异。', 'A side-by-side comparison of methods, settings or examples.'],
 };
 
-function CardImage({ row, eager, english, onOpen }: { row: PaperFigure; eager: boolean; english: boolean; onOpen: () => void }) {
+function CardImage({ row, eager, english, original, onOpen }: { row: PaperFigure; eager: boolean; english: boolean; original: boolean; onOpen: () => void }) {
   const [attempt, setAttempt] = useState(0);
   const [failed, setFailed] = useState(false);
+  useEffect(() => { if (original) setFailed(false); }, [original]);
   const retry = () => { setFailed(false); setAttempt(n => n + 1); };
   const style = { aspectRatio: row.w && row.h ? row.w + ' / ' + row.h : '16 / 10' };
   return <div className="pg-image-slot" style={style}>{failed ?
     row.supplement ? <button className="pg-preview pg-source-preview" type="button" onClick={onOpen}><BookOpen size={22}/><span>{row.figure} · {english ? 'View source figure' : '查看原文插图'}</span></button> :
     <button type="button" className="pg-retry" onClick={retry}>{english ? 'Reload image' : '重新加载图片'}</button> :
-    <button className="pg-preview" type="button" onClick={onOpen} aria-label={(english ? 'View ' : '查看 ') + row.title + (row.figure ? ' · ' + row.figure : '')}><img key={attempt} loading={eager ? 'eager' : 'lazy'} decoding="async" src={figureImage(row.id,!!row.supplement) + (attempt ? '?retry=' + attempt : '')}
+    <button className="pg-preview" type="button" onClick={onOpen} aria-label={(english ? 'View ' : '查看 ') + row.title + (row.figure ? ' · ' + row.figure : '')}><img key={attempt} loading={eager ? 'eager' : 'lazy'} decoding="async" src={figureImage(row.id,!!row.supplement && !original) + (attempt ? '?retry=' + attempt : '')}
       alt="" onError={() => { if (!row.supplement && !eager && !attempt) retry(); else setFailed(true); }} /></button>}</div>;
 }
 type Props = { api: WorkspaceApi; selecting: boolean; selectedId?: string; selectedLayoutIds?: readonly string[]; onSelect: (referenceId: string, figure: PaperFigure) => Promise<void>; onBack: () => void; onBusyChange?: (busy: boolean) => void };
@@ -60,6 +61,8 @@ export default function PaperGallery({ api, selecting, selectedId, selectedLayou
   const [imageError, setImageError] = useState('');
   const [openedImages, setOpenedImages] = useState<ReadonlySet<string>>(() => new Set());
   const gallery = useRef<HTMLElement>(null);
+  const grid = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => { if (grid.current) return observeGalleryMasonry(grid.current); }, []);
   const lastFigure = useRef<string | null>(null);
   const more = useRef<HTMLDivElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
@@ -275,13 +278,13 @@ export default function PaperGallery({ api, selecting, selectedId, selectedLayou
       <label>{tr('排序', 'Sort')} <select aria-label={tr('排序', 'Sort')} value={filters.sort} onChange={event => setFilter('sort', event.target.value as GalleryFilters['sort'])}>{journal && <option value="explore">{tr('跨刊浏览', 'Across journals')}</option>}<option value="venue">{journal ? tr('期刊顺序', 'Journal') : tr('会议顺序', 'Venue')}</option><option value="recent">{tr('年份从新到旧', 'Year, newest first')}</option><option value="year">{tr('年份从早到晚', 'Year, oldest first')}</option><option value="title">{tr('论文标题 A–Z', 'Title A–Z')}</option></select></label></div>
     {!open && status}
     {loading ? <p className="pg-empty" role="status">{tr('正在读取本机图库…', 'Loading the local gallery…')}</p> : failedLoad ? <button className="pg-button" onClick={() => setAttempt(n => n + 1)}>{tr('重新载入', 'Retry')}</button> : !rows.length ? <p className="pg-empty">{favoritesOnly && !savedCount ? tr('还没有收藏。点击图卡上的书签即可收藏。', 'No favorites yet. Use the bookmark on a figure to save it.') : tr('没有匹配的图片，请调整筛选或关键词。', 'No matching figures. Try different filters or keywords.')}</p> : null}
-    <div className={rows.length <= 4 ? "pg-grid pg-short-grid" : "pg-grid"}>{Array.from({ length: Math.ceil(Math.min(limit, rows.length) / galleryPageSize) }, (_, page) => <div className="pg-page" key={page}>{rows.slice(page * galleryPageSize, (page + 1) * galleryPageSize).map((row, slot) => <article key={row.id} data-paper-id={row.id} className="pg-card">
-      <CardImage key={openedImages.has(row.id) ? 'cached' : 'initial'} row={row} eager={page === 0 && slot < 24} english={en} onOpen={() => openFigure(row)}/>
+    <div ref={grid} className="pg-grid pg-page">{rows.slice(0, limit).map((row, slot) => <article key={row.id} data-paper-id={row.id} className="pg-card">
+      <CardImage original={openedImages.has(row.id)} row={row} eager={slot < 24} english={en} onOpen={() => openFigure(row)}/>
       <div className="pg-card-body"><div className="pg-meta"><span>{venueNames[row.venue] || row.venue} · {row.year}</span>{badge(row) && <span className="pg-award">{badge(row)}</span>}</div>
         <button className="pg-title" onClick={() => openFigure(row)}>{row.title}</button>
         <p className="pg-byline">{row.authors.slice(0, 5).join(', ')}{row.authors.length > 5 ? ' et al.' : ''}</p><div className="pg-card-end"><span>{kind(row)}{row.figure && ' · ' + row.figure}</span>{favoriteButton(row, true)}</div>
         {selecting && applyButton(row)}
-      </div></article>)}</div>)}</div>
+      </div></article>)}</div>
     {hasMore && <div className="pg-more" ref={more}><button className="pg-button" onClick={() => setLimit(value => value + galleryPageSize)}>{tr('加载更多', 'Load more')} · {Math.min(rows.length - limit, galleryPageSize)}</button></div>}
     {!hasMore && rows.length > galleryPageSize && <p className="pg-end" role="status">{tr('已加载全部', 'All figures loaded')} · {number(rows.length)}</p>}
     {figure && <dialog ref={dialog} className="pg-dialog" aria-label={figure.title} onCancel={event => { event.preventDefault(); if (zoom) setZoom(false); else closeFigure(); }} onClick={event => { if (event.target === event.currentTarget) closeFigure(); }} onKeyDown={event => {
@@ -290,7 +293,7 @@ export default function PaperGallery({ api, selecting, selectedId, selectedLayou
     }}><div className="pg-dialog-body">
       <div className="pg-modal-tools"><span>{rowIndex + 1} / {number(rows.length)}</span><button className="pg-icon" aria-label={tr('上一张', 'Previous figure')} disabled={rowIndex <= 0 || applying} onClick={() => moveFigure(-1)}><ChevronLeft size={19}/></button><button className="pg-icon" aria-label={tr('下一张', 'Next figure')} disabled={rowIndex + 1 >= rows.length || applying} onClick={() => moveFigure(1)}><ChevronRight size={19}/></button>
       <button className="pg-icon" aria-label={zoom ? tr('适应窗口', 'Fit to window') : tr('放大原图', 'Zoom original image')} aria-pressed={zoom} onClick={() => setZoom(!zoom)}>{zoom ? <ZoomOut size={18}/> : <ZoomIn size={18}/>}</button><button autoFocus className="pg-icon" disabled={applying} aria-label={tr('关闭', 'Close')} onClick={closeFigure}><X size={19}/></button></div>
-      <div className={'pg-stage' + (zoom ? ' pg-zoomed' : '')}>{imageError === figure.id ? <p role="alert">{tr('暂时无法载入原图。可重试，或通过下方论文链接查看。', 'The image could not be loaded. Retry or open the article below.')} <button className="pg-button" onClick={() => setImageError('')}>{tr('重试', 'Retry')}</button></p> : <button aria-label={zoom ? tr('缩小原图', 'Fit image') : tr('放大原图', 'Zoom image')} onClick={() => setZoom(!zoom)}><img src={figureImage(figure.id)} style={zoom ? { minWidth: 'max(120cqw, ' + (figure.w || 0) + 'px)' } : undefined} onLoad={() => { if (figure.supplement) setOpenedImages(previous => previous.has(figure.id) ? previous : new Set([...previous,figure.id])); }} onError={() => setImageError(figure.id)} alt={figure.title}/></button>}</div>
+      <div className={'pg-stage' + (zoom ? ' pg-zoomed' : '')}>{imageError === figure.id ? <p role="alert">{tr('暂时无法载入原图。可重试，或通过下方论文链接查看。', 'The image could not be loaded. Retry or open the article below.')} <button className="pg-button" onClick={() => setImageError('')}>{tr('重试', 'Retry')}</button></p> : <button aria-label={zoom ? tr('缩小原图', 'Fit image') : tr('放大原图', 'Zoom image')} onClick={() => setZoom(!zoom)}><img src={figureImage(figure.id)} onLoad={() => { if (figure.supplement) setOpenedImages(previous => previous.has(figure.id) ? previous : new Set([...previous,figure.id])); }} onError={() => setImageError(figure.id)} alt={figure.title}/></button>}</div>
       <div className="pg-detail"><div className="pg-meta"><span>{venueNames[figure.venue] || figure.venue} · {figure.year}</span><span>{kind(figure)}</span>{figure.figure && <span>{caption(figure)}</span>}{badge(figure) && <span className="pg-award">{badge(figure)}</span>}{figure.award && figure.tier && <span className="pg-award">{label(tierNames[figure.tier], figure.tier)}</span>}</div>
       {figure.supplement?.category === 'result' && <div className="pg-study-facts">{[studyDimension(figure) && label(dimensionNames[studyDimension(figure)!]), ...(figure.supplement.forms || []).map(form => label(formNames[form]))].filter(Boolean).join(' · ')}</div>}
       <h2>{figure.title}</h2>{figure.supplement?.description && <p className="pg-description">{figure.supplement.description}</p>}<p className="pg-authors">{figure.authors.join(', ')}</p>{figure.doi && <p className="pg-journal-credit">{journalVenues[figure.venue]?.[1]} · DOI {figure.doi}{figure.supplement?.license && <> · {figure.supplement.license}</>}</p>}

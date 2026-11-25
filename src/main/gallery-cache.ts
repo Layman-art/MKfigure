@@ -6,7 +6,7 @@ import { sniffImage } from './providers/common';
 
 const missing = (error: unknown) => (error as NodeJS.ErrnoException)?.code === 'ENOENT';
 const digest = (bytes: Buffer) => createHash('sha256').update(bytes).digest('hex');
-const OPEN_ARCHIVE = 'https://github.com/Layman-art/MKfigure/releases/download/v2.0.0/MK-Figure-2.0.0-Open-Figures.zip';
+const releaseApi = 'https://api.github.com/repos/Layman-art/MKfigure/releases';
 const cacheName = (row: PaperFigure, hash: string) => hash + path.extname(row.image);
 type SourceResolver = (row: PaperFigure, signal: AbortSignal) => Promise<Buffer>;
 
@@ -47,6 +47,9 @@ interface PendingRead {
 
 export class GalleryImageCache {
   private index?: Promise<{revision:string; hashes:Record<string,string>}>;
+  private coverage?: Promise<{archiveVersion?:string;cardPreviewProfile?:number}>;
+  private archiveAsset?: Promise<string>;
+  private preferAssetApi = false;
   private pending = new Map<string, PendingRead>();
   private available = new Set<string>();
   private inventoried?: Promise<void>;
@@ -125,15 +128,75 @@ export class GalleryImageCache {
     if (!info) return this.read(row,signal);
     signal?.throwIfAborted();
     const hash = info.sha256;
-    // Opening a grid must never trigger full-paper downloads.
+    const privateCard=await optionalFile(path.join(this.directory,'cards-v2',hash+'.webp'));
+    if (privateCard) return privateCard;
+    const publicPath=path.join(this.root,'journals','previews',row.id+'.webp');
+    if (info.archive && (await this.catalogCoverage()).cardPreviewProfile===2) {
+      const currentCard=await optionalFile(publicPath);
+      if (currentCard) return currentCard;
+    }
+    // Read local assets only. Older private caches may have a 172px-wide portrait preview.
+    const original = await verifiedFile(path.join(this.directory,cacheName(row,hash)),hash) ||
+      await verifiedFile(path.join(this.root,row.image),hash) ||
+      await renderedFile(path.join(this.directory,hash+'.rendered'));
+    if (original) return original;
     if (info.archive) {
-      const bundled=await optionalFile(path.join(this.root,'journals','previews',row.id+'.webp'));
+      const bundled=await optionalFile(publicPath);
       if (bundled) return bundled;
     }
-    return await optionalFile(path.join(this.directory,'previews',hash+'.webp')) ||
-      await verifiedFile(path.join(this.root,row.image),hash) ||
-      await verifiedFile(path.join(this.directory,cacheName(row,hash)),hash) ||
-      await renderedFile(path.join(this.directory,hash+'.rendered'));
+    return optionalFile(path.join(this.directory,'previews',hash+'.webp'));
+  }
+
+  private catalogCoverage() {
+    return this.coverage ??= optionalFile(path.join(this.root,'journals','coverage.json')).then(bytes =>
+      bytes ? JSON.parse(bytes.toString('utf8')) : {});
+  }
+
+  private assetUrl(version: string, name: string) {
+    return this.archiveAsset ??= (async () => {
+      const response = await this.request(releaseApi+'/tags/v'+version,{credentials:'omit',signal:AbortSignal.timeout(8000)});
+      if (!response.ok) { await response.body?.cancel(); throw Error('未取得公开图包信息。'); }
+      const release = await response.json();
+      const asset = Array.isArray(release.assets) && release.assets.find((entry:{name?:string}) => entry?.name === name);
+      if (!asset || !Number.isSafeInteger(asset.id) || asset.id <= 0) throw Error('未找到对应版本的公开图包。');
+      return releaseApi+'/assets/'+asset.id;
+    })().catch(error => { this.archiveAsset=undefined; throw error; });
+  }
+
+  private async archiveFigure(part: {offset:number;length:number}, hash: string, signal: AbortSignal) {
+    const version=(await this.catalogCoverage()).archiveVersion ?? '2.0.0';
+    if (typeof version!=='string' || !/^\d+\.\d+\.\d+$/.test(version)) throw Error('图包版本无效。');
+    const name='MK-Figure-'+version+'-Open-Figures.zip';
+    const end=part.offset+part.length-1;
+    for (const api of (this.preferAssetApi ? [true,false] : [false,true])) {
+      try {
+        signal.throwIfAborted();
+        const url=api ? await this.assetUrl(version,name) : 'https://github.com/Layman-art/MKfigure/releases/download/v'+version+'/'+name;
+        const headers: Record<string,string>={Range:`bytes=${part.offset}-${end}`};
+        if (api) headers.Accept='application/octet-stream';
+        const response=await this.request(url,{headers,credentials:'omit',signal:AbortSignal.any([signal,AbortSignal.timeout(12000)])});
+        if (response.status!==206 || !response.headers.get('content-range')?.startsWith(`bytes ${part.offset}-${end}/`)) {
+          await response.body?.cancel(); continue;
+        }
+        const reader=response.body?.getReader();
+        if (!reader) continue;
+        const chunks:Uint8Array[]=[];
+        let total=0;
+        try {
+          while (true) {
+            const {done,value}=await reader.read();
+            if (done) break;
+            total+=value.byteLength;
+            if (total>part.length) break;
+            chunks.push(value);
+          }
+        } finally { await reader.cancel().catch(()=>{}); }
+        if (total===part.length) {
+          const bytes=Buffer.concat(chunks);
+          if (digest(bytes)===hash) { this.preferAssetApi=api; return bytes; }
+        }
+      } catch { signal.throwIfAborted(); }
+    }
   }
 
   private async readOrFetch(row: PaperFigure, signal: AbortSignal): Promise<Buffer> {
@@ -150,30 +213,8 @@ export class GalleryImageCache {
       if (previous) return previous;
       const part=row.supplement.archive;
       if (part && Number.isSafeInteger(part.offset) && Number.isSafeInteger(part.length) && part.offset >= 0 && part.length > 0 && part.length <= 32*1024*1024) {
-        try {
-          const end=part.offset+part.length-1;
-          const response=await this.request(OPEN_ARCHIVE,{headers:{Range:`bytes=${part.offset}-${end}`},credentials:'omit',signal:AbortSignal.any([signal,AbortSignal.timeout(12000)])});
-          if (response.status===206 && response.headers.get('content-range')?.startsWith(`bytes ${part.offset}-${end}/`)) {
-            const reader=response.body?.getReader();
-            const chunks: Uint8Array[]=[];
-            let total=0;
-            if (reader) {
-              try {
-                while (true) {
-                  const {done,value}=await reader.read();
-                  if (done) break;
-                  total+=value.byteLength;
-                  if (total>part.length) break;
-                  chunks.push(value);
-                }
-              } finally { await reader.cancel().catch(()=>{}); }
-            }
-            if (total===part.length) {
-              const original=Buffer.concat(chunks);
-              if (digest(original)===hash) { await atomicWrite(target,original,signal); return original; }
-            }
-          } else { await response.body?.cancel(); }
-        } catch { signal.throwIfAborted(); }
+        const original=await this.archiveFigure(part,hash,signal);
+        if (original) { await atomicWrite(target,original,signal); return original; }
       }
       if (!this.resolveSource || !(row.supplement.imageSource || row.supplement.imagePanels?.length || row.pdf_source && row.supplement.cropPdfPoints && row.page))
         throw Error('增补图库原图暂不可用，可打开原文图位或安装离线图包。');

@@ -10,6 +10,7 @@ import json
 import os
 import re
 import shutil
+import threading
 import zipfile
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
@@ -28,6 +29,8 @@ except ImportError:
     optimize_jpeg = None
 
 ROOT = Path(__file__).resolve().parents[1]
+CARD_PREVIEW_PROFILE = 2
+ENCODING_LOCKS = [threading.Lock() for _ in range(64)]
 OPEN = re.compile(r'^https?://creativecommons\.org/(?:licenses/by/(?:[1-4]\.0|2\.5)|publicdomain/zero/1\.0)/?$', re.I)
 CREDIT = re.compile(r'reprinted|reproduced (?:with|from|by)|adapted (?:with permission|from)|courtesy of|©|third.party material|all rights reserved|used (?:by|with|under) (?:license|licence|permission)|(?:photograph|image|illustration|map|basemap|photo) (?:credit|by\b)|credited to|(?:map tiles|basemap) from', re.I)
 PAPER_TOPICS = {
@@ -45,6 +48,10 @@ PAPER_TOPICS = {
     'charging': r'charging station|electric vehicle|vehicle.to.grid',
     'control': r'predictive control|distributed control|feedback control|inverter|power converter',
     'graphlearning': r'graph neural|graph representation learning',
+    'dynamics': r'power.system dynamics|dynamic (?:simulation|equivalent|model)|time.domain simulation|electromagnetic transient|differential.algebraic|small.signal model|transient response',
+    'neuraldynamics': r'neural (?:ordinary|differential|operator|ODE)|physics.informed|Koopman operator|learning dynamical systems|learned dynamical model',
+    'gridtransfer': r'network reconfiguration|topology (?:change|transfer|variation|generalization)|across (?:different )?(?:grid |network )?topolog|cross.scenario|unseen (?:operating|grid|topolog)|across (?:operating|loading) (?:points|conditions)',
+    'identification': r'system identification|parameter identification|dynamic state estimation|closed.loop identification|subspace identification',
 }
 
 
@@ -86,6 +93,11 @@ def file_hash(file):
 def encode(path, cache):
     raw = path.read_bytes()
     digest = sha(raw)
+    with ENCODING_LOCKS[int(digest[:2], 16) % len(ENCODING_LOCKS)]:
+        return encode_pixels(raw, digest, cache)
+
+
+def encode_pixels(raw, digest, cache):
     folder = cache / digest[:2]
     folder.mkdir(exist_ok=True, parents=True)
     facts = folder / (digest + '.json')
@@ -94,7 +106,7 @@ def encode(path, cache):
     if facts.exists():
         old = json_file(facts)
         if (folder / old['file']).is_file() and (folder / (digest + '-preview.webp')).is_file():
-            if old.get('codecProfile',1) >= profile:
+            if old.get('codecProfile',1) >= profile and old.get('cardPreviewProfile') == CARD_PREVIEW_PROFILE:
                 return old, folder
             previous = old
     with Image.open(io.BytesIO(raw)) as opened:
@@ -103,6 +115,16 @@ def encode(path, cache):
     w, h = img.size
     if min(w, h) < 45 or max(w, h) < 280:
         raise ValueError(f'insufficient source resolution {w} x {h}')
+    thumb = img.copy()
+    thumb.thumbnail((800, 1800), Image.Resampling.LANCZOS)
+    preview_path = folder / (digest + '-preview.webp')
+    preview_tmp = preview_path.with_suffix('.webp.part')
+    thumb.save(preview_tmp, 'WEBP', quality=87, method=4)
+    preview_tmp.replace(preview_path)
+    if previous and previous.get('codecProfile',1) >= profile:
+        previous['cardPreviewProfile'] = CARD_PREVIEW_PROFILE
+        compact(facts, previous)
+        return previous, folder
     pixels = np.asarray(img)
     gray = cv2.cvtColor(pixels, cv2.COLOR_RGB2GRAY)
     plane = cv2.resize(gray, (32, 32), interpolation=cv2.INTER_AREA)
@@ -129,10 +151,7 @@ def encode(path, cache):
                     full, extension, optimized = lossless_jpg, 'jpg', True
     fname = digest + ('.opt.' if optimized else '.') + extension
     (folder / fname).write_bytes(full)
-    thumb = img.copy()
-    thumb.thumbnail((456, 320), Image.Resampling.LANCZOS)
-    thumb.save(folder / (digest + '-preview.webp'), 'WEBP', quality=80, method=4)
-    record = dict(originalSha=digest, hash=sha(full), file=fname, phash=phash, w=w, h=h, codecProfile=profile, optimizedJpeg=optimized,
+    record = dict(originalSha=digest, hash=sha(full), file=fname, phash=phash, w=w, h=h, codecProfile=profile, cardPreviewProfile=CARD_PREVIEW_PROFILE, optimizedJpeg=optimized,
                   originalBytes=len(raw), bytes=len(full))
     compact(facts, record)
     return record, folder
@@ -181,9 +200,12 @@ def open_license(row, lic, base):
     if row.get('sourceKind') == 'publisher-html-open':
         article = 'https://www.nature.com/articles/'+row['doi'].split('/',1)[-1]
         source = urlparse(row.get('imageSource',''))
+        number = key(row)[1]
+        media = unquote(source.path)
         return (evidence.get('scope') == 'same-version-article' and evidence.get('url') == article+'#rightslink' and
-                row.get('figureUrl') == article+'#Fig'+str(row['figure']) and source.hostname == 'media.springernature.com' and
-                source.path.startswith('/full/springer-static/image/'))
+                row.get('figureUrl') == article+'#Fig'+str(number) and source.hostname == 'media.springernature.com' and
+                media.startswith('/full/springer-static/image/art:'+row['doi']+'/MediaObjects/') and
+                re.search(rf'_Fig{number}_HTML\.[a-z]+$', media, re.I) is not None)
     source_image = str(row.get('imageSource') or row.get('figureUrl') or '')
     if row.get('sourceKind') == 'publisher-jats-matched':
         native = urlparse(source_image)
@@ -213,6 +235,8 @@ def open_license(row, lic, base):
 def one(job):
     src, row, forms, args = job
     doi, num = key(row)
+    if num < 1:
+        raise ValueError('figure requires a positive original number')
     year = int(row['year'])
     category = row['category']
     if not 2017 <= year <= 2026 or category not in ('result', 'mechanism', 'algorithm') or not row.get('authors'):
@@ -222,7 +246,7 @@ def one(job):
     original = (base / relative).resolve()
     if not original.is_relative_to(base):
         raise ValueError('image outside the source directory')
-    enc, folder = encode(original, args.work / 'encoding')
+    enc, folder = encode(original, args.encoding_cache)
     if row.get('sha256') and row['sha256'] != enc['originalSha']:
         raise ValueError('reviewed image checksum mismatch')
     ident = f"mk-j-{row['journal']}-{sha(doi.encode())[:14]}-f{num}"
@@ -278,10 +302,25 @@ def one(job):
         info['imageSource'] = direct
     panels = row.get('imagePanels')
     if panels:
-        if (row.get('panelLayout') != 'vertical' or not 2 <= len(panels) <= 6 or
-                any(not url(p.get('url')) or not isinstance(p.get('label'), str) or len(p['label']) > 120 for p in panels)):
+        sizes = row.get('panelRows')
+        if row.get('panelLayout') == 'vertical' and sizes is None:
+            sizes = [1] * len(panels)
+        if (row.get('panelLayout') not in ('vertical', 'rows') or not isinstance(sizes, list) or
+                not 2 <= len(panels) <= 12 or not all(type(n) is int and 1 <= n <= 4 for n in sizes) or
+                sum(sizes) != len(panels) or any(not url(p.get('url')) or not isinstance(p.get('label'), str)
+                or len(p['label']) > 120 for p in panels)):
             raise ValueError('invalid numbered figure panels')
-        info['imagePanels'] = [dict(url=p['url'], label=p['label']) for p in panels]
+        if any(n > 1 for n in sizes):
+            info['panelRows'] = sizes
+        rendered_panels = []
+        for panel in panels:
+            item = dict(url=panel['url'], label=panel['label'])
+            if 'width' in panel or 'height' in panel:
+                if any(type(panel.get(k)) not in (float, int) or not 0 < panel[k] <= 90000 for k in ('width', 'height')):
+                    raise ValueError('invalid panel display size')
+                item.update(width=panel['width'], height=panel['height'])
+            rendered_panels.append(item)
+        info['imagePanels'] = rendered_panels
         info.pop('imageSource', None)
     if lic and open_license(row, lic, base):
         info['license'] = lic
@@ -332,16 +371,20 @@ def main():
     ap.add_argument('manifests', type=Path, nargs='+')
     ap.add_argument('--work', required=True, type=Path, help='Private staging and public release asset directory')
     ap.add_argument('--form-tags', type=Path, action='append', default=[], help='Array of {doi,figure,forms} records')
+    ap.add_argument('--output', type=Path, default=ROOT/'resources/paper-gallery/journals', help='Journal catalog directory')
+    ap.add_argument('--encoding-cache', type=Path, help='Reuse verified lossless masters across releases')
     ap.add_argument('--jobs', type=int, default=5)
     ap.add_argument('--require-targets', action='store_true')
     args = ap.parse_args()
     args.work.mkdir(exist_ok=True, parents=True)
-    out = ROOT/'resources/paper-gallery/journals'
+    out = args.output
+    args.encoding_cache = args.encoding_cache or args.work / 'encoding'
     forms = defaultdict(list)
     for f in args.form_tags:
         for row in json_file(f):
             forms[key(row)].extend(row['forms'])
-    jobs = [(f,r,forms[key(r)],args) for f in args.manifests for r in json_file(f)]
+    excluded_keys = {key(r) for r in json_file(ROOT/'scripts/gallery-editorial-exclusions.json')['figures']}
+    jobs = [(f, r, forms[key(r)], args) for f in args.manifests for r in json_file(f) if key(r) not in excluded_keys]
     def safe(job):
         try:
             return one(job), None
@@ -370,7 +413,8 @@ def main():
     compact(args.work/'excluded.json',rejected)
     if args.require_targets and not all(counts[k]>=n for k,n in [('result',2000),('algorithm',800),('mechanism',800)]):
         raise SystemExit(f'After deduplication: {counts}')
-    archive = args.work/'MK-Figure-2.0.0-Open-Figures.zip'
+    version = json_file(ROOT/'package.json')['version']
+    archive = args.work/f'MK-Figure-{version}-Open-Figures.zip'
     output_zip = archive.with_suffix('.zip.part')
     credits, private, records = [], [], []
     with zipfile.ZipFile(output_zip,'w',allowZip64=True) as pack:
@@ -388,7 +432,7 @@ def main():
             private.append(dict(id=row['id'],sha=enc['hash'],ext=source.suffix,source=str(local),preview=str(preview)))
             records.append(row)
         write_archive_entry(pack,'CREDITS.json',json.dumps(credits,ensure_ascii=False,indent=1).encode())
-        write_archive_entry(pack,'README.txt',b'Open journal figures for MK Figure 2.0.0. CREDITS.json identifies the authors, title, numbered figure, source and license of each file. Preparation includes extracting or cropping the numbered figure, trimming margins, resizing and raster encoding for on-screen viewing. The subsequent storage optimization preserved every decoded figure pixel. Scientific values and labels are those of the original authors.\n')
+        write_archive_entry(pack,'README.txt',f'Open journal figures for MK Figure {version}. CREDITS.json identifies the authors, title, numbered figure, source and license of each file. Preparation includes extracting or cropping the numbered figure, trimming margins, resizing and raster encoding for on-screen viewing. The subsequent storage optimization preserved every decoded figure pixel. Scientific values and labels are those of the original authors.\n'.encode())
     output_zip.replace(archive)
     # A license change must also remove a preview produced by an earlier run.
     for directory, keep in [(out/'previews',{r['id']+'.webp' for r in records if r['supplement'].get('archive')}),
@@ -410,13 +454,13 @@ def main():
     write_index([r['id'] for r in records], [[r['title'],r['supplement']['description'],r['venue'],r['supplement']['category'],
                 *r['supplement'].get('forms',[]),*r['supplement'].get('dimensions',[])] for r in records],
                 ROOT/'resources/layout-index/concepts.json',out/'layout-terms.json.gz')
-    stat=dict(figures=len(records),papers=len({r['doi'] for r in records}),category=dict(counts),years=dict(Counter(r['year'] for r in records)),
+    stat=dict(archiveVersion=version,cardPreviewProfile=CARD_PREVIEW_PROFILE,figures=len(records),papers=len({r['doi'] for r in records}),category=dict(counts),years=dict(Counter(r['year'] for r in records)),
               venues=dict(Counter(r['venue'] for r in records)),dimensions=dict(Counter('+'.join(sorted(r['supplement']['dimensions'])) for r in records if r['supplement']['category']=='result')),
               forms=dict(Counter(t for r in records for t in r['supplement'].get('forms',[]))), openImages=len(credits),
               originalBytes=sum(r[1]['originalBytes'] for r in kept), storedBytes=sum(r[1]['bytes'] for r in kept), archiveBytes=archive.stat().st_size,
               previewsBytes=sum((out/'previews'/(r['id']+'.webp')).stat().st_size for r in records if 'archive' in r['supplement']),
               losslessWebP=sum(r[1]['file'].endswith('.webp') for r in kept),
-              losslessJpeg=sum(bool(r[1].get('optimizedJpeg')) for r in kept), sourceFiguresExcluded=len(rejected))
+              losslessJpeg=sum(bool(r[1].get('optimizedJpeg')) for r in kept), sourceFiguresExcluded=len(rejected), editorialExclusions=len(excluded_keys))
     compact(out/'coverage.json',stat)
     print(json.dumps(stat,ensure_ascii=False),flush=True)
 

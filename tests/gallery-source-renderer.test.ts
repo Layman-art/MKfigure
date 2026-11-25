@@ -1,10 +1,15 @@
 import { describe, expect,it,vi } from 'vitest';
 import { checkProxySource } from '../src/main/gallery-source-proxy';
 import { publicAddress, validatePublicSource,waitWithSignal } from '../src/main/gallery-source-download';
-import { publicImageMime,validateFigureCrop } from '../src/main/gallery-source-renderer';
+import { figurePanelRows,publicImageMime,validateFigureCrop } from '../src/main/gallery-source-renderer';
 vi.mock('electron',()=>({app:{},session:{},BrowserWindow:class{}}));
 
 describe('on-demand scholarly source validation',()=>{
+  it('preserves each original panel row and checks that it covers exactly one numbered figure',()=>{
+    expect(figurePanelRows(3,[1,2])).toEqual([1,2]);
+    expect(figurePanelRows(2)).toEqual([1,1]);
+    for(const bad of [[2,2],[],[0,3],[1.5,1.5],[5]]) expect(()=>figurePanelRows(3,bad)).toThrow('布局');
+  });
   it('allows only public destination addresses, including when a public name redirects',()=>{
     for(const ip of ['::1','::ffff:127.0.0.1','fc00::2','fe80::1','2002::1','2001:db8::1','10.0.0.1','127.0.0.1','169.254.169.254','198.18.0.12','224.0.0.1']) expect(publicAddress(ip),ip).toBe(false);
     for(const ip of ['1.1.1.1','2606:4700:4700::1111']) expect(publicAddress(ip),ip).toBe(true);

@@ -11,4 +11,4 @@
 
 MK Figure 增补条目按图号单独建索引，使用论文题名、该图的编目说明、类别、维度和图形标签。其原文位置见 [增补数据](../paper-gallery/supplement/figures.json) 中的论文链接、实际取图 PDF 和 PDF 页码。
 
-期刊图以每个正式图号的记录 ID 为检索单位。构建器取题名、图级说明、期刊简称、主类别及已有的形式与维度，生成期刊专用压缩词表。一本期刊或一篇论文里的不同图可以返回不同的匹配理由。建议先看命中的图，再从原文图位检查数据与面板关系。[期刊构建脚本](../../scripts/build-journal-gallery.py) · [期刊图级清单](../paper-gallery/journals/figures.json) · [用户指南](../../docs/gallery-2.0.md)
+期刊图以每个正式图号的记录 ID 为检索单位。构建器取题名、图级说明、期刊简称、主类别及已有的形式与维度，生成期刊专用压缩词表。一本期刊或一篇论文里的不同图可以返回不同的匹配理由。建议先看命中的图，再从原文图位检查数据与面板关系。[期刊构建脚本](../../scripts/build-journal-gallery.py) · [期刊图级清单](../paper-gallery/journals/figures.json) · [用户指南](../../docs/gallery-2.1.md)

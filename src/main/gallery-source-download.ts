@@ -18,6 +18,7 @@ export function publicAddress(address: string) {
   return family === 4 ? !blocked.check(address, 'ipv4') : family === 6 && v6.check(address, 'ipv6') && !blocked.check(address, 'ipv6');
 }
 const imageHosts = new Set(['pmc-oa-opendata.s3.amazonaws.com', 'cdn.ncbi.nlm.nih.gov', 'arxiv.org', 'ar5iv.labs.arxiv.org', 'ars.els-cdn.com', 'pubs.rsc.org', 'media.springernature.com']);
+export const sourceByteLimit = (kind: 'pdf'|'image') => (kind === 'pdf' ? 48 : 32) * 1024 * 1024;
 export function validatePublicSource(raw: string, kind: 'pdf'|'image') {
   const url = new URL(raw);
   if (url.protocol !== 'https:' || url.port || url.username || url.password || !url.hostname.includes('.') || isIP(url.hostname) ||
@@ -37,7 +38,7 @@ export function waitWithSignal<T>(work: Promise<T>, signal: AbortSignal): Promis
 }
 export async function downloadSource(raw: string, kind: 'pdf'|'image', signal: AbortSignal) {
   let url = validatePublicSource(raw,kind);
-  const limit = (kind === 'pdf' ? 48 : 16) * 1024 * 1024;
+  const limit = sourceByteLimit(kind);
   for (let hop=0; hop<=4; hop++) {
     const addresses = await waitWithSignal(lookup(url.hostname,{all:true}),signal);
     if (!addresses.length || addresses.some(a=>!publicAddress(a.address))) throw new Error('图源域名未解析为公开 IP 地址。');
@@ -45,7 +46,7 @@ export async function downloadSource(raw: string, kind: 'pdf'|'image', signal: A
     const result = await new Promise<Buffer|URL>((resolve,reject)=>{
       const req = request(url,{method:'GET',agent:false,family:chosen.family,signal,
         lookup:(_host,_opts,cb)=>cb(null,chosen.address,chosen.family),
-        headers:{accept:kind==='pdf'?'application/pdf':'image/*','accept-encoding':'identity','user-agent':'MKFigure/2.0 (public scholarly figure viewer)'}},res=>{
+        headers:{accept:kind==='pdf'?'application/pdf':'image/*','accept-encoding':'identity','user-agent':'MKFigure/2.1 (public scholarly figure viewer)'}},res=>{
         const status = res.statusCode || 0;
         res.on('error',reject);
         if ([301,302,303,307,308].includes(status) && res.headers.location) {
